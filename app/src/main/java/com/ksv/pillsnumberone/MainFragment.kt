@@ -1,5 +1,6 @@
 package com.ksv.pillsnumberone
 
+import android.icu.text.Transliterator.Position
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,7 +15,7 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private val medicineCardAdapter =
-        MedicineCardAdapter { medicineItem -> onTimeClick(medicineItem) }
+        MedicineCardAdapter { position -> onTimeClick(position) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,51 +39,21 @@ class MainFragment : Fragment() {
 
     }
 
-    private fun onTimeClick(medicine: MedicineItem) {
-        if(!medicine.finished) {
-            val timePicker = MaterialTimePicker.Builder()
-                .setTitleText("Время поедания")
-                .build().apply {
-                    addOnPositiveButtonClickListener {
-                        val hour = this.hour
-                        var min = this.minute.toString()
-                        if (this.minute < 10) min = "0$min"
-                        val timeToDisplay = "$hour:$min"
-                        medicineCardAdapter.setTime(medicine, timeToDisplay)
-                    }
+    private fun onTimeClick(position: Int) {
+        val timePicker = MaterialTimePicker.Builder()
+            .setTitleText("Время поедания")
+            .build().apply {
+                addOnPositiveButtonClickListener {
+                    val hour = this.hour
+                    var min = this.minute.toString()
+                    if (this.minute < 10) min = "0$min"
+                    val timeToDisplay = "$hour:$min"
+                    medicineCardAdapter.setTimeAt(position, timeToDisplay)
                 }
-            timePicker.show(parentFragmentManager, timePicker::class.java.name)
-        }
+            }
+        timePicker.show(parentFragmentManager, timePicker::class.java.name)
     }
 
-//    private fun setMorningPills() {
-//        binding.morningAlmagel.setMedicine(AllPills.ALMAGEL.medicine)
-//        setTimeListener(binding.morningAlmagel)
-//        binding.morningBackset.setMedicine(AllPills.BACKSET.medicine)
-//        setTimeListener(binding.morningBackset)
-//        binding.morningErmital.apply {
-//            setMedicine(AllPills.ERMITAL.medicine)
-//            setTimeListener(this)
-//        }
-//
-//    }
-
-//    private fun setTimeListener(view: MedicineView){
-//        view.timeClicked = {
-//            val timePicker = MaterialTimePicker.Builder()
-//                .setTitleText("Время поедания")
-//                .build().apply {
-//                    addOnPositiveButtonClickListener {
-//                        val hour = this.hour
-//                        var min = this.minute.toString()
-//                        if (this.minute < 10) min = "0$min"
-//                        val time = "$hour:$min"
-//                        view.setTime(time)
-//                    }
-//                }
-//            timePicker.show(parentFragmentManager, timePicker::class.java.name)
-//        }
-//    }
 
     companion object {
         enum class AllPills(val medicine: MedicineItem) {

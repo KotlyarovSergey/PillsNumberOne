@@ -1,5 +1,6 @@
 package com.ksv.pillsnumberone
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +9,7 @@ import com.ksv.pillsnumberone.databinding.MedicineViewBinding
 import com.ksv.pillsnumberone.entity.MedicineItem
 
 class MedicineCardAdapter(
-    private val onClick: (MedicineItem) -> Unit
+    private val onTimeClick: (Int) -> Unit
 ) : RecyclerView.Adapter<MedicineCardAdapter.MedicineViewHolder>() {
     private var medicineList: MutableList<MedicineItem> = mutableListOf()
 
@@ -32,27 +33,22 @@ class MedicineCardAdapter(
                 title.text = medicineItem.title
                 recipe.text = medicineItem.recipe
                 time.text = medicineItem.time
-                val isChecked = medicineItem.finished
-                checkFinish.isChecked = isChecked
-                if (isChecked) {
-                    cardLayout.setBackgroundColor(root.context.getColor(R.color.medicine_passive))
-                } else {
-                    cardLayout.setBackgroundColor(root.context.getColor(R.color.medicine_active))
-                }
+                checkFinish.isChecked = medicineItem.finished
+                setFinishedState(medicineItem.finished, holder.binding)
 
                 checkFinish.setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) {
-                        cardLayout.setBackgroundColor(root.context.getColor(R.color.medicine_passive))
-                    } else {
-                        cardLayout.setBackgroundColor(root.context.getColor(R.color.medicine_active))
-                    }
+                    setFinishedState(isChecked, holder.binding)
                     medicineItem.finished = isChecked
                 }
             }
+            time.setOnClickListener {
+                if(!checkFinish.isChecked) onTimeClick(position)
+            }
         }
-        holder.binding.time.setOnClickListener {
-            medicineItem?.let(onClick)
-        }
+//        holder.binding.time.setOnClickListener {
+//            if(!holder.binding.checkFinish.isChecked)
+//                onTimeClick(position)
+//        }
     }
 
     fun setData(medicineList: List<MedicineItem>) {
@@ -72,6 +68,12 @@ class MedicineCardAdapter(
         }
     }
 
+    fun isFinished(index: Int): Boolean{
+        return if (index in 0 until medicineList.size) {
+            medicineList[index].finished
+        } else false
+    }
+
     fun checkedChangeItemAt(index: Int) {
         if (index in 0 until medicineList.size) {
             val isChecked = medicineList[index].finished
@@ -88,6 +90,14 @@ class MedicineCardAdapter(
         if (index in 0 until medicineList.size) {
             medicineList[index].time = time
             notifyDataSetChanged()
+        }
+    }
+
+    private fun setFinishedState(isFinished: Boolean, binding: MedicineViewBinding){
+        if (isFinished) {
+            binding.cardLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_passive))
+        } else {
+            binding.cardLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_active))
         }
     }
 
