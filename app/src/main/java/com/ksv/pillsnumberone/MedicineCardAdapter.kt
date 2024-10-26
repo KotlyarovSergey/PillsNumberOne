@@ -1,10 +1,8 @@
 package com.ksv.pillsnumberone
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.timepicker.MaterialTimePicker
 import com.ksv.pillsnumberone.databinding.MedicineViewBinding
 import com.ksv.pillsnumberone.entity.MedicineItem
 
@@ -45,10 +43,6 @@ class MedicineCardAdapter(
                 if(!checkFinish.isChecked) onTimeClick(position)
             }
         }
-//        holder.binding.time.setOnClickListener {
-//            if(!holder.binding.checkFinish.isChecked)
-//                onTimeClick(position)
-//        }
     }
 
     fun setData(medicineList: List<MedicineItem>) {
