@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.timepicker.MaterialTimePicker
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
 import com.ksv.pillsnumberone.entity.MedicineItem
 
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
+    private val medicineCardAdapter =
+        MedicineCardAdapter { medicineItem -> onTimeClick(medicineItem) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,33 +27,32 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val morningMedicineCardAdapter = MedicineCardAdapter()
         binding.recyclerMorning.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerMorning.adapter = morningMedicineCardAdapter
-        morningMedicineCardAdapter.setData(
+        binding.recyclerMorning.adapter = medicineCardAdapter
+        medicineCardAdapter.setData(
             listOf(AllPills.ERMITAL.medicine, AllPills.ALMAGEL.medicine, AllPills.BACKSET.medicine)
         )
-        morningMedicineCardAdapter.addItem(AllPills.SMECTA.medicine)
+        medicineCardAdapter.addItem(AllPills.SMECTA.medicine)
+        medicineCardAdapter.removeItemAt(0)
+//        medicineCardAdapter.checkedChangeItemAt(0)
 
+    }
 
-
-//        setMorningPills()
-//        binding.medicineOne.setTitle("Омепразол")
-//        binding.medicineOne.setReceipt("за 30 мин. до еды")
-//        binding.medicineOne.timeClicked = {
-//            val timePicker = MaterialTimePicker.Builder()
-//                .setTitleText("Время поедания")
-//                .build().apply {
-//                    addOnPositiveButtonClickListener {
-//                        val hour = this.hour
-//                        var min = this.minute.toString()
-//                        if (this.minute < 10) min = "0$min"
-//                        val time = "$hour:$min"
-//                        binding.medicineOne.setTime(time)
-//                    }
-//                }
-//            timePicker.show(parentFragmentManager, timePicker::class.java.name)
-//        }
+    private fun onTimeClick(medicine: MedicineItem) {
+        if(!medicine.finished) {
+            val timePicker = MaterialTimePicker.Builder()
+                .setTitleText("Время поедания")
+                .build().apply {
+                    addOnPositiveButtonClickListener {
+                        val hour = this.hour
+                        var min = this.minute.toString()
+                        if (this.minute < 10) min = "0$min"
+                        val timeToDisplay = "$hour:$min"
+                        medicineCardAdapter.setTime(medicine, timeToDisplay)
+                    }
+                }
+            timePicker.show(parentFragmentManager, timePicker::class.java.name)
+        }
     }
 
 //    private fun setMorningPills() {
@@ -83,7 +85,7 @@ class MainFragment : Fragment() {
 //    }
 
     companion object {
-        enum class AllPills (val medicine: MedicineItem) {
+        enum class AllPills(val medicine: MedicineItem) {
             SMECTA(MedicineItem("Смекта", "За час до еды")),
             MEBEVETIN(MedicineItem("Мебиверин", "За 20 мин. до еды")),
             OMEPRAZOL(MedicineItem("Омепразол", "За 30 мин. до еды")),
