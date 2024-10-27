@@ -1,6 +1,7 @@
 package com.ksv.pillsnumberone
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -46,6 +47,11 @@ class MainFragment : Fragment() {
         binding.recyclerEvening.adapter = eveningMedicineCardAdapter
         eveningMedicineCardAdapter.setData(eveningPills)
 
+        binding.eveningTitle.setOnClickListener {
+            val medicineList = eveningMedicineCardAdapter.getItems()
+            Log.d("ksvlog", medicineList.toString())
+//            binding.eveningTitle.text = medicineList.toString()
+        }
     }
 
     private fun onTimeClick(adapter: MedicineCardAdapter, position: Int) {
@@ -63,13 +69,15 @@ class MainFragment : Fragment() {
         timePicker.show(parentFragmentManager, timePicker::class.java.name)
     }
 
-    private fun morningTimeClick(position: Int){
+    private fun morningTimeClick(position: Int) {
         onTimeClick(morningMedicineCardAdapter, position)
     }
-    private fun noonTimeClick(position: Int){
+
+    private fun noonTimeClick(position: Int) {
         onTimeClick(noonMedicineCardAdapter, position)
     }
-    private fun eveningTimeClick(position: Int){
+
+    private fun eveningTimeClick(position: Int) {
         onTimeClick(eveningMedicineCardAdapter, position)
     }
 

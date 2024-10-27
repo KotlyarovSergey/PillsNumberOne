@@ -83,8 +83,13 @@ class MedicineCardAdapter(
     fun setTimeAt(index: Int, time: String) {
         if (index in 0 until medicineList.size) {
             medicineList[index].time = time
-            notifyDataSetChanged()
+//            notifyDataSetChanged()
+            notifyItemChanged(index)
         }
+    }
+
+    fun getItems(): List<MedicineItem>{
+        return medicineList
     }
 
     private fun setFinishedState(isFinished: Boolean, binding: MedicineViewBinding){

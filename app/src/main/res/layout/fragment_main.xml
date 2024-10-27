@@ -10,16 +10,16 @@
         android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#519DA6"
+        android:background="#EA80FC"
         android:orientation="vertical"
         android:padding="4dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Утро"
+            android:text="@string/morning_title"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="#264020"
             android:textSize="32sp"
             android:textStyle="bold" />
 
@@ -33,6 +33,7 @@
                 android:id="@+id/recycler_morning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#6FC9F0"
                 android:nestedScrollingEnabled="false"
                 tools:itemCount="5"
                 tools:listitem="@layout/medicine_view" />
@@ -42,12 +43,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Обед"
+            android:text="@string/noon_title"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="#264020"
             android:textSize="32sp"
             android:textStyle="bold" />
-
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -60,20 +60,21 @@
                 android:id="@+id/recycler_noon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#4B942C"
                 android:nestedScrollingEnabled="false"
                 tools:itemCount="3"
                 tools:listitem="@layout/medicine_view" />
         </androidx.cardview.widget.CardView>
 
         <TextView
+            android:id="@+id/evening_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Вечер"
+            android:text="@string/evening_title"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="#264020"
             android:textSize="32sp"
             android:textStyle="bold" />
-
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -84,7 +85,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_evening"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E45B31"
                 android:nestedScrollingEnabled="false"
                 tools:itemCount="5"
                 tools:listitem="@layout/medicine_view" />
