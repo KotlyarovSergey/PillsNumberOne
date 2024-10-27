@@ -35,9 +35,6 @@ class MainFragment : Fragment() {
         binding.recyclerMorning.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerMorning.adapter = morningMedicineCardAdapter
         morningMedicineCardAdapter.setData(morningPills)
-//        morningMedicineCardAdapter.addItem(AllPills.SMECTA.medicine)
-//        morningMedicineCardAdapter.removeItemAt(0)
-//        medicineCardAdapter.checkedChangeItemAt(0)
 
         binding.recyclerNoon.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerNoon.adapter = noonMedicineCardAdapter
@@ -48,9 +45,11 @@ class MainFragment : Fragment() {
         eveningMedicineCardAdapter.setData(eveningPills)
 
         binding.eveningTitle.setOnClickListener {
+//            morningMedicineCardAdapter.removeItemAt(morningMedicineCardAdapter.itemCount-1)
+//            morningMedicineCardAdapter.removeItemAt(2)
+//            morningMedicineCardAdapter.updateItemAt(2, MedicineItem("Бурда-мурда", "когда хочешь", true))
             val medicineList = eveningMedicineCardAdapter.getItems()
-            Log.d("ksvlog", medicineList.toString())
-//            binding.eveningTitle.text = medicineList.toString()
+//            Log.d("ksvlog", medicineList.toString())
         }
     }
 

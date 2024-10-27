@@ -47,18 +47,30 @@ class MedicineCardAdapter(
 
     fun setData(medicineList: List<MedicineItem>) {
         this.medicineList = medicineList.toMutableList()
-        notifyDataSetChanged()
+//        notifyDataSetChanged()
+//        notifyItemRangeChanged(0, medicineList.lastIndex)
+        notifyItemRangeInserted(0, medicineList.lastIndex)
     }
 
     fun addItem(medicineItem: MedicineItem) {
         medicineList.add(medicineItem)
-        notifyDataSetChanged()
+//        notifyDataSetChanged()
+//        notifyItemChanged(medicineList.lastIndex)
+        notifyItemInserted(medicineList.lastIndex)
     }
 
     fun removeItemAt(index: Int) {
         if (index in 0 until medicineList.size) {
             medicineList.removeAt(index)
-            notifyDataSetChanged()
+//            notifyDataSetChanged()
+            notifyItemRemoved(index)
+        }
+    }
+
+    fun updateItemAt(index: Int, medicine: MedicineItem){
+        if (index in 0 until medicineList.size) {
+            medicineList[index] = medicine
+            notifyItemChanged(index)
         }
     }
 
@@ -72,7 +84,8 @@ class MedicineCardAdapter(
         if (index in 0 until medicineList.size) {
             val isChecked = medicineList[index].finished
             medicineList[index].finished = !isChecked
-            notifyDataSetChanged()
+//            notifyDataSetChanged()
+            notifyItemChanged(index)
         }
     }
 
