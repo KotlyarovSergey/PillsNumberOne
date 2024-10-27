@@ -1,11 +1,17 @@
 package com.ksv.pillsnumberone
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
@@ -32,6 +38,21 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        addMenuProvider()
+        setRecyclerViews()
+
+        binding.eveningTitle.setOnClickListener {
+//            morningMedicineCardAdapter.removeItemAt(morningMedicineCardAdapter.itemCount-1)
+//            morningMedicineCardAdapter.removeItemAt(2)
+//            morningMedicineCardAdapter.updateItemAt(2, MedicineItem("Бурда-мурда", "когда хочешь", true))
+//            morningMedicineCardAdapter.resetAllItems()
+
+//            val medicineList = eveningMedicineCardAdapter.getItems()
+//            Log.d("ksvlog", medicineList.toString())
+        }
+    }
+
+    private fun setRecyclerViews() {
         binding.recyclerMorning.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerMorning.adapter = morningMedicineCardAdapter
         morningMedicineCardAdapter.setData(morningPills)
@@ -43,14 +64,40 @@ class MainFragment : Fragment() {
         binding.recyclerEvening.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerEvening.adapter = eveningMedicineCardAdapter
         eveningMedicineCardAdapter.setData(eveningPills)
+    }
 
-        binding.eveningTitle.setOnClickListener {
-//            morningMedicineCardAdapter.removeItemAt(morningMedicineCardAdapter.itemCount-1)
-//            morningMedicineCardAdapter.removeItemAt(2)
-//            morningMedicineCardAdapter.updateItemAt(2, MedicineItem("Бурда-мурда", "когда хочешь", true))
-            val medicineList = eveningMedicineCardAdapter.getItems()
-//            Log.d("ksvlog", medicineList.toString())
-        }
+    private fun addMenuProvider() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_main, menu)
+            }
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_clear -> {
+                        menuClearClick()
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun menuClearClick() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder
+            .setTitle(getString(R.string.alert_dialog_clear_title))
+            .setMessage(getString(R.string.alert_dialog_clear_message))
+            .setIcon(R.drawable.baseline_cached_red_24)
+            .setPositiveButton(getString(R.string.alert_dialog_clear_yes)) { _, _ ->
+                morningMedicineCardAdapter.resetAllItems()
+                noonMedicineCardAdapter.resetAllItems()
+                eveningMedicineCardAdapter.resetAllItems()
+            }
+            .setNegativeButton(getString(R.string.alert_dialog_clear_no)) { _, _ -> }
+        builder.create().show()
     }
 
     private fun onTimeClick(adapter: MedicineCardAdapter, position: Int) {
@@ -79,7 +126,6 @@ class MainFragment : Fragment() {
     private fun eveningTimeClick(position: Int) {
         onTimeClick(eveningMedicineCardAdapter, position)
     }
-
 
 
     companion object {

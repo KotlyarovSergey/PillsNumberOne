@@ -105,6 +105,14 @@ class MedicineCardAdapter(
         return medicineList
     }
 
+    fun resetAllItems(){
+        medicineList.forEachIndexed { index, medicine ->
+            medicine.time = "0:00"
+            medicine.finished = false
+            notifyItemChanged(index)
+        }
+    }
+
     private fun setFinishedState(isFinished: Boolean, binding: MedicineViewBinding){
         if (isFinished) {
             binding.cardLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_passive))

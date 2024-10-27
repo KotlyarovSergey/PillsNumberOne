@@ -4,4 +4,10 @@
     <string name="morning_title">Утро</string>
     <string name="noon_title">Обед</string>
     <string name="evening_title">Вечер</string>
+    <string name="clear_all_title">Очистить всё</string>
+    <string name="toolbar_title">Пилюли</string>
+    <string name="alert_dialog_clear_title">Сборос</string>
+    <string name="alert_dialog_clear_message">Сбросить все пилюльки</string>
+    <string name="alert_dialog_clear_yes">Да</string>
+    <string name="alert_dialog_clear_no">Нет</string>
 </resources>
