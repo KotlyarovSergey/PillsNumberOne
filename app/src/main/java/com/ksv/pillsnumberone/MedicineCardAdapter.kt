@@ -1,6 +1,7 @@
 package com.ksv.pillsnumberone
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ksv.pillsnumberone.databinding.MedicineViewBinding
@@ -10,7 +11,6 @@ class MedicineCardAdapter(
     private val onTimeClick: (Int) -> Unit
 ) : RecyclerView.Adapter<MedicineCardAdapter.MedicineViewHolder>() {
     private var medicineList: MutableList<MedicineItem> = mutableListOf()
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MedicineViewHolder {
         return MedicineViewHolder(
@@ -33,6 +33,8 @@ class MedicineCardAdapter(
                 time.text = medicineItem.time
                 checkFinish.isChecked = medicineItem.finished
                 setFinishedState(medicineItem.finished, holder.binding)
+                checkFinish.isClickable = !medicineItem.editable
+                moveImageButton.visibility = if(medicineItem.editable) View.VISIBLE else View.GONE
 
                 checkFinish.setOnCheckedChangeListener { _, isChecked ->
                     setFinishedState(isChecked, holder.binding)
@@ -40,41 +42,36 @@ class MedicineCardAdapter(
                 }
             }
             time.setOnClickListener {
-                if(!checkFinish.isChecked) onTimeClick(position)
+                if (!checkFinish.isChecked && medicineItem?.editable == false) onTimeClick(position)
             }
         }
     }
 
     fun setData(medicineList: List<MedicineItem>) {
         this.medicineList = medicineList.toMutableList()
-//        notifyDataSetChanged()
-//        notifyItemRangeChanged(0, medicineList.lastIndex)
         notifyItemRangeInserted(0, medicineList.lastIndex)
     }
 
     fun addItem(medicineItem: MedicineItem) {
         medicineList.add(medicineItem)
-//        notifyDataSetChanged()
-//        notifyItemChanged(medicineList.lastIndex)
         notifyItemInserted(medicineList.lastIndex)
     }
 
     fun removeItemAt(index: Int) {
         if (index in 0 until medicineList.size) {
             medicineList.removeAt(index)
-//            notifyDataSetChanged()
             notifyItemRemoved(index)
         }
     }
 
-    fun updateItemAt(index: Int, medicine: MedicineItem){
+    fun updateItemAt(index: Int, medicine: MedicineItem) {
         if (index in 0 until medicineList.size) {
             medicineList[index] = medicine
             notifyItemChanged(index)
         }
     }
 
-    fun isFinished(index: Int): Boolean{
+    fun isFinished(index: Int): Boolean {
         return if (index in 0 until medicineList.size) {
             medicineList[index].finished
         } else false
@@ -84,7 +81,6 @@ class MedicineCardAdapter(
         if (index in 0 until medicineList.size) {
             val isChecked = medicineList[index].finished
             medicineList[index].finished = !isChecked
-//            notifyDataSetChanged()
             notifyItemChanged(index)
         }
     }
@@ -96,16 +92,15 @@ class MedicineCardAdapter(
     fun setTimeAt(index: Int, time: String) {
         if (index in 0 until medicineList.size) {
             medicineList[index].time = time
-//            notifyDataSetChanged()
             notifyItemChanged(index)
         }
     }
 
-    fun getItems(): List<MedicineItem>{
+    fun getItems(): List<MedicineItem> {
         return medicineList
     }
 
-    fun resetAllItems(){
+    fun resetAllItems() {
         medicineList.forEachIndexed { index, medicine ->
             medicine.time = "0:00"
             medicine.finished = false
@@ -113,7 +108,32 @@ class MedicineCardAdapter(
         }
     }
 
-    private fun setFinishedState(isFinished: Boolean, binding: MedicineViewBinding){
+    fun moveUp(index: Int) {
+        if (index in 1 until medicineList.size) {
+            val tmp = medicineList[index - 1]
+            medicineList[index - 1] = medicineList[index]
+            medicineList[index] = tmp
+            notifyItemRangeChanged(index - 1, 2)
+        }
+    }
+
+    fun moveDown(index: Int) {
+        if (index in 0 until medicineList.size - 1) {
+            val tmp = medicineList[index]
+            medicineList[index] = medicineList[index + 1]
+            medicineList[index + 1] = tmp
+            notifyItemRangeChanged(index, 2)
+        }
+    }
+
+    fun switchEditMode(edit: Boolean) {
+        medicineList.forEach { item ->
+            item.editable = edit
+        }
+        notifyItemRangeChanged(0, medicineList.size)
+    }
+
+    private fun setFinishedState(isFinished: Boolean, binding: MedicineViewBinding) {
         if (isFinished) {
             binding.cardLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_passive))
         } else {

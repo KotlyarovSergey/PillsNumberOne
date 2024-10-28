@@ -26,6 +26,7 @@ class MainFragment : Fragment() {
         MedicineCardAdapter { position -> noonTimeClick(position) }
     private val eveningMedicineCardAdapter =
         MedicineCardAdapter { position -> eveningTimeClick(position) }
+    private var edition = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +47,7 @@ class MainFragment : Fragment() {
 //            morningMedicineCardAdapter.removeItemAt(2)
 //            morningMedicineCardAdapter.updateItemAt(2, MedicineItem("Бурда-мурда", "когда хочешь", true))
 //            morningMedicineCardAdapter.resetAllItems()
+//            eveningMedicineCardAdapter.moveDown(1)
 
 //            val medicineList = eveningMedicineCardAdapter.getItems()
 //            Log.d("ksvlog", medicineList.toString())
@@ -75,7 +77,16 @@ class MainFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menu_clear -> {
-                        menuClearClick()
+                        if(!edition) menuClearClick()
+                        true
+                    }
+                    R.id.menu_edit -> {
+                        edition = !edition
+                        if(edition) menuItem.setIcon(R.drawable.baseline_check_box_24)
+                        else menuItem.setIcon(R.drawable.baseline_edit_off)
+                        morningMedicineCardAdapter.switchEditMode(edition)
+                        noonMedicineCardAdapter.switchEditMode(edition)
+                        eveningMedicineCardAdapter.switchEditMode(edition)
                         true
                     }
 
