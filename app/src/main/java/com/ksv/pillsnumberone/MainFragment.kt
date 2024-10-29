@@ -9,6 +9,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
@@ -21,11 +23,11 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private val morningMedicineCardAdapter =
-        MedicineCardAdapter { position -> morningTimeClick(position) }
+        MedicineCardAdapter({ morningTimeClick(it) }, { pos, view -> morningMoreClick(pos, view) })
     private val noonMedicineCardAdapter =
-        MedicineCardAdapter { position -> noonTimeClick(position) }
+        MedicineCardAdapter({ noonTimeClick(it) }, { pos, view -> noonMoreClick(pos, view) })
     private val eveningMedicineCardAdapter =
-        MedicineCardAdapter { position -> eveningTimeClick(position) }
+        MedicineCardAdapter({ eveningTimeClick(it) }, { pos, view -> eveningMoreClick(pos, view) })
     private var edition = false
 
     override fun onCreateView(
@@ -48,6 +50,9 @@ class MainFragment : Fragment() {
 //            morningMedicineCardAdapter.updateItemAt(2, MedicineItem("Бурда-мурда", "когда хочешь", true))
 //            morningMedicineCardAdapter.resetAllItems()
 //            eveningMedicineCardAdapter.moveDown(1)
+//            morningMedicineCardAdapter.notifySetChange()
+
+
 
 //            val medicineList = eveningMedicineCardAdapter.getItems()
 //            Log.d("ksvlog", medicineList.toString())
@@ -74,19 +79,21 @@ class MainFragment : Fragment() {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_main, menu)
             }
+
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menu_clear -> {
-                        if(!edition) menuClearClick()
+                        if (!edition) menuClearClick()
                         true
                     }
+
                     R.id.menu_edit -> {
                         edition = !edition
-                        if(edition) menuItem.setIcon(R.drawable.baseline_check_box_24)
+                        if (edition) menuItem.setIcon(R.drawable.baseline_check_box_24)
                         else menuItem.setIcon(R.drawable.baseline_edit_off)
-                        morningMedicineCardAdapter.switchEditMode(edition)
-                        noonMedicineCardAdapter.switchEditMode(edition)
-                        eveningMedicineCardAdapter.switchEditMode(edition)
+//                        morningMedicineCardAdapter.switchEditMode(edition)
+//                        noonMedicineCardAdapter.switchEditMode(edition)
+//                        eveningMedicineCardAdapter.switchEditMode(edition)
                         true
                     }
 
@@ -136,6 +143,37 @@ class MainFragment : Fragment() {
 
     private fun eveningTimeClick(position: Int) {
         onTimeClick(eveningMedicineCardAdapter, position)
+    }
+
+    private fun onMoreClick(adapter: MedicineCardAdapter, position: Int, view: View) {
+        val popupMenu = PopupMenu(requireContext(), view)
+        popupMenu.inflate(R.menu.popup_menu)
+        popupMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.popup_move_up -> adapter.moveUp(position)
+                R.id.popup_move_down -> adapter.moveDown(position)
+                R.id.popup_change -> {
+                    // TODO
+                }
+                R.id.popup_remove -> {
+                    adapter.removeItemAt(position)
+                }
+            }
+            true
+        }
+        popupMenu.show()
+    }
+
+    private fun morningMoreClick(position: Int, view: View) {
+        onMoreClick(morningMedicineCardAdapter, position, view)
+    }
+
+    private fun noonMoreClick(position: Int, view: View) {
+        onMoreClick(noonMedicineCardAdapter, position, view)
+    }
+
+    private fun eveningMoreClick(position: Int, view: View) {
+        onMoreClick(eveningMedicineCardAdapter, position, view)
     }
 
 

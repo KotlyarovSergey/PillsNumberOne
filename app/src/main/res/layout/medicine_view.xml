@@ -85,15 +85,16 @@
                 android:layout_height="match_parent">
 
                 <ImageButton
-                    android:id="@+id/move_image_button"
+                    android:id="@+id/more_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="8dp"
                     android:background="@color/medicine_active"
+                    android:contentDescription="@string/more"
                     tools:visibility="visible"
-                    android:visibility="gone"
-                    android:src="@drawable/baseline_import_export_24" />
+                    android:visibility="visible"
+                    android:src="@drawable/baseline_more_vert_24" />
             </FrameLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
