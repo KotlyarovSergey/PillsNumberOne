@@ -23,5 +23,12 @@
     <string name="alert_dialog_clear_yes">Да</string>
     <string name="alert_dialog_clear_no">Нет</string>
 
+    <!--    EditFragment -->
+    <string name="medicine_name">Название препарата:</string>
+    <string name="medicine_recipe">Способ приема:</string>
+    <string name="button_ok">OK</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

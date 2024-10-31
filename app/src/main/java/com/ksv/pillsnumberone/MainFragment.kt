@@ -13,7 +13,10 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
@@ -46,6 +49,7 @@ class MainFragment : Fragment() {
 
         binding.eveningTitle.setOnClickListener {
 //            morningMedicineCardAdapter.notifySetChange()
+            findNavController().navigate(R.id.action_mainFragment_to_editFragment)
 
 //            val medicineList = eveningMedicineCardAdapter.getItems()
 //            Log.d("ksvlog", medicineList.toString())
@@ -146,7 +150,7 @@ class MainFragment : Fragment() {
                 R.id.popup_move_up -> adapter.moveUp(position)
                 R.id.popup_move_down -> adapter.moveDown(position)
                 R.id.popup_change -> {
-                    // TODO
+                    findNavController().navigate(R.id.action_mainFragment_to_editFragment)
                 }
                 R.id.popup_remove -> {
                     adapter.removeItemAt(position)
