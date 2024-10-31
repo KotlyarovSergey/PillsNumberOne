@@ -45,14 +45,7 @@ class MainFragment : Fragment() {
         setRecyclerViews()
 
         binding.eveningTitle.setOnClickListener {
-//            morningMedicineCardAdapter.removeItemAt(morningMedicineCardAdapter.itemCount-1)
-//            morningMedicineCardAdapter.removeItemAt(2)
-//            morningMedicineCardAdapter.updateItemAt(2, MedicineItem("Бурда-мурда", "когда хочешь", true))
-//            morningMedicineCardAdapter.resetAllItems()
-//            eveningMedicineCardAdapter.moveDown(1)
 //            morningMedicineCardAdapter.notifySetChange()
-
-
 
 //            val medicineList = eveningMedicineCardAdapter.getItems()
 //            Log.d("ksvlog", medicineList.toString())
@@ -89,11 +82,11 @@ class MainFragment : Fragment() {
 
                     R.id.menu_edit -> {
                         edition = !edition
-                        if (edition) menuItem.setIcon(R.drawable.baseline_check_box_24)
+                        if (edition) menuItem.setIcon(R.drawable.baseline_check_24)
                         else menuItem.setIcon(R.drawable.baseline_edit_off)
-//                        morningMedicineCardAdapter.switchEditMode(edition)
-//                        noonMedicineCardAdapter.switchEditMode(edition)
-//                        eveningMedicineCardAdapter.switchEditMode(edition)
+                        morningMedicineCardAdapter.switchEditMode(edition)
+                        noonMedicineCardAdapter.switchEditMode(edition)
+                        eveningMedicineCardAdapter.switchEditMode(edition)
                         true
                     }
 
@@ -120,7 +113,7 @@ class MainFragment : Fragment() {
 
     private fun onTimeClick(adapter: MedicineCardAdapter, position: Int) {
         val timePicker = MaterialTimePicker.Builder()
-            .setTitleText("Время поедания")
+            .setTitleText(requireActivity().getString(R.string.time_picker_title))
             .build().apply {
                 addOnPositiveButtonClickListener {
                     val hour = this.hour
@@ -178,18 +171,6 @@ class MainFragment : Fragment() {
 
 
     companion object {
-        enum class AllPills(val medicine: MedicineItem) {
-            SMECTA(MedicineItem("Смекта", "За час до еды")),
-            MEBEVETIN(MedicineItem("Мебиверин", "За 20 мин. до еды")),
-            OMEPRAZOL(MedicineItem("Омепразол", "За 30 мин. до еды")),
-            BACKSET(MedicineItem("Бак-Сет", "Во время еды")),
-            ERMITAL(MedicineItem("Эрмиталь", "Во время еды")),
-            LEVOFLOCSACIN(MedicineItem("Левофлоксацин", "После еды")),
-            ALMAGEL(MedicineItem("Алмагель", "Через час после еды")),
-            GASTROSTAT(MedicineItem("Гастростат", "Перед едой")),
-            URSODESO(MedicineItem("Урсодезоксихол", "Перед сном"))
-        }
-
         private val morningPills = listOf(
             MedicineItem("Омепразол", "За 30 мин. до еды"),
             MedicineItem("Мебиверин", "За 20 мин. до еды"),

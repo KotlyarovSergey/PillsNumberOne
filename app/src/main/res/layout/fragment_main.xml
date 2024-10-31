@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:background="#6FC9F0"
                 android:nestedScrollingEnabled="false"
+                android:paddingVertical="2dp"
                 tools:itemCount="5"
                 tools:listitem="@layout/medicine_view" />
         </androidx.cardview.widget.CardView>
@@ -62,6 +63,7 @@
                 android:layout_height="wrap_content"
                 android:background="#4B942C"
                 android:nestedScrollingEnabled="false"
+                android:paddingVertical="2dp"
                 tools:itemCount="3"
                 tools:listitem="@layout/medicine_view" />
         </androidx.cardview.widget.CardView>
@@ -88,6 +90,7 @@
                 android:layout_height="wrap_content"
                 android:background="#E45B31"
                 android:nestedScrollingEnabled="false"
+                android:paddingVertical="2dp"
                 tools:itemCount="5"
                 tools:listitem="@layout/medicine_view" />
         </androidx.cardview.widget.CardView>

@@ -1,15 +1,27 @@
 <resources>
-    <string name="app_name">PillsNumberOne</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Пилюльки</string>
+
+    <!--    MainFragment-->
     <string name="morning_title">Утро</string>
     <string name="noon_title">Обед</string>
     <string name="evening_title">Вечер</string>
+
+    <!--    MedicineView-->
+    <string name="default_time">0:00</string>
+    <string name="more_button_description">more...</string>
+
+    <!--    Menu-->
     <string name="clear_all_title">Очистить всё</string>
     <string name="edit_title">Редактировать</string>
-    <string name="toolbar_title">Пилюли</string>
+
+    <!--    TimePicker-->
+    <string name="time_picker_title">Время приёма</string>
+
+    <!--    Alert Dialog-->
     <string name="alert_dialog_clear_title">Сборос</string>
     <string name="alert_dialog_clear_message">Сбросить все пилюльки</string>
     <string name="alert_dialog_clear_yes">Да</string>
     <string name="alert_dialog_clear_no">Нет</string>
-    <string name="more">more...</string>
+
+
 </resources>
