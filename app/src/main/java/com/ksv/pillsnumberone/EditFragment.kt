@@ -23,7 +23,7 @@ class EditFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.buttonOk.setOnClickListener{
 //            findNavController().navigate(R.id.action_editFragment_to_mainFragment)
-            findNavController().navigate(R.id.action_editFragment_to_blankFragment)
+            findNavController().navigate(R.id.action_editFragment_to_mainFragment)
         }
     }
 
