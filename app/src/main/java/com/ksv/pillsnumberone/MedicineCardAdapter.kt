@@ -1,11 +1,8 @@
 package com.ksv.pillsnumberone
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.ksv.pillsnumberone.databinding.MedicineViewBinding
 import com.ksv.pillsnumberone.entity.MedicineItem
@@ -13,7 +10,8 @@ import java.util.Collections
 
 class MedicineCardAdapter(
     private val onTimeClick: (Int) -> Unit,
-    private val onMoreClick: (Int, View) -> Unit
+    private val onMoreClick: (Int, View) -> Unit,
+    private val onDataChanged: () -> Unit
 ) : RecyclerView.Adapter<MedicineCardAdapter.MedicineViewHolder>() {
     private var medicineList: MutableList<MedicineItem> = mutableListOf()
 
@@ -29,6 +27,7 @@ class MedicineCardAdapter(
         holder.binding.checkFinish.setOnCheckedChangeListener { _, isChecked ->
             setFinishedState(isChecked, holder.binding)
             medicineList[holder.adapterPosition].finished = isChecked
+            onDataChanged
         }
         holder.binding.time.setOnClickListener {
             val isChecked = holder.binding.checkFinish.isChecked
@@ -64,39 +63,44 @@ class MedicineCardAdapter(
 
     fun setData(medicineList: List<MedicineItem>) {
         this.medicineList = medicineList.toMutableList()
+        onDataChanged
         notifyItemRangeInserted(0, medicineList.size)
     }
 
     fun addItem(medicineItem: MedicineItem) {
         medicineList.add(medicineItem)
+        onDataChanged
         notifyItemInserted(medicineList.lastIndex)
     }
 
     fun removeItemAt(index: Int) {
-        if (index in 0 until medicineList.size) {
+        if (index in 0 .. medicineList.lastIndex) {
             medicineList.removeAt(index)
+            onDataChanged
             notifyItemRemoved(index)
             notifyItemRangeChanged(index, itemCount - index)
         }
     }
 
     fun updateItemAt(index: Int, medicine: MedicineItem) {
-        if (index in 0 until medicineList.size) {
+        if (index in 0 .. medicineList.lastIndex) {
             medicineList[index] = medicine
+            onDataChanged
             notifyItemChanged(index)
         }
     }
 
     fun isFinished(index: Int): Boolean {
-        return if (index in 0 until medicineList.size) {
+        return if (index in 0 .. medicineList.lastIndex) {
             medicineList[index].finished
         } else false
     }
 
     fun finishedChangeItemAt(index: Int) {
-        if (index in 0 until medicineList.size) {
+        if (index in 0 .. medicineList.lastIndex) {
             val isChecked = medicineList[index].finished
             medicineList[index].finished = !isChecked
+            onDataChanged
             notifyItemChanged(index)
         }
     }
@@ -108,6 +112,7 @@ class MedicineCardAdapter(
     fun setTimeAt(index: Int, time: String) {
         if (index in 0 until medicineList.size) {
             medicineList[index].time = time
+            onDataChanged
             notifyItemChanged(index)
         }
     }
@@ -121,12 +126,14 @@ class MedicineCardAdapter(
             medicine.time = "0:00"
             medicine.finished = false
         }
+        onDataChanged
         notifyItemRangeChanged(0, medicineList.size)
     }
 
     fun moveUp(index: Int) {
         if (index in 1 until medicineList.size) {
             Collections.swap(medicineList, index - 1, index)
+            onDataChanged
             notifyItemMoved(index, index - 1)
         }
     }
@@ -134,14 +141,16 @@ class MedicineCardAdapter(
     fun moveDown(index: Int) {
         if (index in 0 until medicineList.size - 1) {
             Collections.swap(medicineList, index, index + 1)
+            onDataChanged
             notifyItemMoved(index, index + 1)
         }
     }
 
-    fun switchEditMode(edit: Boolean) {
+    fun switchEditModeForAll(edit: Boolean) {
         medicineList.forEach { item ->
             item.editable = edit
         }
+        onDataChanged
         notifyItemRangeChanged(0, medicineList.size)
     }
 

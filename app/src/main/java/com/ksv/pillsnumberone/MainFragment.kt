@@ -10,11 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
-import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,12 +23,20 @@ import com.ksv.pillsnumberone.entity.MedicineItem
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: DataViewModel by activityViewModels()
     private val morningMedicineCardAdapter =
-        MedicineCardAdapter({ morningTimeClick(it) }, { pos, view -> morningMoreClick(pos, view) })
+        MedicineCardAdapter({ morningTimeClick(it) }, { pos, view -> morningMoreClick(pos, view) },
+            { morningDataChange() })
     private val noonMedicineCardAdapter =
-        MedicineCardAdapter({ noonTimeClick(it) }, { pos, view -> noonMoreClick(pos, view) })
+        MedicineCardAdapter(
+            { noonTimeClick(it) },
+            { pos, view -> noonMoreClick(pos, view) },
+            { noonDataChange() })
     private val eveningMedicineCardAdapter =
-        MedicineCardAdapter({ eveningTimeClick(it) }, { pos, view -> eveningMoreClick(pos, view) })
+        MedicineCardAdapter(
+            { eveningTimeClick(it) },
+            { pos, view -> eveningMoreClick(pos, view) },
+            { eveningDataChange() })
     private var edition = false
 
     override fun onCreateView(
@@ -59,15 +65,18 @@ class MainFragment : Fragment() {
     private fun setRecyclerViews() {
         binding.recyclerMorning.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerMorning.adapter = morningMedicineCardAdapter
-        morningMedicineCardAdapter.setData(morningPills)
+        //morningMedicineCardAdapter.setData(morningPills)
+        morningMedicineCardAdapter.setData(viewModel.getMorningList())
 
         binding.recyclerNoon.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerNoon.adapter = noonMedicineCardAdapter
-        noonMedicineCardAdapter.setData(noonPills)
+//        noonMedicineCardAdapter.setData(noonPills)
+        noonMedicineCardAdapter.setData(viewModel.getNoonList())
 
         binding.recyclerEvening.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerEvening.adapter = eveningMedicineCardAdapter
-        eveningMedicineCardAdapter.setData(eveningPills)
+//        eveningMedicineCardAdapter.setData(eveningPills)
+        eveningMedicineCardAdapter.setData(viewModel.getEveningList())
     }
 
     private fun addMenuProvider() {
@@ -88,9 +97,9 @@ class MainFragment : Fragment() {
                         edition = !edition
                         if (edition) menuItem.setIcon(R.drawable.baseline_check_24)
                         else menuItem.setIcon(R.drawable.baseline_edit_off)
-                        morningMedicineCardAdapter.switchEditMode(edition)
-                        noonMedicineCardAdapter.switchEditMode(edition)
-                        eveningMedicineCardAdapter.switchEditMode(edition)
+                        morningMedicineCardAdapter.switchEditModeForAll(edition)
+                        noonMedicineCardAdapter.switchEditModeForAll(edition)
+                        eveningMedicineCardAdapter.switchEditModeForAll(edition)
                         true
                     }
 
@@ -152,6 +161,7 @@ class MainFragment : Fragment() {
                 R.id.popup_change -> {
                     findNavController().navigate(R.id.action_mainFragment_to_editFragment)
                 }
+
                 R.id.popup_remove -> {
                     adapter.removeItemAt(position)
                 }
@@ -173,26 +183,17 @@ class MainFragment : Fragment() {
         onMoreClick(eveningMedicineCardAdapter, position, view)
     }
 
-
-    companion object {
-        private val morningPills = listOf(
-            MedicineItem("Омепразол", "За 30 мин. до еды"),
-            MedicineItem("Мебиверин", "За 20 мин. до еды"),
-            MedicineItem("Гастростат", "Перед едой"),
-            MedicineItem("Бак-Сет", "Во время еды"),
-            MedicineItem("Эрмиталь", "Во время еды")
-        )
-        private val noonPills = listOf(
-            MedicineItem("Гастростат", "Перед едой"),
-            MedicineItem("Эрмиталь", "Во время еды")
-        )
-        private val eveningPills = listOf(
-            MedicineItem("Омепразол", "За 30 мин. до еды"),
-            MedicineItem("Мебиверин", "За 20 мин. до еды"),
-            MedicineItem("Гастростат", "Перед едой"),
-            MedicineItem("Бак-Сет", "Во время еды"),
-            MedicineItem("Эрмиталь", "Во время еды"),
-            MedicineItem("Урсодезоксихол", "Перед сном")
-        )
+    private fun morningDataChange() {
+        viewModel.saveMorningList(morningMedicineCardAdapter.getAllItems())
     }
+
+    private fun noonDataChange() {
+        viewModel.saveNoonList(noonMedicineCardAdapter.getAllItems())
+    }
+
+    private fun eveningDataChange() {
+        viewModel.saveEveningList(eveningMedicineCardAdapter.getAllItems())
+    }
+
+
 }

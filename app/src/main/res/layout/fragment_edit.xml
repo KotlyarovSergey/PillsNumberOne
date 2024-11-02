@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
+    tools:context=".EditFragment"
+    >
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
     android:background="@color/medicine_active"
     android:orientation="vertical"
-    android:layout_margin="16dp"
     android:padding="8dp"
-    tools:context=".EditFragment">
+    >
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/medicine_name"
         android:textSize="24sp" />
 
@@ -39,6 +45,7 @@
         android:id="@+id/button_ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#377873"
         android:layout_gravity="center"
         android:layout_marginTop="26dp"
         android:paddingHorizontal="50dp"
@@ -46,3 +53,4 @@
 
 
 </LinearLayout>
+</FrameLayout>
