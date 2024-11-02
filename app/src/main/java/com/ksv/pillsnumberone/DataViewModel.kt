@@ -10,6 +10,8 @@ class DataViewModel: ViewModel() {
     private var _morningMedicineList: List<MedicineItem> = emptyList()
     private var _noonMedicineList: List<MedicineItem> = emptyList()
     private var _eveningMedicineList: List<MedicineItem> = emptyList()
+    private var _isEditMode = false
+    val isEditMode get() = _isEditMode
 
     init {
         Log.d("ksvlog", "VM init")
@@ -39,4 +41,7 @@ class DataViewModel: ViewModel() {
     fun getNoonList(): List<MedicineItem> = _noonMedicineList
     fun getEveningList(): List<MedicineItem> = _eveningMedicineList
 
+    fun setEditMode(isEdit: Boolean) {
+        _isEditMode = isEdit
+    }
 }

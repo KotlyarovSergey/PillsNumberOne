@@ -18,7 +18,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
-import com.ksv.pillsnumberone.entity.MedicineItem
 
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
@@ -37,12 +36,13 @@ class MainFragment : Fragment() {
             { eveningTimeClick(it) },
             { pos, view -> eveningMoreClick(pos, view) },
             { eveningDataChange() })
-    private var edition = false
+    //private var edition = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        //edition = viewModel.isEditMode
         _binding = FragmentMainBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -84,22 +84,28 @@ class MainFragment : Fragment() {
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_main, menu)
+                menu.findItem(R.id.menu_edit).setIcon(
+                    if(viewModel.isEditMode) R.drawable.baseline_check_24
+                    else R.drawable.baseline_edit_off
+                )
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menu_clear -> {
-                        if (!edition) menuClearClick()
+                        if (!viewModel.isEditMode) menuClearClick()
                         true
                     }
 
                     R.id.menu_edit -> {
-                        edition = !edition
-                        if (edition) menuItem.setIcon(R.drawable.baseline_check_24)
+//                        edition = !edition
+                        //viewModel.isEditMode = edition
+//                        morningMedicineCardAdapter.switchEditModeForAll(edition)
+//                        noonMedicineCardAdapter.switchEditModeForAll(edition)
+//                        eveningMedicineCardAdapter.switchEditModeForAll(edition)
+                        switchEditMode()
+                        if (viewModel.isEditMode) menuItem.setIcon(R.drawable.baseline_check_24)
                         else menuItem.setIcon(R.drawable.baseline_edit_off)
-                        morningMedicineCardAdapter.switchEditModeForAll(edition)
-                        noonMedicineCardAdapter.switchEditModeForAll(edition)
-                        eveningMedicineCardAdapter.switchEditModeForAll(edition)
                         true
                     }
 
@@ -159,6 +165,7 @@ class MainFragment : Fragment() {
                 R.id.popup_move_up -> adapter.moveUp(position)
                 R.id.popup_move_down -> adapter.moveDown(position)
                 R.id.popup_change -> {
+                    switchEditMode()
                     findNavController().navigate(R.id.action_mainFragment_to_editFragment)
                 }
 
@@ -169,6 +176,14 @@ class MainFragment : Fragment() {
             true
         }
         popupMenu.show()
+    }
+
+    private fun switchEditMode(){
+//        edition = !edition
+        viewModel.setEditMode(!viewModel.isEditMode)
+        morningMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
+        noonMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
+        eveningMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
     }
 
     private fun morningMoreClick(position: Int, view: View) {

@@ -1,56 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".EditFragment"
-    >
-
-<LinearLayout
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical"
-    android:background="@color/medicine_active"
+    android:layout_gravity="center_vertical"
+    android:background="@color/edit_background"
     android:orientation="vertical"
     android:padding="8dp"
-    >
+    tools:context=".EditFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/medicine_name"
-        android:textSize="24sp" />
+        android:layout_marginVertical="28dp"
+        android:paddingHorizontal="24dp"
+        android:text="@string/edit_title_new"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/medicine_active"
+        android:textSize="36sp" />
 
-    <EditText
-        android:id="@+id/medicine_name"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="8dp" />
+        app:cardCornerRadius="12dp">
 
-    <TextView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/medicine_active"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/medicine_name"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/medicine_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
-        android:text="@string/medicine_recipe"
-        android:textSize="24sp" />
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="12dp">
 
-    <EditText
-        android:id="@+id/medicine_recipe"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="8dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/medicine_active"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/medicine_recipe"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/medicine_recipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/button_ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#377873"
         android:layout_gravity="center"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#EF6C00"
         android:paddingHorizontal="50dp"
-        android:text="@string/button_ok"/>
-
-
+        android:text="@string/button_ok"
+        android:textSize="24sp" />
 </LinearLayout>
-</FrameLayout>
