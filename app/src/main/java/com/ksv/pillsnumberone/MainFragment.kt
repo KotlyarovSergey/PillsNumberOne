@@ -1,7 +1,6 @@
 package com.ksv.pillsnumberone
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -57,6 +56,7 @@ class MainFragment : Fragment() {
 
         binding.eveningTitle.setOnClickListener {
 //            morningMedicineCardAdapter.notifySetChange()
+            viewModel.setAddItemMode()
             findNavController().navigate(R.id.action_mainFragment_to_editFragment)
 
 //            val medicineList = eveningMedicineCardAdapter.getItems()
@@ -170,20 +170,29 @@ class MainFragment : Fragment() {
                     switchEditMode()
                     val medicine = adapter.getItemAt(position)
                     if (medicine != null) {
-                        val timess = when(adapter){
+//                        val timess = when(adapter){
+//                            morningMedicineCardAdapter -> Timess.MORNING
+//                            noonMedicineCardAdapter -> Timess.NOON
+//                            else -> Timess.EVENING
+//                        }
+//                        val action = MainFragmentDirections
+//                            .actionMainFragmentToEditFragment(
+//                                title = medicine.title, recipe = medicine.recipe, times = timess, newMedicine = false
+//                            )
+//                        findNavController().navigate(action)
+
+                        val time = when(adapter){
                             morningMedicineCardAdapter -> Timess.MORNING
                             noonMedicineCardAdapter -> Timess.NOON
                             else -> Timess.EVENING
                         }
-                        val action = MainFragmentDirections
-                            .actionMainFragmentToEditFragment(
-                                title = medicine.title, recipe = medicine.recipe, times = timess, newMedicine = false
-                            )
-                        findNavController().navigate(action)
+                        viewModel.setEditItemMode(position, time)
+
+
+                        findNavController().navigate(R.id.action_mainFragment_to_editFragment)
                     }
 
 
-//                    findNavController().navigate(R.id.action_mainFragment_to_editFragment)
                 }
 
                 R.id.popup_remove -> {

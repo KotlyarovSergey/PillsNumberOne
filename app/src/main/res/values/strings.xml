@@ -29,6 +29,7 @@
     <string name="medicine_name">Название препарата:</string>
     <string name="medicine_recipe">Способ приема:</string>
     <string name="button_ok">OK</string>
+    <string name="need_check_message">Выберете период веремени</string>
 
 
 

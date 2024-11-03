@@ -5,15 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.ksv.pillsnumberone.data.State
 import com.ksv.pillsnumberone.data.Timess
 import com.ksv.pillsnumberone.databinding.FragmentEditBinding
-import kotlin.math.E
+import com.ksv.pillsnumberone.entity.MedicineItem
 
 class EditFragment : Fragment() {
-    private var _binding : FragmentEditBinding? = null
+    private var _binding: FragmentEditBinding? = null
     private val binding get() = _binding!!
-    private var newMedicine = true
+    private val dataViewModel: DataViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -24,27 +27,39 @@ class EditFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val title = EditFragmentArgs.fromBundle(requireArguments()).title
-        binding.medicineName.setText(title)
 
-        val recipe = EditFragmentArgs.fromBundle(requireArguments()).recipe
-        binding.medicineRecipe.setText(recipe)
-
-        newMedicine = EditFragmentArgs.fromBundle(requireArguments()).newMedicine
-        binding.timesCard.visibility = if(newMedicine) View.VISIBLE else View.GONE
-
-        if(!newMedicine) {
-            binding.fragmentTitle.text = requireContext().getString(R.string.edit_title_edit)
-            val timess = EditFragmentArgs.fromBundle(requireArguments()).times
-            when (timess) {
-                Timess.MORNING -> binding.checkMorning.isChecked = true
-                Timess.NOON -> binding.checkNoon.isChecked = true
-                Timess.EVENING -> binding.checkEvening.isChecked = true
-            }
+        when (dataViewModel.state) {
+            State.AddNewItem -> {}
+            is State.EditItem -> fillEdit()
+            State.Normal -> {}
         }
 
-        binding.buttonOk.setOnClickListener{
-            findNavController().navigate(R.id.action_editFragment_to_mainFragment)
+        binding.buttonOk.setOnClickListener {
+            val title = binding.medicineName.text.toString()
+            val recipe = binding.medicineRecipe.text.toString()
+            val medicine = MedicineItem(title, recipe)
+
+            when (dataViewModel.state) {
+                State.AddNewItem -> {
+                    if (checkTimes()) {
+                        if (binding.checkMorning.isChecked)
+                            dataViewModel.addItem(medicine, Timess.MORNING)
+                        if (binding.checkNoon.isChecked)
+                            dataViewModel.addItem(medicine, Timess.NOON)
+                        if (binding.checkEvening.isChecked)
+                            dataViewModel.addItem(medicine, Timess.EVENING)
+                        findNavController().navigate(R.id.action_editFragment_to_mainFragment)
+                    }
+                }
+
+                is State.EditItem -> {
+                    dataViewModel.editItem(medicine)
+                    findNavController().navigate(R.id.action_editFragment_to_mainFragment)
+                }
+
+                State.Normal -> {}
+            }
+
         }
     }
 
@@ -52,5 +67,25 @@ class EditFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun fillEdit() {
+        binding.timesCard.visibility = View.GONE
+        binding.medicineName.setText(dataViewModel.editableMedicine.title)
+        binding.medicineRecipe.setText(dataViewModel.editableMedicine.recipe)
+    }
+
+    private fun checkTimes(): Boolean {
+        return if (!binding.checkMorning.isChecked
+            && !binding.checkNoon.isChecked
+            && !binding.checkEvening.isChecked) {
+            Toast.makeText(
+                requireContext(),
+                getText(R.string.need_check_message),
+                Toast.LENGTH_SHORT
+            ).show()
+            false
+        } else true
+    }
+
 
 }

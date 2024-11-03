@@ -10,9 +10,9 @@ class Repository {
 
     fun load(): Map<String, List<MedicineItem>>{
         return mapOf(
-            TIMES.MORNING to morningPills,
-            TIMES.NOON to noonPills,
-            TIMES.EVENING to eveningPills)
+            Times.MORNING to morningPills,
+            Times.NOON to noonPills,
+            Times.EVENING to eveningPills)
     }
 
     companion object{
