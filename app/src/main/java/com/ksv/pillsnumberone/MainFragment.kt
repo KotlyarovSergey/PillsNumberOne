@@ -1,6 +1,7 @@
 package com.ksv.pillsnumberone
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -17,6 +18,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.timepicker.MaterialTimePicker
+import com.ksv.pillsnumberone.data.Timess
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -85,7 +87,7 @@ class MainFragment : Fragment() {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_main, menu)
                 menu.findItem(R.id.menu_edit).setIcon(
-                    if(viewModel.isEditMode) R.drawable.baseline_check_24
+                    if (viewModel.isEditMode) R.drawable.baseline_check_24
                     else R.drawable.baseline_edit_off
                 )
             }
@@ -166,7 +168,22 @@ class MainFragment : Fragment() {
                 R.id.popup_move_down -> adapter.moveDown(position)
                 R.id.popup_change -> {
                     switchEditMode()
-                    findNavController().navigate(R.id.action_mainFragment_to_editFragment)
+                    val medicine = adapter.getItemAt(position)
+                    if (medicine != null) {
+                        val timess = when(adapter){
+                            morningMedicineCardAdapter -> Timess.MORNING
+                            noonMedicineCardAdapter -> Timess.NOON
+                            else -> Timess.EVENING
+                        }
+                        val action = MainFragmentDirections
+                            .actionMainFragmentToEditFragment(
+                                title = medicine.title, recipe = medicine.recipe, times = timess, newMedicine = false
+                            )
+                        findNavController().navigate(action)
+                    }
+
+
+//                    findNavController().navigate(R.id.action_mainFragment_to_editFragment)
                 }
 
                 R.id.popup_remove -> {
@@ -178,7 +195,7 @@ class MainFragment : Fragment() {
         popupMenu.show()
     }
 
-    private fun switchEditMode(){
+    private fun switchEditMode() {
 //        edition = !edition
         viewModel.setEditMode(!viewModel.isEditMode)
         morningMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)

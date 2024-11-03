@@ -1,5 +1,8 @@
 package com.ksv.pillsnumberone.entity
 
+import android.os.Parcelable
+
+
 data class MedicineItem(
     val title: String,
     val recipe: String,

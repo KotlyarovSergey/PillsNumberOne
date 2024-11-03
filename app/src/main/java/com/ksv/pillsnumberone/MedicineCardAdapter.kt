@@ -67,6 +67,12 @@ class MedicineCardAdapter(
         notifyItemRangeInserted(0, medicineList.size)
     }
 
+    fun getItemAt(index: Int): MedicineItem? {
+        return if (index in 0 .. medicineList.lastIndex)
+            medicineList.get(index)
+        else null
+    }
+
     fun addItem(medicineItem: MedicineItem) {
         medicineList.add(medicineItem)
         onDataChanged

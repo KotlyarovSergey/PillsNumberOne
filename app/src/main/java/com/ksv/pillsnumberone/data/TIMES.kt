@@ -5,3 +5,7 @@ object TIMES {
     const val NOON = "noon"
     const val EVENING = "evening"
 }
+
+enum class Timess {
+    MORNING, NOON, EVENING
+}
