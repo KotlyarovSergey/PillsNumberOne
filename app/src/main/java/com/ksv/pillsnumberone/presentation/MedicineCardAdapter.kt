@@ -1,9 +1,11 @@
-package com.ksv.pillsnumberone
+package com.ksv.pillsnumberone.presentation
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.databinding.MedicineViewBinding
 import com.ksv.pillsnumberone.entity.MedicineItem
 import java.util.Collections
@@ -11,7 +13,7 @@ import java.util.Collections
 class MedicineCardAdapter(
     private val onTimeClick: (Int) -> Unit,
     private val onMoreClick: (Int, View) -> Unit,
-    private val onDataChanged: () -> Unit
+    private val onDataChanged: (List<MedicineItem>) -> Unit
 ) : RecyclerView.Adapter<MedicineCardAdapter.MedicineViewHolder>() {
     private var medicineList: MutableList<MedicineItem> = mutableListOf()
 
@@ -27,7 +29,7 @@ class MedicineCardAdapter(
         holder.binding.checkFinish.setOnCheckedChangeListener { _, isChecked ->
             setFinishedState(isChecked, holder.binding)
             medicineList[holder.adapterPosition].finished = isChecked
-            onDataChanged
+            onDataChanged(medicineList)
         }
         holder.binding.time.setOnClickListener {
             val isChecked = holder.binding.checkFinish.isChecked
@@ -47,7 +49,6 @@ class MedicineCardAdapter(
 
     override fun onBindViewHolder(holder: MedicineViewHolder, position: Int) {
         val medicineItem = medicineList.getOrNull(position)
-        //Log.d("ksvlog", "$position: ${medicineItem?.title} ${medicineItem?.finished}")
         with(holder.binding) {
             medicineItem?.let {
                 title.text = medicineItem.title
@@ -63,50 +64,50 @@ class MedicineCardAdapter(
 
     fun setData(medicineList: List<MedicineItem>) {
         this.medicineList = medicineList.toMutableList()
-        onDataChanged
+        onDataChanged(medicineList)
         notifyItemRangeInserted(0, medicineList.size)
     }
 
     fun getItemAt(index: Int): MedicineItem? {
-        return if (index in 0 .. medicineList.lastIndex)
+        return if (index in 0..medicineList.lastIndex)
             medicineList.get(index)
         else null
     }
 
     fun addItem(medicineItem: MedicineItem) {
         medicineList.add(medicineItem)
-        onDataChanged
+        onDataChanged(medicineList)
         notifyItemInserted(medicineList.lastIndex)
     }
 
     fun removeItemAt(index: Int) {
-        if (index in 0 .. medicineList.lastIndex) {
+        if (index in 0..medicineList.lastIndex) {
             medicineList.removeAt(index)
-            onDataChanged
+            onDataChanged(medicineList)
             notifyItemRemoved(index)
             notifyItemRangeChanged(index, itemCount - index)
         }
     }
 
     fun updateItemAt(index: Int, medicine: MedicineItem) {
-        if (index in 0 .. medicineList.lastIndex) {
+        if (index in 0..medicineList.lastIndex) {
             medicineList[index] = medicine
-            onDataChanged
+            onDataChanged(medicineList)
             notifyItemChanged(index)
         }
     }
 
     fun isFinished(index: Int): Boolean {
-        return if (index in 0 .. medicineList.lastIndex) {
+        return if (index in 0..medicineList.lastIndex) {
             medicineList[index].finished
         } else false
     }
 
     fun finishedChangeItemAt(index: Int) {
-        if (index in 0 .. medicineList.lastIndex) {
+        if (index in 0..medicineList.lastIndex) {
             val isChecked = medicineList[index].finished
             medicineList[index].finished = !isChecked
-            onDataChanged
+            onDataChanged(medicineList)
             notifyItemChanged(index)
         }
     }
@@ -118,7 +119,7 @@ class MedicineCardAdapter(
     fun setTimeAt(index: Int, time: String) {
         if (index in 0 until medicineList.size) {
             medicineList[index].time = time
-            onDataChanged
+            onDataChanged(medicineList)
             notifyItemChanged(index)
         }
     }
@@ -132,14 +133,14 @@ class MedicineCardAdapter(
             medicine.time = "0:00"
             medicine.finished = false
         }
-        onDataChanged
+        onDataChanged(medicineList)
         notifyItemRangeChanged(0, medicineList.size)
     }
 
     fun moveUp(index: Int) {
         if (index in 1 until medicineList.size) {
             Collections.swap(medicineList, index - 1, index)
-            onDataChanged
+            onDataChanged(medicineList)
             notifyItemMoved(index, index - 1)
         }
     }
@@ -147,7 +148,7 @@ class MedicineCardAdapter(
     fun moveDown(index: Int) {
         if (index in 0 until medicineList.size - 1) {
             Collections.swap(medicineList, index, index + 1)
-            onDataChanged
+            onDataChanged(medicineList)
             notifyItemMoved(index, index + 1)
         }
     }
@@ -156,7 +157,7 @@ class MedicineCardAdapter(
         medicineList.forEach { item ->
             item.editable = edit
         }
-        onDataChanged
+        onDataChanged(medicineList)
         notifyItemRangeChanged(0, medicineList.size)
     }
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainFragment">
+    tools:context=".presentation.MainFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -36,13 +36,16 @@
             android:padding="4dp">
 
             <TextView
+                android:id="@+id/breakfast_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/morning_title"
                 android:textAlignment="center"
                 android:textColor="#9E9D24"
                 android:textSize="32sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -51,17 +54,17 @@
                 app:cardCornerRadius="15dp">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_morning"
+                    android:id="@+id/recycler_breakfast"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#6FC9F0"
                     android:nestedScrollingEnabled="false"
-                    android:paddingVertical="2dp"
                     tools:itemCount="1"
                     tools:listitem="@layout/medicine_view" />
             </androidx.cardview.widget.CardView>
 
             <TextView
+                android:id="@+id/lunch_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -69,7 +72,9 @@
                 android:textAlignment="center"
                 android:textColor="#9E9D24"
                 android:textSize="32sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -79,25 +84,26 @@
                 app:cardCornerRadius="15dp">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_noon"
+                    android:id="@+id/recycler_lunch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#4B942C"
                     android:nestedScrollingEnabled="false"
-                    android:paddingVertical="2dp"
                     tools:itemCount="1"
                     tools:listitem="@layout/medicine_view" />
             </androidx.cardview.widget.CardView>
 
             <TextView
-                android:id="@+id/evening_title"
+                android:id="@+id/dinner_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/evening_title"
                 android:textAlignment="center"
                 android:textColor="#9E9D24"
                 android:textSize="32sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -106,12 +112,11 @@
                 app:cardCornerRadius="15dp">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_evening"
+                    android:id="@+id/recycler_dinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#E45B31"
                     android:nestedScrollingEnabled="false"
-                    android:paddingVertical="2dp"
                     tools:itemCount="1"
                     tools:listitem="@layout/medicine_view" />
             </androidx.cardview.widget.CardView>
@@ -123,11 +128,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="#FF8F00"
         android:contentDescription="@string/floating_button_description"
         android:nestedScrollingEnabled="false"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         android:src="@drawable/baseline_add_24"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         app:maxImageSize="44dp" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

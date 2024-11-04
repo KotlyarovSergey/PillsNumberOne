@@ -2,9 +2,9 @@
     <string name="app_name">Пилюльки</string>
 
     <!--    MainFragment-->
-    <string name="morning_title">Утро</string>
+    <string name="morning_title">Завтрак</string>
     <string name="noon_title">Обед</string>
-    <string name="evening_title">Вечер</string>
+    <string name="evening_title">Ужин</string>
     <string name="floating_button_description">Добавить</string>
 
 

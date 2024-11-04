@@ -1,4 +1,4 @@
-package com.ksv.pillsnumberone
+package com.ksv.pillsnumberone.presentation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.State
-import com.ksv.pillsnumberone.data.Timess
+import com.ksv.pillsnumberone.data.EatingTime
 import com.ksv.pillsnumberone.databinding.FragmentEditBinding
 import com.ksv.pillsnumberone.entity.MedicineItem
 
@@ -42,12 +43,12 @@ class EditFragment : Fragment() {
             when (dataViewModel.state) {
                 State.AddNewItem -> {
                     if (checkTimes()) {
-                        if (binding.checkMorning.isChecked)
-                            dataViewModel.addItem(medicine, Timess.MORNING)
-                        if (binding.checkNoon.isChecked)
-                            dataViewModel.addItem(medicine, Timess.NOON)
-                        if (binding.checkEvening.isChecked)
-                            dataViewModel.addItem(medicine, Timess.EVENING)
+                        if (binding.checkBreakfast.isChecked)
+                            dataViewModel.addItem(medicine, EatingTime.BREAKFAST)
+                        if (binding.checkLunch.isChecked)
+                            dataViewModel.addItem(medicine, EatingTime.LUNCH)
+                        if (binding.checkDinner.isChecked)
+                            dataViewModel.addItem(medicine, EatingTime.DINNER)
                         findNavController().navigate(R.id.action_editFragment_to_mainFragment)
                     }
                 }
@@ -75,9 +76,9 @@ class EditFragment : Fragment() {
     }
 
     private fun checkTimes(): Boolean {
-        return if (!binding.checkMorning.isChecked
-            && !binding.checkNoon.isChecked
-            && !binding.checkEvening.isChecked) {
+        return if (!binding.checkBreakfast.isChecked
+            && !binding.checkLunch.isChecked
+            && !binding.checkDinner.isChecked) {
             Toast.makeText(
                 requireContext(),
                 getText(R.string.need_check_message),

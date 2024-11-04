@@ -1,8 +1,8 @@
 package com.ksv.pillsnumberone.entity
 
-import android.os.Parcelable
+import kotlinx.serialization.Serializable
 
-
+@Serializable
 data class MedicineItem(
     val title: String,
     val recipe: String,

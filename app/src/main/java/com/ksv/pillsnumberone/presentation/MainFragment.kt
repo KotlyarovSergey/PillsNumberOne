@@ -1,4 +1,4 @@
-package com.ksv.pillsnumberone
+package com.ksv.pillsnumberone.presentation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -19,26 +19,30 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.timepicker.MaterialTimePicker
-import com.ksv.pillsnumberone.data.Timess
+import com.ksv.pillsnumberone.R
+import com.ksv.pillsnumberone.data.EatingTime
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
+import com.ksv.pillsnumberone.entity.MedicineItem
 
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private val viewModel: DataViewModel by activityViewModels()
-    private val morningMedicineCardAdapter =
-        MedicineCardAdapter({ morningTimeClick(it) }, { pos, view -> morningMoreClick(pos, view) },
-            { morningDataChange() })
-    private val noonMedicineCardAdapter =
+    private val breakfastMedicineCardAdapter =
         MedicineCardAdapter(
-            { noonTimeClick(it) },
-            { pos, view -> noonMoreClick(pos, view) },
-            { noonDataChange() })
-    private val eveningMedicineCardAdapter =
+            { breakfastTimeClick(it) },
+            { pos, view -> breakfastMoreClick(pos, view) },
+            { breakfastDataChange(it) })
+    private val lunchMedicineCardAdapter =
         MedicineCardAdapter(
-            { eveningTimeClick(it) },
-            { pos, view -> eveningMoreClick(pos, view) },
-            { eveningDataChange() })
+            { lunchTimeClick(it) },
+            { pos, view -> lunchMoreClick(pos, view) },
+            { lunchDataChange(it) })
+    private val dinnerMedicineCardAdapter =
+        MedicineCardAdapter(
+            { dinnerTimeClick(it) },
+            { pos, view -> dinnerMoreClick(pos, view) },
+            { dinnerDataChange(it) })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,29 +64,20 @@ class MainFragment : Fragment() {
             viewModel.setAddItemMode()
             findNavController().navigate(R.id.action_mainFragment_to_editFragment)
         }
-
-        binding.eveningTitle.setOnClickListener {
-//            morningMedicineCardAdapter.notifySetChange()
-//            viewModel.setAddItemMode()
-//            findNavController().navigate(R.id.action_mainFragment_to_editFragment)
-
-//            val medicineList = eveningMedicineCardAdapter.getItems()
-//            Log.d("ksvlog", medicineList.toString())
-        }
     }
 
     private fun setRecyclerViews() {
-        binding.recyclerMorning.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerMorning.adapter = morningMedicineCardAdapter
-        morningMedicineCardAdapter.setData(viewModel.getMorningList())
+        binding.recyclerBreakfast.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerBreakfast.adapter = breakfastMedicineCardAdapter
+        breakfastMedicineCardAdapter.setData(viewModel.getBreakfastList())
 
-        binding.recyclerNoon.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerNoon.adapter = noonMedicineCardAdapter
-        noonMedicineCardAdapter.setData(viewModel.getNoonList())
+        binding.recyclerLunch.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerLunch.adapter = lunchMedicineCardAdapter
+        lunchMedicineCardAdapter.setData(viewModel.getLunchList())
 
-        binding.recyclerEvening.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerEvening.adapter = eveningMedicineCardAdapter
-        eveningMedicineCardAdapter.setData(viewModel.getEveningList())
+        binding.recyclerDinner.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerDinner.adapter = dinnerMedicineCardAdapter
+        dinnerMedicineCardAdapter.setData(viewModel.getDinnerList())
     }
 
     private fun addMenuProvider() {
@@ -102,12 +97,14 @@ class MainFragment : Fragment() {
                         if (!viewModel.isEditMode) menuClearClick()
                         true
                     }
+
                     R.id.menu_edit -> {
                         switchEditMode()
                         if (viewModel.isEditMode) menuItem.setIcon(R.drawable.baseline_check_24)
                         else menuItem.setIcon(R.drawable.baseline_edit_off)
                         true
                     }
+
                     else -> false
                 }
             }
@@ -121,9 +118,9 @@ class MainFragment : Fragment() {
             .setMessage(getString(R.string.alert_dialog_clear_message))
             .setIcon(R.drawable.baseline_cached_red_24)
             .setPositiveButton(getString(R.string.alert_dialog_clear_yes)) { _, _ ->
-                morningMedicineCardAdapter.resetAllItems()
-                noonMedicineCardAdapter.resetAllItems()
-                eveningMedicineCardAdapter.resetAllItems()
+                breakfastMedicineCardAdapter.resetAllItems()
+                lunchMedicineCardAdapter.resetAllItems()
+                dinnerMedicineCardAdapter.resetAllItems()
             }
             .setNegativeButton(getString(R.string.alert_dialog_clear_no)) { _, _ -> }
         builder.create().show()
@@ -144,16 +141,16 @@ class MainFragment : Fragment() {
         timePicker.show(parentFragmentManager, timePicker::class.java.name)
     }
 
-    private fun morningTimeClick(position: Int) {
-        onTimeClick(morningMedicineCardAdapter, position)
+    private fun breakfastTimeClick(position: Int) {
+        onTimeClick(breakfastMedicineCardAdapter, position)
     }
 
-    private fun noonTimeClick(position: Int) {
-        onTimeClick(noonMedicineCardAdapter, position)
+    private fun lunchTimeClick(position: Int) {
+        onTimeClick(lunchMedicineCardAdapter, position)
     }
 
-    private fun eveningTimeClick(position: Int) {
-        onTimeClick(eveningMedicineCardAdapter, position)
+    private fun dinnerTimeClick(position: Int) {
+        onTimeClick(dinnerMedicineCardAdapter, position)
     }
 
     private fun onMoreClick(adapter: MedicineCardAdapter, position: Int, view: View) {
@@ -163,28 +160,28 @@ class MainFragment : Fragment() {
             when (item.itemId) {
                 R.id.popup_move_up -> {
                     adapter.moveUp(position)
-                    saveData(adapter)
                 }
+
                 R.id.popup_move_down -> {
                     adapter.moveDown(position)
-                    saveData(adapter)
                 }
+
                 R.id.popup_change -> {
                     switchEditMode()
                     val medicine = adapter.getItemAt(position)
                     if (medicine != null) {
-                        val time = when(adapter){
-                            morningMedicineCardAdapter -> Timess.MORNING
-                            noonMedicineCardAdapter -> Timess.NOON
-                            else -> Timess.EVENING
+                        val time = when (adapter) {
+                            breakfastMedicineCardAdapter -> EatingTime.BREAKFAST
+                            lunchMedicineCardAdapter -> EatingTime.LUNCH
+                            else -> EatingTime.DINNER
                         }
                         viewModel.setEditItemMode(position, time)
                         findNavController().navigate(R.id.action_mainFragment_to_editFragment)
                     }
                 }
+
                 R.id.popup_remove -> {
                     adapter.removeItemAt(position)
-                    saveData(adapter)
                 }
             }
             true
@@ -192,44 +189,45 @@ class MainFragment : Fragment() {
         popupMenu.show()
     }
 
-    private fun saveData(adapter: MedicineCardAdapter){
-        val medicineList = adapter.getAllItems()
-        when(adapter){
-            morningMedicineCardAdapter -> viewModel.saveMorningList(medicineList)
-            noonMedicineCardAdapter -> viewModel.saveNoonList(medicineList)
-            eveningMedicineCardAdapter -> viewModel.saveEveningList(medicineList)
-        }
-    }
-
     private fun switchEditMode() {
         viewModel.setEditMode(!viewModel.isEditMode)
-        morningMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
-        noonMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
-        eveningMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
+
+        breakfastMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
+        lunchMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
+        dinnerMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
     }
 
-    private fun morningMoreClick(position: Int, view: View) {
-        onMoreClick(morningMedicineCardAdapter, position, view)
+    private fun breakfastMoreClick(position: Int, view: View) {
+        onMoreClick(breakfastMedicineCardAdapter, position, view)
     }
 
-    private fun noonMoreClick(position: Int, view: View) {
-        onMoreClick(noonMedicineCardAdapter, position, view)
+    private fun lunchMoreClick(position: Int, view: View) {
+        onMoreClick(lunchMedicineCardAdapter, position, view)
     }
 
-    private fun eveningMoreClick(position: Int, view: View) {
-        onMoreClick(eveningMedicineCardAdapter, position, view)
+    private fun dinnerMoreClick(position: Int, view: View) {
+        onMoreClick(dinnerMedicineCardAdapter, position, view)
     }
 
-    private fun morningDataChange() {
-        viewModel.saveMorningList(morningMedicineCardAdapter.getAllItems())
+    private fun breakfastDataChange(medicineList: List<MedicineItem>) {
+        binding.breakfastHeader.visibility =
+            if (medicineList.isEmpty()) View.GONE
+            else View.VISIBLE
+        viewModel.saveBreakfastList(medicineList)
     }
 
-    private fun noonDataChange() {
-        viewModel.saveNoonList(noonMedicineCardAdapter.getAllItems())
+    private fun lunchDataChange(medicineList: List<MedicineItem>) {
+        binding.lunchHeader.visibility =
+            if (medicineList.isEmpty()) View.GONE
+            else View.VISIBLE
+        viewModel.saveLunchList(medicineList)
     }
 
-    private fun eveningDataChange() {
-        viewModel.saveEveningList(eveningMedicineCardAdapter.getAllItems())
+    private fun dinnerDataChange(medicineList: List<MedicineItem>) {
+        binding.dinnerHeader.visibility =
+            if (medicineList.isEmpty()) View.GONE
+            else View.VISIBLE
+        viewModel.saveDinnerList(medicineList)
     }
 
 

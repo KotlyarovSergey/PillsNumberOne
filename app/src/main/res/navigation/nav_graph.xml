@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.ksv.pillsnumberone.MainFragment"
+        android:name="com.ksv.pillsnumberone.presentation.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/editFragment"
-        android:name="com.ksv.pillsnumberone.EditFragment"
+        android:name="com.ksv.pillsnumberone.presentation.EditFragment"
         android:label="fragment_edit"
         tools:layout="@layout/fragment_edit" >
         <action
@@ -34,8 +34,8 @@
             android:defaultValue="" />
         <argument
             android:name="times"
-            app:argType="com.ksv.pillsnumberone.data.Timess"
-            android:defaultValue="MORNING" />
+            app:argType="com.ksv.pillsnumberone.data.EatingTime"
+            android:defaultValue="BREAKFAST" />
         <argument
             android:name="newMedicine"
             app:argType="boolean"

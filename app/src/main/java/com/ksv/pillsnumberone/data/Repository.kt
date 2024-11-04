@@ -4,15 +4,20 @@ import com.ksv.pillsnumberone.entity.MedicineItem
 
 class Repository {
 
-    fun save(data: Map<String, List<MedicineItem>>){
-
+    fun save(allMedicine: Map<String, List<MedicineItem>>){
+        val fds = FileDataSource()
+        fds.saveData(allMedicine)
     }
 
     fun load(): Map<String, List<MedicineItem>>{
-        return mapOf(
-            Times.MORNING to morningPills,
-            Times.NOON to noonPills,
-            Times.EVENING to eveningPills)
+        val fds = FileDataSource()
+        val map = fds.loadData()
+        return map
+
+//        return mapOf(
+//            Times.MORNING to morningPills,
+//            Times.NOON to noonPills,
+//            Times.EVENING to eveningPills)
     }
 
     companion object{
