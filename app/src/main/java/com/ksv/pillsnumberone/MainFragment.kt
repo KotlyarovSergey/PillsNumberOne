@@ -39,13 +39,11 @@ class MainFragment : Fragment() {
             { eveningTimeClick(it) },
             { pos, view -> eveningMoreClick(pos, view) },
             { eveningDataChange() })
-    //private var edition = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        //edition = viewModel.isEditMode
         _binding = FragmentMainBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -76,17 +74,14 @@ class MainFragment : Fragment() {
     private fun setRecyclerViews() {
         binding.recyclerMorning.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerMorning.adapter = morningMedicineCardAdapter
-        //morningMedicineCardAdapter.setData(morningPills)
         morningMedicineCardAdapter.setData(viewModel.getMorningList())
 
         binding.recyclerNoon.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerNoon.adapter = noonMedicineCardAdapter
-//        noonMedicineCardAdapter.setData(noonPills)
         noonMedicineCardAdapter.setData(viewModel.getNoonList())
 
         binding.recyclerEvening.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerEvening.adapter = eveningMedicineCardAdapter
-//        eveningMedicineCardAdapter.setData(eveningPills)
         eveningMedicineCardAdapter.setData(viewModel.getEveningList())
     }
 
@@ -107,19 +102,12 @@ class MainFragment : Fragment() {
                         if (!viewModel.isEditMode) menuClearClick()
                         true
                     }
-
                     R.id.menu_edit -> {
-//                        edition = !edition
-                        //viewModel.isEditMode = edition
-//                        morningMedicineCardAdapter.switchEditModeForAll(edition)
-//                        noonMedicineCardAdapter.switchEditModeForAll(edition)
-//                        eveningMedicineCardAdapter.switchEditModeForAll(edition)
                         switchEditMode()
                         if (viewModel.isEditMode) menuItem.setIcon(R.drawable.baseline_check_24)
                         else menuItem.setIcon(R.drawable.baseline_edit_off)
                         true
                     }
-
                     else -> false
                 }
             }
@@ -173,39 +161,30 @@ class MainFragment : Fragment() {
         popupMenu.inflate(R.menu.popup_menu)
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.popup_move_up -> adapter.moveUp(position)
-                R.id.popup_move_down -> adapter.moveDown(position)
+                R.id.popup_move_up -> {
+                    adapter.moveUp(position)
+                    saveData(adapter)
+                }
+                R.id.popup_move_down -> {
+                    adapter.moveDown(position)
+                    saveData(adapter)
+                }
                 R.id.popup_change -> {
                     switchEditMode()
                     val medicine = adapter.getItemAt(position)
                     if (medicine != null) {
-//                        val timess = when(adapter){
-//                            morningMedicineCardAdapter -> Timess.MORNING
-//                            noonMedicineCardAdapter -> Timess.NOON
-//                            else -> Timess.EVENING
-//                        }
-//                        val action = MainFragmentDirections
-//                            .actionMainFragmentToEditFragment(
-//                                title = medicine.title, recipe = medicine.recipe, times = timess, newMedicine = false
-//                            )
-//                        findNavController().navigate(action)
-
                         val time = when(adapter){
                             morningMedicineCardAdapter -> Timess.MORNING
                             noonMedicineCardAdapter -> Timess.NOON
                             else -> Timess.EVENING
                         }
                         viewModel.setEditItemMode(position, time)
-
-
                         findNavController().navigate(R.id.action_mainFragment_to_editFragment)
                     }
-
-
                 }
-
                 R.id.popup_remove -> {
                     adapter.removeItemAt(position)
+                    saveData(adapter)
                 }
             }
             true
@@ -213,8 +192,16 @@ class MainFragment : Fragment() {
         popupMenu.show()
     }
 
+    private fun saveData(adapter: MedicineCardAdapter){
+        val medicineList = adapter.getAllItems()
+        when(adapter){
+            morningMedicineCardAdapter -> viewModel.saveMorningList(medicineList)
+            noonMedicineCardAdapter -> viewModel.saveNoonList(medicineList)
+            eveningMedicineCardAdapter -> viewModel.saveEveningList(medicineList)
+        }
+    }
+
     private fun switchEditMode() {
-//        edition = !edition
         viewModel.setEditMode(!viewModel.isEditMode)
         morningMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
         noonMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
