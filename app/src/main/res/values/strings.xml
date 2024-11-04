@@ -5,6 +5,8 @@
     <string name="morning_title">Утро</string>
     <string name="noon_title">Обед</string>
     <string name="evening_title">Вечер</string>
+    <string name="floating_button_description">Добавить</string>
+
 
     <!--    MedicineView-->
     <string name="default_time">0:00</string>

@@ -54,10 +54,15 @@ class MainFragment : Fragment() {
         addMenuProvider()
         setRecyclerViews()
 
-        binding.eveningTitle.setOnClickListener {
-//            morningMedicineCardAdapter.notifySetChange()
+        binding.addButton.setOnClickListener {
             viewModel.setAddItemMode()
             findNavController().navigate(R.id.action_mainFragment_to_editFragment)
+        }
+
+        binding.eveningTitle.setOnClickListener {
+//            morningMedicineCardAdapter.notifySetChange()
+//            viewModel.setAddItemMode()
+//            findNavController().navigate(R.id.action_mainFragment_to_editFragment)
 
 //            val medicineList = eveningMedicineCardAdapter.getItems()
 //            Log.d("ksvlog", medicineList.toString())
