@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
     android:background="@color/edit_background"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:padding="8dp"
     tools:context=".presentation.EditFragment">
@@ -41,7 +42,7 @@
                 android:id="@+id/check_breakfast"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
+                android:layout_marginHorizontal="8dp"
                 android:text="@string/morning_title"
                 android:textSize="21sp" />
 
@@ -49,7 +50,7 @@
                 android:id="@+id/check_lunch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
+                android:layout_marginHorizontal="8dp"
                 android:text="@string/noon_title"
                 android:textSize="21sp" />
 
@@ -57,7 +58,7 @@
                 android:id="@+id/check_dinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
+                android:layout_marginHorizontal="8dp"
                 android:text="@string/evening_title"
                 android:textSize="21sp" />
 
@@ -88,7 +89,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences"
-                android:paddingHorizontal="8dp" />
+                android:paddingHorizontal="8dp"
+                android:textSize="22sp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -116,7 +118,8 @@
                 android:id="@+id/medicine_recipe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="8dp" />
+                android:paddingHorizontal="8dp"
+                android:textSize="22sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -126,8 +129,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="32dp"
-        android:backgroundTint="#EF6C00"
+        android:backgroundTint="@color/medicine_active"
         android:paddingHorizontal="50dp"
         android:text="@string/button_ok"
+        android:textColor="@color/black"
         android:textSize="24sp" />
 </LinearLayout>

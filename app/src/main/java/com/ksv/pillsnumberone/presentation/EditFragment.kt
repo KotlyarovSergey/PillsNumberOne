@@ -70,6 +70,7 @@ class EditFragment : Fragment() {
     }
 
     private fun fillEdit() {
+        binding.fragmentTitle.text = getString(R.string.edit_title_edit)
         binding.timesCard.visibility = View.GONE
         binding.medicineName.setText(dataViewModel.editableMedicine.title)
         binding.medicineRecipe.setText(dataViewModel.editableMedicine.recipe)

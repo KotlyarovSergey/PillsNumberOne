@@ -210,21 +210,24 @@ class MainFragment : Fragment() {
     }
 
     private fun breakfastDataChange(medicineList: List<MedicineItem>) {
-        binding.breakfastHeader.visibility =
+//        binding.breakfastHeader.visibility =
+        binding.breakfastCard.visibility =
             if (medicineList.isEmpty()) View.GONE
             else View.VISIBLE
         viewModel.saveBreakfastList(medicineList)
     }
 
     private fun lunchDataChange(medicineList: List<MedicineItem>) {
-        binding.lunchHeader.visibility =
+//        binding.lunchHeader.visibility =
+        binding.lunchCard.visibility =
             if (medicineList.isEmpty()) View.GONE
             else View.VISIBLE
         viewModel.saveLunchList(medicineList)
     }
 
     private fun dinnerDataChange(medicineList: List<MedicineItem>) {
-        binding.dinnerHeader.visibility =
+//        binding.dinnerHeader.visibility =
+        binding.dinnerCard.visibility =
             if (medicineList.isEmpty()) View.GONE
             else View.VISIBLE
         viewModel.saveDinnerList(medicineList)
