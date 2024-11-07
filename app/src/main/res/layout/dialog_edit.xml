@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#F3F8C4"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/edit_background"
+        android:paddingVertical="8dp"
+        android:text="@string/edit_title_edit"
+        android:textAlignment="center"
+        android:textColor="@color/medicine_active"
+        android:textSize="28sp" />
+
+    <EditText
+        android:id="@+id/ed_medicine_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="8dp"
+        android:hint="@string/edit_medicine_name"
+        android:inputType="textCapSentences"
+        android:paddingHorizontal="8dp"
+        android:textSize="21sp" />
+
+    <EditText
+        android:id="@+id/ed_medicine_recipe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="8dp"
+        android:hint="@string/edit_medicine_recipe"
+        android:paddingHorizontal="8dp"
+        android:textSize="21sp" />
+
+    <Button
+        android:id="@+id/ed_button_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
+        android:text="@string/button_ok"
+        android:textSize="21sp" />
+
+</LinearLayout>

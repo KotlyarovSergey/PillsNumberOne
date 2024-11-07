@@ -15,9 +15,9 @@ class Repository {
         return map
 
 //        return mapOf(
-//            Times.MORNING to morningPills,
-//            Times.NOON to noonPills,
-//            Times.EVENING to eveningPills)
+//            EatingTime.BREAKFAST.title to morningPills,
+//            EatingTime.LUNCH.title to noonPills,
+//            EatingTime.DINNER.title to eveningPills)
     }
 
     companion object{

@@ -164,5 +164,5 @@
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         app:maxImageSize="48dp"
         app:shapeAppearance="?attr/shapeAppearance"
-        app:tint="?attr/background" />
+        app:tint="#FFFFFF" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

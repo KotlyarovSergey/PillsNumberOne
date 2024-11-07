@@ -61,9 +61,18 @@ class MainFragment : Fragment() {
         setRecyclerViews()
 
         binding.addButton.setOnClickListener {
-            viewModel.setAddItemMode()
-            findNavController().navigate(R.id.action_mainFragment_to_editFragment)
+//            viewModel.setAddItemMode()
+//            findNavController().navigate(R.id.action_mainFragment_to_editFragment)
+            EditDialog { title, recipe -> onEditDialogOkClick(title, recipe) }
+                .show(parentFragmentManager, EditDialog::class.java.name)
+
+
         }
+    }
+
+    private fun onEditDialogOkClick(title: String, recipe: String){
+        val text = "$title, $recipe"
+        binding.breakfastHeader.text = text
     }
 
     private fun setRecyclerViews() {
