@@ -60,7 +60,8 @@ class MedicineCardAdapter(
         }
 
         holder.binding.cardLayout.setOnClickListener {
-            onItemClick(holder.adapterPosition)
+            if(holder.adapterPosition == editableItemPosition)
+                onItemClick(holder.adapterPosition)
         }
 
         return holder
