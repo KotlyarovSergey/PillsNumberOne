@@ -10,8 +10,6 @@ class DataViewModel : ViewModel() {
     private var _breakfastMedicineList: MutableList<MedicineItem>
     private var _lunchMedicineList: MutableList<MedicineItem>
     private var _dinnerMedicineList: MutableList<MedicineItem>
-    private var _isEditMode = false
-    val isEditMode get() = _isEditMode
     private var _editableTime: EatingTime? = null
     val editableTime get() = _editableTime
 
@@ -59,9 +57,8 @@ class DataViewModel : ViewModel() {
     fun getLunchList(): List<MedicineItem> = _lunchMedicineList
     fun getDinnerList(): List<MedicineItem> = _dinnerMedicineList
 
-    fun setEditMode(isEdit: Boolean) {
-        _isEditMode = isEdit
-        if(!isEdit) _editableTime = null
+    fun clearPermissionOnEdit(){
+        _editableTime = null
     }
 
     fun setPermissionOnEditTo(eatingTime: EatingTime){

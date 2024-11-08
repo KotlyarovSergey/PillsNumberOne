@@ -73,7 +73,7 @@ class MainFragment : Fragment() {
             breakfastMedicineCardAdapter.finishEdition()
             lunchMedicineCardAdapter.finishEdition()
             dinnerMedicineCardAdapter.finishEdition()
-            viewModel.setEditMode(false)
+            viewModel.clearPermissionOnEdit()
             setEditAndAddButtons()
         }
     }
@@ -110,7 +110,7 @@ class MainFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menu_clear -> {
-                        if (!viewModel.isEditMode) menuClearClick()
+                        if (viewModel.editableTime == null) menuClearClick()
                         true
                     }
                     else -> false
@@ -148,49 +148,48 @@ class MainFragment : Fragment() {
             }
         timePicker.show(parentFragmentManager, timePicker::class.java.name)
     }
-
     private fun breakfastTimeClick(position: Int) {
         onTimeClick(breakfastMedicineCardAdapter, position)
     }
-
     private fun lunchTimeClick(position: Int) {
         onTimeClick(lunchMedicineCardAdapter, position)
     }
-
     private fun dinnerTimeClick(position: Int) {
         onTimeClick(dinnerMedicineCardAdapter, position)
     }
 
-    private fun onItemLongClick() {
-        viewModel.setEditMode(true)
-        setEditAndAddButtons()
-    }
+
+//    private fun onItemLongClick() {
+//        setEditAndAddButtons()
+//    }
 
     private fun onBreakfastItemLongClick(){
         viewModel.setPermissionOnEditTo(EatingTime.BREAKFAST)
         lunchMedicineCardAdapter.denyPermissionToEdit()
         dinnerMedicineCardAdapter.denyPermissionToEdit()
-        onItemLongClick()
+//        onItemLongClick()
+        setEditAndAddButtons()
     }
 
     private fun onLunchItemLongClick(){
         viewModel.setPermissionOnEditTo(EatingTime.LUNCH)
         breakfastMedicineCardAdapter.denyPermissionToEdit()
         dinnerMedicineCardAdapter.denyPermissionToEdit()
-        onItemLongClick()
+//        onItemLongClick()
+        setEditAndAddButtons()
     }
     private fun onDinnerItemLongClick(){
         viewModel.setPermissionOnEditTo(EatingTime.DINNER)
         breakfastMedicineCardAdapter.denyPermissionToEdit()
         lunchMedicineCardAdapter.denyPermissionToEdit()
-        onItemLongClick()
+//        onItemLongClick()
+        setEditAndAddButtons()
     }
 
-
     private fun setEditAndAddButtons() {
-        val isEdit = viewModel.isEditMode
-        binding.applyButton.visibility = if (isEdit) View.VISIBLE else View.GONE
-        binding.addButton.visibility = if (isEdit) View.GONE else View.VISIBLE
+        val isEditMode = viewModel.editableTime != null
+        binding.applyButton.visibility = if (isEditMode) View.VISIBLE else View.GONE
+        binding.addButton.visibility = if (isEditMode) View.GONE else View.VISIBLE
     }
 
     private fun onItemClick(adapter: MedicineCardAdapter, position: Int) {
@@ -217,15 +216,12 @@ class MainFragment : Fragment() {
             }
             .create().show()
     }
-
     private fun breakfastItemClick(position: Int) {
         onItemClick(breakfastMedicineCardAdapter, position)
     }
-
     private fun lunchItemClick(position: Int) {
         onItemClick(lunchMedicineCardAdapter, position)
     }
-
     private fun dinnerItemClick(position: Int) {
         onItemClick(dinnerMedicineCardAdapter, position)
     }
