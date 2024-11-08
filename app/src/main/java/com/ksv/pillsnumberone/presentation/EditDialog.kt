@@ -3,33 +3,41 @@ package com.ksv.pillsnumberone.presentation
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.ksv.pillsnumberone.R
+import com.ksv.pillsnumberone.databinding.DialogEditBinding
 
 class EditDialog(
     private val medicineTitle: String,
     private val medicineRecipe: String,
     private val onOkClick: (String, String) -> Unit,
 ) : DialogFragment() {
+    private var _binding: DialogEditBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val view = layoutInflater.inflate(R.layout.dialog_edit, null)
+        _binding = DialogEditBinding.inflate(layoutInflater)
 
-        view.findViewById<EditText>(R.id.ed_medicine_title).setText(medicineTitle)
-        view.findViewById<EditText>(R.id.ed_medicine_recipe).setText(medicineRecipe)
+        binding.edMedicineTitle.setText(medicineTitle)
+        binding.edMedicineRecipe.setText(medicineRecipe)
 
-        val button = view.findViewById<Button>(R.id.ed_button_ok)
-        button.setOnClickListener {
-            val title = view.findViewById<EditText>(R.id.ed_medicine_title)
-            val recipe = view.findViewById<EditText>(R.id.ed_medicine_recipe)
-            onOkClick(title.text.toString(), recipe.text.toString())
+        binding.edButtonOk.setOnClickListener {
+            val title = binding.edMedicineTitle.text.toString()
+            val recipe = binding.edMedicineRecipe.text.toString()
+                onOkClick(title, recipe)
             dismiss()
         }
 
         return AlertDialog.Builder(requireContext())
-            .setView(view)
+            .setView(binding.root)
             .create()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

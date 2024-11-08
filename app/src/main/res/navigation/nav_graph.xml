@@ -16,9 +16,9 @@
     </fragment>
     <fragment
         android:id="@+id/editFragment"
-        android:name="com.ksv.pillsnumberone.presentation.EditFragment"
+        android:name="com.ksv.pillsnumberone.presentation.AddFragment"
         android:label="fragment_edit"
-        tools:layout="@layout/fragment_edit" >
+        tools:layout="@layout/fragment_add" >
         <action
             android:id="@+id/action_editFragment_to_mainFragment"
             app:destination="@id/mainFragment"

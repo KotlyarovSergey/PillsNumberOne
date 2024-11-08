@@ -13,7 +13,6 @@ class Repository {
         val fds = FileDataSource()
         val map = fds.loadData()
         return map
-
 //        return mapOf(
 //            EatingTime.BREAKFAST.title to morningPills,
 //            EatingTime.LUNCH.title to noonPills,
@@ -22,23 +21,23 @@ class Repository {
 
     companion object{
         private val morningPills = listOf(
-            MedicineItem("Омепразол", "За 30 мин. до еды"),
-            MedicineItem("Мебиверин", "За 20 мин. до еды", time = "6:20"),
-            MedicineItem("Гастростат", "Перед едой", finished = true),
-            MedicineItem("Бак-Сет", "Во время еды"),
-            MedicineItem("Эрмиталь", "Во время еды")
+            MedicineItem("Омепразол", "за 30 мин. до еды", time = "6:10", finished = true),
+            MedicineItem("Мебиверин", "за 20 мин. до еды", time = "6:20", finished = true),
+            MedicineItem("Гастростат", "перед едой", time = "6:40"),
+            MedicineItem("Бак-Сет", "во время еды"),
+            MedicineItem("Эрмиталь", "во время еды")
         )
         private val noonPills = listOf(
-            MedicineItem("Гастростат", "Перед едой"),
-            MedicineItem("Эрмиталь", "Во время еды")
+            MedicineItem("Гастростат", "перед едой"),
+            MedicineItem("Эрмиталь", "во время еды")
         )
         private val eveningPills = listOf(
-            MedicineItem("Омепразол", "За 30 мин. до еды"),
-            MedicineItem("Мебиверин", "За 20 мин. до еды"),
-            MedicineItem("Гастростат", "Перед едой"),
-            MedicineItem("Бак-Сет", "Во время еды"),
-            MedicineItem("Эрмиталь", "Во время еды"),
-            MedicineItem("Урсодезоксихол", "Перед сном")
+            MedicineItem("Омепразол", "за 30 мин. до еды"),
+            MedicineItem("Мебиверин", "за 20 мин. до еды"),
+            MedicineItem("Гастростат", "перед едой"),
+            MedicineItem("Бак-Сет", "во время еды"),
+            MedicineItem("Эрмиталь", "во время еды"),
+            MedicineItem("Урсодезоксихол", "перед сном")
         )
     }
 }

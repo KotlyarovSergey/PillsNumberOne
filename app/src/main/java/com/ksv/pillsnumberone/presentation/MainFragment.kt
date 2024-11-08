@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.ksv.pillsnumberone.R
-import com.ksv.pillsnumberone.data.EatingTime
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
 import com.ksv.pillsnumberone.entity.MedicineItem
 
@@ -63,14 +61,10 @@ class MainFragment : Fragment() {
 
         addMenuProvider()
         setRecyclerViews()
-        switchEditItemMode()
+        setEditAndAddButtons()
 
         binding.addButton.setOnClickListener {
-            viewModel.setAddItemMode()
             findNavController().navigate(R.id.action_mainFragment_to_editFragment)
-
-//            EditDialog { title, recipe -> onEditDialogOkClick(title, recipe) }
-//                .show(parentFragmentManager, EditDialog::class.java.name)
         }
 
         binding.applyButton.setOnClickListener {
@@ -78,7 +72,7 @@ class MainFragment : Fragment() {
             lunchMedicineCardAdapter.finishEdition()
             dinnerMedicineCardAdapter.finishEdition()
             viewModel.setEditMode(false)
-            switchEditItemMode()
+            setEditAndAddButtons()
         }
     }
 
@@ -102,11 +96,6 @@ class MainFragment : Fragment() {
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_main, menu)
-                menu.findItem(R.id.menu_edit).setIcon(
-                    if (viewModel.isEditMode) R.drawable.baseline_check_24
-                    else R.drawable.baseline_edit_off
-                )
-                menu.findItem(R.id.menu_edit).setVisible(false)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -115,15 +104,6 @@ class MainFragment : Fragment() {
                         if (!viewModel.isEditMode) menuClearClick()
                         true
                     }
-
-//                    R.id.menu_edit -> {
-//                        viewModel.setEditMode(false)
-//                        switchEditItemMode()
-//                        if (viewModel.isEditMode) menuItem.setIcon(R.drawable.baseline_check_24)
-//                        else menuItem.setIcon(R.drawable.baseline_edit_off)
-//                        true
-//                    }
-
                     else -> false
                 }
             }
@@ -174,10 +154,10 @@ class MainFragment : Fragment() {
 
     private fun onItemLongClick() {
         viewModel.setEditMode(true)
-        switchEditItemMode()
+        setEditAndAddButtons()
     }
 
-    private fun switchEditItemMode() {
+    private fun setEditAndAddButtons() {
         val isEdit = viewModel.isEditMode
         binding.applyButton.visibility = if (isEdit) View.VISIBLE else View.GONE
         binding.addButton.visibility = if (isEdit) View.GONE else View.VISIBLE

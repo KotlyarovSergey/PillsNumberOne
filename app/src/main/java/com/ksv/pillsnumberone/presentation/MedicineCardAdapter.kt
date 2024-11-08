@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.ksv.pillsnumberone.MyApp
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.databinding.MedicineViewBinding
 import com.ksv.pillsnumberone.entity.MedicineItem
@@ -15,6 +16,7 @@ class MedicineCardAdapter(
     private val onItemClick: (Int) -> Unit,
     private val onDataChanged: (List<MedicineItem>) -> Unit
 ) : RecyclerView.Adapter<MedicineCardAdapter.MedicineViewHolder>() {
+
     private var medicineList: MutableList<MedicineItem> = mutableListOf()
     private var editableItemPosition: Int = -1
 
@@ -28,7 +30,7 @@ class MedicineCardAdapter(
         )
 
         holder.binding.checkFinish.setOnCheckedChangeListener { _, isChecked ->
-            setFinishedState(isChecked, holder.binding)
+            holder.binding.mainLayout.setBackgroundColor(getBackgroundColor(isChecked))
             medicineList[holder.adapterPosition].finished = isChecked
             onDataChanged(medicineList)
         }
@@ -74,16 +76,14 @@ class MedicineCardAdapter(
                 recipe.text = medicineItem.recipe
                 time.text = medicineItem.time
                 checkFinish.isChecked = medicineItem.finished
-                setFinishedState(medicineItem.finished, holder.binding)
+                mainLayout.setBackgroundColor(getBackgroundColor(medicineItem.finished))
                 checkFinish.isClickable = !medicineItem.editable
                 removeButton.visibility = if (medicineItem.editable) View.VISIBLE else View.GONE
-                moveLayout.visibility  = if (medicineItem.editable) View.VISIBLE else View.GONE
-                //if(medicineItem.editable) editableItemPosition = position
-                if(medicineItem.editable) editableItemPosition = holder.adapterPosition
+                moveLayout.visibility = if (medicineItem.editable) View.VISIBLE else View.GONE
+                if (medicineItem.editable) editableItemPosition = holder.adapterPosition
             }
         }
     }
-
 
 
     //      CREATE
@@ -102,7 +102,7 @@ class MedicineCardAdapter(
     //      READ
     fun getItemAt(index: Int): MedicineItem? {
         return if (index in 0..medicineList.lastIndex)
-            medicineList.get(index)
+            medicineList[index]
         else null
     }
 
@@ -136,7 +136,7 @@ class MedicineCardAdapter(
         notifyItemRangeChanged(0, medicineList.size)
     }
 
-    fun moveUp(index: Int) {
+    private fun moveUp(index: Int) {
         if (index in 1 until medicineList.size) {
             Collections.swap(medicineList, index - 1, index)
             onDataChanged(medicineList)
@@ -145,7 +145,7 @@ class MedicineCardAdapter(
         }
     }
 
-    fun moveDown(index: Int) {
+    private fun moveDown(index: Int) {
         if (index in 0 until medicineList.size - 1) {
             Collections.swap(medicineList, index, index + 1)
             onDataChanged(medicineList)
@@ -154,8 +154,8 @@ class MedicineCardAdapter(
         }
     }
 
-    private fun setOnEditModeAt(position: Int){
-        if (position in 0 ..medicineList.lastIndex) {
+    private fun setOnEditModeAt(position: Int) {
+        if (position in 0..medicineList.lastIndex) {
             medicineList[position].editable = true
             onDataChanged(medicineList)
             notifyItemChanged(position, medicineList.size)
@@ -163,7 +163,7 @@ class MedicineCardAdapter(
         }
     }
 
-    fun finishEdition(){
+    fun finishEdition() {
         if (editableItemPosition >= 0) {
             medicineList[editableItemPosition].editable = false
             onDataChanged(medicineList)
@@ -173,7 +173,7 @@ class MedicineCardAdapter(
     }
 
     //      DELETE
-    fun removeItemAt(index: Int) {
+    private fun removeItemAt(index: Int) {
         if (index in 0..medicineList.lastIndex) {
             medicineList.removeAt(index)
             onDataChanged(medicineList)
@@ -184,12 +184,10 @@ class MedicineCardAdapter(
     }
 
     //      SUPPORT
-    private fun setFinishedState(isFinished: Boolean, binding: MedicineViewBinding) {
-        if (isFinished) {
-            binding.cardLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_passive))
-        } else {
-            binding.cardLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_active))
-        }
+    private fun getBackgroundColor(isFinished:Boolean): Int {
+        return if(isFinished) MyApp.applicationContext.getColor(R.color.medicine_passive)
+        else MyApp.applicationContext.getColor(R.color.medicine_active)
+
     }
 
 

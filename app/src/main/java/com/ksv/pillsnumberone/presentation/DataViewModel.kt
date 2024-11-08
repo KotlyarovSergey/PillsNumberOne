@@ -3,7 +3,6 @@ package com.ksv.pillsnumberone.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ksv.pillsnumberone.data.Repository
-import com.ksv.pillsnumberone.data.State
 import com.ksv.pillsnumberone.data.EatingTime
 import com.ksv.pillsnumberone.entity.MedicineItem
 
@@ -13,10 +12,6 @@ class DataViewModel : ViewModel() {
     private var _dinnerMedicineList: MutableList<MedicineItem>
     private var _isEditMode = false
     val isEditMode get() = _isEditMode
-    private var _state: State = State.Normal
-    val state get() = _state
-    private var _editableMedicine = MedicineItem("", "")
-    val editableMedicine get() = _editableMedicine
 
     init {
         val repo = Repository()
@@ -66,9 +61,6 @@ class DataViewModel : ViewModel() {
         _isEditMode = isEdit
     }
 
-    fun setAddItemMode() {
-        _state = State.AddNewItem
-    }
 
     fun addItem(item: MedicineItem, time: EatingTime) {
         when (time) {
@@ -77,29 +69,6 @@ class DataViewModel : ViewModel() {
             EatingTime.DINNER -> _dinnerMedicineList.add(item)
         }
         saveData()
-        _state = State.Normal
     }
-
-    fun setEditItemMode(index: Int, eatingTime: EatingTime) {
-        _editableMedicine = when (eatingTime) {
-            EatingTime.BREAKFAST -> _breakfastMedicineList[index]
-            EatingTime.LUNCH -> _lunchMedicineList[index]
-            EatingTime.DINNER -> _dinnerMedicineList[index]
-        }
-        _state = State.EditItem(index, eatingTime)
-    }
-
-    fun editItem(item: MedicineItem) {
-        val timess = _state.eatingTime!!
-        val index = _state.index!!
-        when (timess) {
-            EatingTime.BREAKFAST -> _breakfastMedicineList[index] = item
-            EatingTime.LUNCH -> _lunchMedicineList[index] = item
-            EatingTime.DINNER -> _dinnerMedicineList[index] = item
-        }
-        saveData()
-        _state = State.Normal
-    }
-
 
 }
