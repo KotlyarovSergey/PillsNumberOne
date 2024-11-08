@@ -32,17 +32,20 @@ class MainFragment : Fragment() {
     private val breakfastMedicineCardAdapter =
         MedicineCardAdapter(
             { breakfastTimeClick(it) },
-            { onItemLongClick()},
+            { onItemLongClick() },
+            { breakfastItemClick(it) },
             { breakfastDataChange(it) })
     private val lunchMedicineCardAdapter =
         MedicineCardAdapter(
             { lunchTimeClick(it) },
             { onItemLongClick() },
+            { lunchItemClick(it) },
             { lunchDataChange(it) })
     private val dinnerMedicineCardAdapter =
         MedicineCardAdapter(
             { dinnerTimeClick(it) },
             { onItemLongClick() },
+            { dinnerItemClick(it) },
             { dinnerDataChange(it) })
 
     override fun onCreateView(
@@ -79,10 +82,6 @@ class MainFragment : Fragment() {
         }
     }
 
-//    private fun onEditDialogOkClick(title: String, recipe: String){
-//        val text = "$title, $recipe"
-//        binding.breakfastHeader.text = text
-//    }
 
     private fun setRecyclerViews() {
         binding.recyclerBreakfast.layoutManager = LinearLayoutManager(requireContext())
@@ -173,75 +172,49 @@ class MainFragment : Fragment() {
         onTimeClick(dinnerMedicineCardAdapter, position)
     }
 
-    private fun onItemLongClick(){
+    private fun onItemLongClick() {
         viewModel.setEditMode(true)
         switchEditItemMode()
     }
 
-    private fun switchEditItemMode(){
+    private fun switchEditItemMode() {
         val isEdit = viewModel.isEditMode
-        binding.applyButton.visibility = if(isEdit) View.VISIBLE else View.GONE
-        binding.addButton.visibility = if(isEdit) View.GONE else View.VISIBLE
+        binding.applyButton.visibility = if (isEdit) View.VISIBLE else View.GONE
+        binding.addButton.visibility = if (isEdit) View.GONE else View.VISIBLE
     }
 
-    private fun onMoreClick(adapter: MedicineCardAdapter, position: Int, view: View) {
-        val popupMenu = PopupMenu(requireContext(), view)
-        popupMenu.inflate(R.menu.popup_menu)
-        popupMenu.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.popup_move_up -> {
-                    adapter.moveUp(position)
-                }
+    private fun onItemClick(adapter: MedicineCardAdapter, position: Int) {
+        val oldMedicineItem = adapter.getItemAt(position) ?: MedicineItem("", "")
 
-                R.id.popup_move_down -> {
-                    adapter.moveDown(position)
-                }
-
-                R.id.popup_change -> {
-                    //switchEditMode()
-                    val medicine = adapter.getItemAt(position)
-                    if (medicine != null) {
-                        val time = when (adapter) {
-                            breakfastMedicineCardAdapter -> EatingTime.BREAKFAST
-                            lunchMedicineCardAdapter -> EatingTime.LUNCH
-                            else -> EatingTime.DINNER
-                        }
-                        viewModel.setEditItemMode(position, time)
-                        findNavController().navigate(R.id.action_mainFragment_to_editFragment)
-                    }
-                }
-
-                R.id.popup_remove -> {
-                    adapter.removeItemAt(position)
-                }
+        EditDialog(oldMedicineItem.title, oldMedicineItem.recipe) { title, recipe ->
+            run {
+                val newMedicineItem =
+                    MedicineItem(
+                        title,
+                        recipe,
+                        oldMedicineItem.finished,
+                        oldMedicineItem.time,
+                        editable = true
+                    )
+                adapter.updateItemAt(position, newMedicineItem)
             }
-            true
-        }
-        popupMenu.show()
+        }.show(parentFragmentManager, EditDialog::class.java.name)
+
     }
 
-//    private fun switchEditMode() {
-//        viewModel.setEditMode(!viewModel.isEditMode)
-//
-//        breakfastMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
-//        lunchMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
-//        dinnerMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
-//    }
-
-    private fun breakfastMoreClick(position: Int, view: View) {
-        onMoreClick(breakfastMedicineCardAdapter, position, view)
+    private fun breakfastItemClick(position: Int) {
+        onItemClick(breakfastMedicineCardAdapter, position)
     }
 
-    private fun lunchMoreClick(position: Int, view: View) {
-        onMoreClick(lunchMedicineCardAdapter, position, view)
+    private fun lunchItemClick(position: Int) {
+        onItemClick(lunchMedicineCardAdapter, position)
     }
 
-    private fun dinnerMoreClick(position: Int, view: View) {
-        onMoreClick(dinnerMedicineCardAdapter, position, view)
+    private fun dinnerItemClick(position: Int) {
+        onItemClick(dinnerMedicineCardAdapter, position)
     }
 
     private fun breakfastDataChange(medicineList: List<MedicineItem>) {
-//        binding.breakfastHeader.visibility =
         binding.breakfastCard.visibility =
             if (medicineList.isEmpty()) View.GONE
             else View.VISIBLE
@@ -249,7 +222,6 @@ class MainFragment : Fragment() {
     }
 
     private fun lunchDataChange(medicineList: List<MedicineItem>) {
-//        binding.lunchHeader.visibility =
         binding.lunchCard.visibility =
             if (medicineList.isEmpty()) View.GONE
             else View.VISIBLE
@@ -257,7 +229,6 @@ class MainFragment : Fragment() {
     }
 
     private fun dinnerDataChange(medicineList: List<MedicineItem>) {
-//        binding.dinnerHeader.visibility =
         binding.dinnerCard.visibility =
             if (medicineList.isEmpty()) View.GONE
             else View.VISIBLE

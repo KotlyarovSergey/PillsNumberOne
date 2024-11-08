@@ -12,6 +12,7 @@ import java.util.Collections
 class MedicineCardAdapter(
     private val onTimeClick: (Int) -> Unit,
     private val onItemLongClick: (Int) -> Unit,
+    private val onItemClick: (Int) -> Unit,
     private val onDataChanged: (List<MedicineItem>) -> Unit
 ) : RecyclerView.Adapter<MedicineCardAdapter.MedicineViewHolder>() {
     private var medicineList: MutableList<MedicineItem> = mutableListOf()
@@ -54,6 +55,10 @@ class MedicineCardAdapter(
         }
         holder.binding.moveDownButton.setOnClickListener {
             moveDown(holder.adapterPosition)
+        }
+
+        holder.binding.cardLayout.setOnClickListener {
+            onItemClick(holder.adapterPosition)
         }
 
         return holder
@@ -111,7 +116,6 @@ class MedicineCardAdapter(
             medicineList[index] = medicine
             onDataChanged(medicineList)
             notifyItemChanged(index)
-            //editableItemPosition = index
         }
     }
 
