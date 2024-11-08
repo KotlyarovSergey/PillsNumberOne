@@ -28,20 +28,21 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private val viewModel: DataViewModel by activityViewModels()
+
     private val breakfastMedicineCardAdapter =
         MedicineCardAdapter(
             { breakfastTimeClick(it) },
-            { pos, view -> breakfastMoreClick(pos, view) },
+            { onItemLongClick()},
             { breakfastDataChange(it) })
     private val lunchMedicineCardAdapter =
         MedicineCardAdapter(
             { lunchTimeClick(it) },
-            { pos, view -> lunchMoreClick(pos, view) },
+            { onItemLongClick() },
             { lunchDataChange(it) })
     private val dinnerMedicineCardAdapter =
         MedicineCardAdapter(
             { dinnerTimeClick(it) },
-            { pos, view -> dinnerMoreClick(pos, view) },
+            { onItemLongClick() },
             { dinnerDataChange(it) })
 
     override fun onCreateView(
@@ -59,21 +60,29 @@ class MainFragment : Fragment() {
 
         addMenuProvider()
         setRecyclerViews()
+        switchEditItemMode()
 
         binding.addButton.setOnClickListener {
-//            viewModel.setAddItemMode()
-//            findNavController().navigate(R.id.action_mainFragment_to_editFragment)
-            EditDialog { title, recipe -> onEditDialogOkClick(title, recipe) }
-                .show(parentFragmentManager, EditDialog::class.java.name)
+            viewModel.setAddItemMode()
+            findNavController().navigate(R.id.action_mainFragment_to_editFragment)
 
+//            EditDialog { title, recipe -> onEditDialogOkClick(title, recipe) }
+//                .show(parentFragmentManager, EditDialog::class.java.name)
+        }
 
+        binding.applyButton.setOnClickListener {
+            breakfastMedicineCardAdapter.finishEdition()
+            lunchMedicineCardAdapter.finishEdition()
+            dinnerMedicineCardAdapter.finishEdition()
+            viewModel.setEditMode(false)
+            switchEditItemMode()
         }
     }
 
-    private fun onEditDialogOkClick(title: String, recipe: String){
-        val text = "$title, $recipe"
-        binding.breakfastHeader.text = text
-    }
+//    private fun onEditDialogOkClick(title: String, recipe: String){
+//        val text = "$title, $recipe"
+//        binding.breakfastHeader.text = text
+//    }
 
     private fun setRecyclerViews() {
         binding.recyclerBreakfast.layoutManager = LinearLayoutManager(requireContext())
@@ -98,6 +107,7 @@ class MainFragment : Fragment() {
                     if (viewModel.isEditMode) R.drawable.baseline_check_24
                     else R.drawable.baseline_edit_off
                 )
+                menu.findItem(R.id.menu_edit).setVisible(false)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -107,12 +117,13 @@ class MainFragment : Fragment() {
                         true
                     }
 
-                    R.id.menu_edit -> {
-                        switchEditMode()
-                        if (viewModel.isEditMode) menuItem.setIcon(R.drawable.baseline_check_24)
-                        else menuItem.setIcon(R.drawable.baseline_edit_off)
-                        true
-                    }
+//                    R.id.menu_edit -> {
+//                        viewModel.setEditMode(false)
+//                        switchEditItemMode()
+//                        if (viewModel.isEditMode) menuItem.setIcon(R.drawable.baseline_check_24)
+//                        else menuItem.setIcon(R.drawable.baseline_edit_off)
+//                        true
+//                    }
 
                     else -> false
                 }
@@ -162,6 +173,17 @@ class MainFragment : Fragment() {
         onTimeClick(dinnerMedicineCardAdapter, position)
     }
 
+    private fun onItemLongClick(){
+        viewModel.setEditMode(true)
+        switchEditItemMode()
+    }
+
+    private fun switchEditItemMode(){
+        val isEdit = viewModel.isEditMode
+        binding.applyButton.visibility = if(isEdit) View.VISIBLE else View.GONE
+        binding.addButton.visibility = if(isEdit) View.GONE else View.VISIBLE
+    }
+
     private fun onMoreClick(adapter: MedicineCardAdapter, position: Int, view: View) {
         val popupMenu = PopupMenu(requireContext(), view)
         popupMenu.inflate(R.menu.popup_menu)
@@ -176,7 +198,7 @@ class MainFragment : Fragment() {
                 }
 
                 R.id.popup_change -> {
-                    switchEditMode()
+                    //switchEditMode()
                     val medicine = adapter.getItemAt(position)
                     if (medicine != null) {
                         val time = when (adapter) {
@@ -198,13 +220,13 @@ class MainFragment : Fragment() {
         popupMenu.show()
     }
 
-    private fun switchEditMode() {
-        viewModel.setEditMode(!viewModel.isEditMode)
-
-        breakfastMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
-        lunchMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
-        dinnerMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
-    }
+//    private fun switchEditMode() {
+//        viewModel.setEditMode(!viewModel.isEditMode)
+//
+//        breakfastMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
+//        lunchMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
+//        dinnerMedicineCardAdapter.switchEditModeForAll(viewModel.isEditMode)
+//    }
 
     private fun breakfastMoreClick(position: Int, view: View) {
         onMoreClick(breakfastMedicineCardAdapter, position, view)

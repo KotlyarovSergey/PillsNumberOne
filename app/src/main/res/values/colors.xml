@@ -5,6 +5,7 @@
     <color name="background">#80D8FF</color>
     <color name="main_background">#D98EE6</color>
     <color name="edit_background">#483DDC</color>
+    <color name="arrow_background">#4527A0</color>
     <color name="medicine_active">#F4FF81</color>
     <color name="medicine_passive">#BFD0D7</color>
 

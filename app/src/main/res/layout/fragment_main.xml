@@ -152,6 +152,21 @@
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/apply_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_margin="42dp"
+        android:backgroundTint="#558B2F"
+        android:contentDescription="@string/button_ok"
+        android:src="@drawable/baseline_check_24"
+        android:nestedScrollingEnabled="false"
+        app:maxImageSize="48dp"
+        android:visibility="gone"
+        app:shapeAppearance="?attr/shapeAppearance"
+        app:tint="#FFFFFF" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

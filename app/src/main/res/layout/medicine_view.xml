@@ -22,6 +22,40 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/move_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageButton
+                    android:id="@+id/move_up_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@color/medicine_active"
+                    android:contentDescription="@string/move_up_button_description"
+                    android:src="@drawable/baseline_keyboard_arrow_up_24"
+                    app:tint="@color/arrow_background" />
+
+                <ImageButton
+                    android:id="@+id/move_down_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/medicine_active"
+                    android:contentDescription="@string/move_down_button_description"
+                    android:src="@drawable/baseline_keyboard_arrow_down_24"
+                    app:tint="@color/arrow_background" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/card_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -38,10 +72,9 @@
                         android:id="@+id/check_finish"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
-                        android:translationY="4dp"
-                        android:layout_marginTop="-4dp"
                         android:layout_marginHorizontal="4dp"
-                        />
+                        android:layout_marginTop="-4dp"
+                        android:translationY="4dp" />
 
                     <TextView
                         android:id="@+id/title"
@@ -52,6 +85,7 @@
                         android:textSize="24sp"
                         android:textStyle="bold"
                         tools:text="Алмагель" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -65,8 +99,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="8dp"
-                        android:layout_weight="1.0"
                         android:layout_marginStart="14dp"
+                        android:layout_weight="1.0"
                         android:textSize="16sp"
                         tools:text="За 2 чача до еды" />
 
@@ -88,14 +122,14 @@
                 android:layout_height="match_parent">
 
                 <ImageButton
-                    android:id="@+id/more_button"
+                    android:id="@+id/remove_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="8dp"
                     android:background="@color/medicine_active"
                     android:contentDescription="@string/more_button_description"
-                    android:src="@drawable/baseline_more_vert_24"
+                    android:src="@drawable/baseline_delete_forever_24"
                     android:visibility="visible"
                     tools:visibility="visible" />
             </FrameLayout>
