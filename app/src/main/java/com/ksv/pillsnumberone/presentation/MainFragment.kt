@@ -1,7 +1,6 @@
 package com.ksv.pillsnumberone.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -9,13 +8,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -23,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.ksv.pillsnumberone.R
+import com.ksv.pillsnumberone.data.EatingTime
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
 import com.ksv.pillsnumberone.entity.MedicineItem
 
@@ -34,19 +32,19 @@ class MainFragment : Fragment() {
     private val breakfastMedicineCardAdapter =
         MedicineCardAdapter(
             { breakfastTimeClick(it) },
-            { onItemLongClick() },
+            { onBreakfastItemLongClick() },
             { breakfastItemClick(it) },
             { breakfastDataChange(it) })
     private val lunchMedicineCardAdapter =
         MedicineCardAdapter(
             { lunchTimeClick(it) },
-            { onItemLongClick() },
+            { onLunchItemLongClick() },
             { lunchItemClick(it) },
             { lunchDataChange(it) })
     private val dinnerMedicineCardAdapter =
         MedicineCardAdapter(
             { dinnerTimeClick(it) },
-            { onItemLongClick() },
+            { onDinnerItemLongClick() },
             { dinnerItemClick(it) },
             { dinnerDataChange(it) })
 
@@ -93,6 +91,13 @@ class MainFragment : Fragment() {
         binding.recyclerDinner.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerDinner.adapter = dinnerMedicineCardAdapter
         dinnerMedicineCardAdapter.setData(viewModel.getDinnerList())
+
+        when(viewModel.editableTime){
+            EatingTime.BREAKFAST -> breakfastMedicineCardAdapter.denyPermissionToEdit()
+            EatingTime.LUNCH -> lunchMedicineCardAdapter.denyPermissionToEdit()
+            EatingTime.DINNER -> dinnerMedicineCardAdapter.denyPermissionToEdit()
+            null -> {}
+        }
     }
 
     private fun addMenuProvider() {
@@ -160,6 +165,27 @@ class MainFragment : Fragment() {
         viewModel.setEditMode(true)
         setEditAndAddButtons()
     }
+
+    private fun onBreakfastItemLongClick(){
+        viewModel.setPermissionOnEditTo(EatingTime.BREAKFAST)
+        lunchMedicineCardAdapter.denyPermissionToEdit()
+        dinnerMedicineCardAdapter.denyPermissionToEdit()
+        onItemLongClick()
+    }
+
+    private fun onLunchItemLongClick(){
+        viewModel.setPermissionOnEditTo(EatingTime.LUNCH)
+        breakfastMedicineCardAdapter.denyPermissionToEdit()
+        dinnerMedicineCardAdapter.denyPermissionToEdit()
+        onItemLongClick()
+    }
+    private fun onDinnerItemLongClick(){
+        viewModel.setPermissionOnEditTo(EatingTime.DINNER)
+        breakfastMedicineCardAdapter.denyPermissionToEdit()
+        lunchMedicineCardAdapter.denyPermissionToEdit()
+        onItemLongClick()
+    }
+
 
     private fun setEditAndAddButtons() {
         val isEdit = viewModel.isEditMode

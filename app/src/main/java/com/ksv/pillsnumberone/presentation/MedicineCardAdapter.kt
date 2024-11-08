@@ -12,13 +12,14 @@ import java.util.Collections
 
 class MedicineCardAdapter(
     private val onTimeClick: (Int) -> Unit,
-    private val onItemLongClick: (Int) -> Unit,
+    private val onItemLongClick: () -> Unit,
     private val onItemClick: (Int) -> Unit,
     private val onDataChanged: (List<MedicineItem>) -> Unit
 ) : RecyclerView.Adapter<MedicineCardAdapter.MedicineViewHolder>() {
 
     private var medicineList: MutableList<MedicineItem> = mutableListOf()
     private var editableItemPosition: Int = -1
+    private var permissionToEdit = true
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MedicineViewHolder {
         val holder = MedicineViewHolder(
@@ -46,9 +47,10 @@ class MedicineCardAdapter(
         }
 
         holder.binding.cardLayout.setOnLongClickListener {
-            if (editableItemPosition == -1) {
+            if (editableItemPosition == -1 && permissionToEdit) {
                 setOnEditModeAt(holder.adapterPosition)
-                onItemLongClick(holder.adapterPosition)
+                //onItemLongClick(holder.adapterPosition)
+                onItemLongClick()
             }
             return@setOnLongClickListener true
         }
@@ -165,6 +167,7 @@ class MedicineCardAdapter(
     }
 
     fun finishEdition() {
+        permissionToEdit = true
         if (editableItemPosition >= 0) {
             medicineList[editableItemPosition].editable = false
             onDataChanged(medicineList)
@@ -188,7 +191,10 @@ class MedicineCardAdapter(
     private fun getBackgroundColor(isFinished:Boolean): Int {
         return if(isFinished) MyApp.applicationContext.getColor(R.color.medicine_passive)
         else MyApp.applicationContext.getColor(R.color.medicine_active)
+    }
 
+    fun denyPermissionToEdit(){
+        permissionToEdit = false
     }
 
 

@@ -12,6 +12,8 @@ class DataViewModel : ViewModel() {
     private var _dinnerMedicineList: MutableList<MedicineItem>
     private var _isEditMode = false
     val isEditMode get() = _isEditMode
+    private var _editableTime: EatingTime? = null
+    val editableTime get() = _editableTime
 
     init {
         val repo = Repository()
@@ -59,8 +61,12 @@ class DataViewModel : ViewModel() {
 
     fun setEditMode(isEdit: Boolean) {
         _isEditMode = isEdit
+        if(!isEdit) _editableTime = null
     }
 
+    fun setPermissionOnEditTo(eatingTime: EatingTime){
+        _editableTime = eatingTime
+    }
 
     fun addItem(item: MedicineItem, time: EatingTime) {
         when (time) {
