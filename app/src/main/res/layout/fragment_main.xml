@@ -49,7 +49,7 @@
                     android:id="@+id/breakfast_linear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#8BD6F6"
+                    android:background="@color/breakfast_background"
                     android:orientation="vertical">
 
                     <TextView
@@ -59,7 +59,7 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/morning_title"
                         android:textAlignment="center"
-                        android:textColor="#383C3C"
+                        android:textColor="@color/titles_text"
                         android:textSize="32sp"
                         android:textStyle="bold" />
 
@@ -68,7 +68,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"
-                        tools:itemCount="1"
+                        tools:itemCount="3"
                         tools:listitem="@layout/medicine_view" />
 
                 </LinearLayout>
@@ -88,7 +88,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#77B85B"
+                    android:background="@color/lunch_background"
                     android:orientation="vertical">
 
                     <TextView
@@ -98,7 +98,7 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/noon_title"
                         android:textAlignment="center"
-                        android:textColor="#383C3C"
+                        android:textColor="@color/titles_text"
                         android:textSize="32sp"
                         android:textStyle="bold" />
 
@@ -107,7 +107,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"
-                        tools:itemCount="1"
+                        tools:itemCount="2"
                         tools:listitem="@layout/medicine_view" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -125,7 +125,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#E27C5C"
+                    android:background="@color/dinner_background"
                     android:orientation="vertical">
 
                     <TextView
@@ -135,7 +135,7 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/evening_title"
                         android:textAlignment="center"
-                        android:textColor="#383C3C"
+                        android:textColor="@color/titles_text"
                         android:textSize="32sp"
                         android:textStyle="bold" />
 
@@ -144,7 +144,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"
-                        tools:itemCount="1"
+                        tools:itemCount="3"
                         tools:listitem="@layout/medicine_view" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

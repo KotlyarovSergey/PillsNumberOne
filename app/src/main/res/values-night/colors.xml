@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="edit_background">#716FDB</color>
+    <color name="arrow_background">#CFC6EB</color>
+    <color name="medicine_active">#43452F</color>
+    <color name="breakfast_background">#548194</color>
+    <color name="lunch_background">#53803E</color>
+    <color name="dinner_background">#733725</color>
+    <color name="titles_text">#ADA0D5</color>
+    <color name="edit_text">#EFC6B9</color>
+    <color name="button_ok_text">#C5EFC9</color>
+</resources>

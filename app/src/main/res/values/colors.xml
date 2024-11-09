@@ -7,6 +7,12 @@
     <color name="edit_background">#483DDC</color>
     <color name="arrow_background">#4527A0</color>
     <color name="medicine_active">#F4FF81</color>
+    <color name="edit_text">#F4FF81</color>
     <color name="medicine_passive">#BFD0D7</color>
+    <color name="breakfast_background">#8BD6F6</color>
+    <color name="lunch_background">#77B85B</color>
+    <color name="dinner_background">#E27C5C</color>
+    <color name="titles_text">#383C3C</color>
+    <color name="button_ok_text">#102812</color>
 
 </resources>

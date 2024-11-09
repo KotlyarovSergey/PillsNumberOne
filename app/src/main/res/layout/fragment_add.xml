@@ -23,7 +23,7 @@
             android:text="@string/edit_title_new"
             android:textAlignment="center"
             android:textAllCaps="true"
-            android:textColor="@color/medicine_active"
+            android:textColor="@color/edit_text"
             android:textSize="36sp" />
 
         <androidx.cardview.widget.CardView
@@ -135,7 +135,7 @@
             android:backgroundTint="@color/medicine_active"
             android:paddingHorizontal="50dp"
             android:text="@string/button_ok"
-            android:textColor="@color/black"
+            android:textColor="@color/button_ok_text"
             android:textSize="24sp" />
     </LinearLayout>
 </ScrollView>
