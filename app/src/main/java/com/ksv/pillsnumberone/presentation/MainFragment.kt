@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
@@ -190,6 +191,7 @@ class MainFragment : Fragment() {
 
     private fun onItemClick(adapter: MedicineCardAdapter, position: Int) {
         val oldMedicineItem = adapter.getItemAt(position) ?: MedicineItem("", "")
+        binding.applyButton.visibility = View.GONE
 
         val view = layoutInflater.inflate(R.layout.dialog_edit, null)
         view.findViewById<EditText>(R.id.ed_medicine_title).setText(oldMedicineItem.title)
@@ -209,6 +211,9 @@ class MainFragment : Fragment() {
                         editable = true
                     )
                 adapter.updateItemAt(position, newMedicineItem)
+            }
+            .setOnDismissListener {
+                binding.applyButton.visibility = View.VISIBLE
             }
             .create().show()
     }
