@@ -180,10 +180,10 @@ class MedicineCardAdapter(
     private fun removeItemAt(index: Int) {
         if (index in 0..medicineList.lastIndex) {
             medicineList.removeAt(index)
-            onDataChanged(medicineList)
             notifyItemRemoved(index)
             notifyItemRangeChanged(index, itemCount - index)
             editableItemPosition = -1
+            onDataChanged(medicineList)
         }
     }
 

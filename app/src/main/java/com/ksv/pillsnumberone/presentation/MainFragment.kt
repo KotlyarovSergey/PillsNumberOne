@@ -70,11 +70,7 @@ class MainFragment : Fragment() {
         }
 
         binding.applyButton.setOnClickListener {
-            breakfastMedicineCardAdapter.finishEdition()
-            lunchMedicineCardAdapter.finishEdition()
-            dinnerMedicineCardAdapter.finishEdition()
-            viewModel.clearPermissionOnEdit()
-            setEditAndAddButtons()
+            applyChange()
         }
     }
 
@@ -227,6 +223,7 @@ class MainFragment : Fragment() {
     }
 
     private fun breakfastDataChange(medicineList: List<MedicineItem>) {
+        ifItemWasDelete(viewModel.getBreakfastList().size, medicineList.size)
         binding.breakfastCard.visibility =
             if (medicineList.isEmpty()) View.GONE
             else View.VISIBLE
@@ -234,6 +231,7 @@ class MainFragment : Fragment() {
     }
 
     private fun lunchDataChange(medicineList: List<MedicineItem>) {
+        ifItemWasDelete(viewModel.getLunchList().size, medicineList.size)
         binding.lunchCard.visibility =
             if (medicineList.isEmpty()) View.GONE
             else View.VISIBLE
@@ -241,11 +239,25 @@ class MainFragment : Fragment() {
     }
 
     private fun dinnerDataChange(medicineList: List<MedicineItem>) {
+        ifItemWasDelete(viewModel.getDinnerList().size, medicineList.size)
         binding.dinnerCard.visibility =
             if (medicineList.isEmpty()) View.GONE
             else View.VISIBLE
         viewModel.saveDinnerList(medicineList)
     }
 
+    private fun ifItemWasDelete(vmListSize: Int, adapterListSize: Int){
+        if (vmListSize - adapterListSize == 1){
+            applyChange()
+        }
+    }
+
+    private fun applyChange() {
+        breakfastMedicineCardAdapter.finishEdition()
+        lunchMedicineCardAdapter.finishEdition()
+        dinnerMedicineCardAdapter.finishEdition()
+        viewModel.clearPermissionOnEdit()
+        setEditAndAddButtons()
+    }
 
 }
