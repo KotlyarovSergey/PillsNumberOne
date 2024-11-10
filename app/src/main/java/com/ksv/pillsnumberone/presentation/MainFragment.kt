@@ -1,6 +1,7 @@
 package com.ksv.pillsnumberone.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
@@ -29,6 +31,7 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private val viewModel: DataViewModel by activityViewModels()
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
 
     private val breakfastMedicineCardAdapter =
         MedicineCardAdapter(
@@ -48,6 +51,28 @@ class MainFragment : Fragment() {
             { onDinnerItemLongClick() },
             { dinnerItemClick(it) },
             { dinnerDataChange(it) })
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val dispatcher = requireActivity().onBackPressedDispatcher
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (viewModel.editableTime != null) {
+                    applyChange()
+                } else {
+                    onBackPressedCallback.isEnabled = false
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        }
+        dispatcher.addCallback(this, onBackPressedCallback)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        onBackPressedCallback.isEnabled = true
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,6 +98,10 @@ class MainFragment : Fragment() {
         binding.applyButton.setOnClickListener {
             applyChange()
         }
+
+        binding.breakfastHeader.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
     }
 
 
@@ -89,7 +118,7 @@ class MainFragment : Fragment() {
         binding.recyclerDinner.adapter = dinnerMedicineCardAdapter
         dinnerMedicineCardAdapter.setData(viewModel.getDinnerList())
 
-        when(viewModel.editableTime){
+        when (viewModel.editableTime) {
             EatingTime.BREAKFAST -> breakfastMedicineCardAdapter.denyPermissionToEdit()
             EatingTime.LUNCH -> lunchMedicineCardAdapter.denyPermissionToEdit()
             EatingTime.DINNER -> dinnerMedicineCardAdapter.denyPermissionToEdit()
@@ -110,6 +139,7 @@ class MainFragment : Fragment() {
                         if (viewModel.editableTime == null) menuClearClick()
                         true
                     }
+
                     else -> false
                 }
             }
@@ -145,12 +175,15 @@ class MainFragment : Fragment() {
             }
         timePicker.show(parentFragmentManager, timePicker::class.java.name)
     }
+
     private fun breakfastTimeClick(position: Int) {
         onTimeClick(breakfastMedicineCardAdapter, position)
     }
+
     private fun lunchTimeClick(position: Int) {
         onTimeClick(lunchMedicineCardAdapter, position)
     }
+
     private fun dinnerTimeClick(position: Int) {
         onTimeClick(dinnerMedicineCardAdapter, position)
     }
@@ -160,7 +193,7 @@ class MainFragment : Fragment() {
 //        setEditAndAddButtons()
 //    }
 
-    private fun onBreakfastItemLongClick(){
+    private fun onBreakfastItemLongClick() {
         viewModel.setPermissionOnEditTo(EatingTime.BREAKFAST)
         lunchMedicineCardAdapter.denyPermissionToEdit()
         dinnerMedicineCardAdapter.denyPermissionToEdit()
@@ -168,14 +201,15 @@ class MainFragment : Fragment() {
         setEditAndAddButtons()
     }
 
-    private fun onLunchItemLongClick(){
+    private fun onLunchItemLongClick() {
         viewModel.setPermissionOnEditTo(EatingTime.LUNCH)
         breakfastMedicineCardAdapter.denyPermissionToEdit()
         dinnerMedicineCardAdapter.denyPermissionToEdit()
 //        onItemLongClick()
         setEditAndAddButtons()
     }
-    private fun onDinnerItemLongClick(){
+
+    private fun onDinnerItemLongClick() {
         viewModel.setPermissionOnEditTo(EatingTime.DINNER)
         breakfastMedicineCardAdapter.denyPermissionToEdit()
         lunchMedicineCardAdapter.denyPermissionToEdit()
@@ -199,7 +233,7 @@ class MainFragment : Fragment() {
 
         AlertDialog.Builder(requireContext())
             .setView(view)
-            .setPositiveButton(getString(R.string.button_ok)){ _, _ ->
+            .setPositiveButton(getString(R.string.button_ok)) { _, _ ->
                 val title = view.findViewById<EditText>(R.id.ed_medicine_title).text.toString()
                 val recipe = view.findViewById<EditText>(R.id.ed_medicine_recipe).text.toString()
                 val newMedicineItem =
@@ -217,12 +251,15 @@ class MainFragment : Fragment() {
             }
             .create().show()
     }
+
     private fun breakfastItemClick(position: Int) {
         onItemClick(breakfastMedicineCardAdapter, position)
     }
+
     private fun lunchItemClick(position: Int) {
         onItemClick(lunchMedicineCardAdapter, position)
     }
+
     private fun dinnerItemClick(position: Int) {
         onItemClick(dinnerMedicineCardAdapter, position)
     }
@@ -251,8 +288,8 @@ class MainFragment : Fragment() {
         viewModel.saveDinnerList(medicineList)
     }
 
-    private fun ifItemWasDelete(vmListSize: Int, adapterListSize: Int){
-        if (vmListSize - adapterListSize == 1){
+    private fun ifItemWasDelete(vmListSize: Int, adapterListSize: Int) {
+        if (vmListSize - adapterListSize == 1) {
             applyChange()
         }
     }
