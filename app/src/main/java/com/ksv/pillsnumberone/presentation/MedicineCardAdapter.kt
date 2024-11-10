@@ -30,13 +30,8 @@ class MedicineCardAdapter(
             )
         )
 
-        holder.binding.checkFinish.setOnCheckedChangeListener { _, isChecked ->
-            holder.binding.mainLayout.setBackgroundColor(getBackgroundColor(isChecked))
-            medicineList[holder.adapterPosition].finished = isChecked
-            onDataChanged(medicineList)
-        }
         holder.binding.time.setOnClickListener {
-            val isChecked = holder.binding.checkFinish.isChecked
+            val isChecked = medicineList[holder.adapterPosition].finished
             val isEditable = medicineList[holder.adapterPosition].editable
             if (!isChecked && !isEditable) {
                 onTimeClick(holder.adapterPosition)
@@ -49,7 +44,6 @@ class MedicineCardAdapter(
         holder.binding.cardLayout.setOnLongClickListener {
             if (editableItemPosition == -1 && permissionToEdit) {
                 setOnEditModeAt(holder.adapterPosition)
-                //onItemLongClick(holder.adapterPosition)
                 onItemLongClick()
             }
             return@setOnLongClickListener true
@@ -62,8 +56,17 @@ class MedicineCardAdapter(
         }
 
         holder.binding.cardLayout.setOnClickListener {
-            if(holder.adapterPosition == editableItemPosition)
-                onItemClick(holder.adapterPosition)
+            if(permissionToEdit){
+                if(holder.adapterPosition == editableItemPosition){
+                    onItemClick(holder.adapterPosition)
+                }
+                if(editableItemPosition == -1){
+                    val setFinished = !medicineList[holder.adapterPosition].finished
+                    holder.binding.mainLayout.setBackgroundColor(getBackgroundColor(setFinished))
+                    medicineList[holder.adapterPosition].finished = setFinished
+                    onDataChanged(medicineList)
+                }
+            }
         }
 
         return holder
@@ -78,9 +81,8 @@ class MedicineCardAdapter(
                 title.text = medicineItem.title
                 recipe.text = medicineItem.recipe
                 time.text = medicineItem.time
-                checkFinish.isChecked = medicineItem.finished
+                time.visibility = if (medicineItem.editable) View.GONE else View.VISIBLE
                 mainLayout.setBackgroundColor(getBackgroundColor(medicineItem.finished))
-                checkFinish.isClickable = !medicineItem.editable
                 removeButton.visibility = if (medicineItem.editable) View.VISIBLE else View.GONE
                 moveLayout.visibility = if (medicineItem.editable) View.VISIBLE else View.GONE
                 if (medicineItem.editable) editableItemPosition = holder.adapterPosition
