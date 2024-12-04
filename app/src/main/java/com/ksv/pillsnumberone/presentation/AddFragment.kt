@@ -28,7 +28,7 @@ class AddFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonOk.setOnClickListener {
+        binding.buttonAdd.setOnClickListener {
             val title = binding.medicineName.text.toString()
             val recipe = binding.medicineRecipe.text.toString()
             val medicine = MedicineItem(title, recipe)

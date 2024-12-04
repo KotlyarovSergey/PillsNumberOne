@@ -6,6 +6,7 @@
     <string name="noon_title">Обед</string>
     <string name="evening_title">Ужин</string>
     <string name="floating_button_description">Добавить</string>
+    <string name="button_apply_description">Применить</string>
 
 
     <!--    MedicineView-->
@@ -28,14 +29,17 @@
     <string name="alert_dialog_clear_message">Сбросить все пилюльки</string>
     <string name="alert_dialog_clear_yes">Да</string>
     <string name="alert_dialog_clear_no">Нет</string>
+    <string name="alert_dialog_ok">OK</string>
 
-    <!--    EditFragment -->
+    <!--    AddFragment -->
     <string name="edit_title_edit">Изменить пилюльку</string>
     <string name="edit_title_new">Добавить пилюльку</string>
-    <string name="medicine_name">Название препарата:</string>
-    <string name="medicine_recipe">Способ приема:</string>
+    <string name="eating_time_title">Период веремени</string>
+    <string name="medicine_name">Название препарата</string>
+    <string name="medicine_recipe">Способ приема</string>
+    <string name="recipe_hit">за 30 мин до еды, 2шт</string>
     <string name="need_check_message">Выберете период веремени</string>
-    <string name="button_ok">OK</string>
+    <string name="button_add">Добавить</string>
 
     <!--    EditDialog -->
     <string name="edit_medicine_name">Название препарата</string>

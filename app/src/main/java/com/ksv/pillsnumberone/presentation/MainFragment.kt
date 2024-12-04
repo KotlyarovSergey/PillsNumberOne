@@ -233,7 +233,7 @@ class MainFragment : Fragment() {
 
         AlertDialog.Builder(requireContext())
             .setView(view)
-            .setPositiveButton(getString(R.string.button_ok)) { _, _ ->
+            .setPositiveButton(getString(R.string.alert_dialog_ok)) { _, _ ->
                 val title = view.findViewById<EditText>(R.id.ed_medicine_title).text.toString()
                 val recipe = view.findViewById<EditText>(R.id.ed_medicine_recipe).text.toString()
                 val newMedicineItem =

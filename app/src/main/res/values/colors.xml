@@ -13,6 +13,6 @@
     <color name="lunch_background">#77B85B</color>
     <color name="dinner_background">#E27C5C</color>
     <color name="titles_text">#383C3C</color>
-    <color name="button_ok_text">#102812</color>
+    <color name="button_add_text">#102812</color>
 
 </resources>

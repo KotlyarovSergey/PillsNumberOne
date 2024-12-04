@@ -37,32 +37,45 @@
                 android:layout_height="wrap_content"
                 android:background="@color/medicine_active"
                 android:gravity="center"
-                android:orientation="horizontal"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp">
 
-                <CheckBox
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/eating_time_title"
+                    android:textSize="24sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/check_breakfast"
-                    android:layout_width="wrap_content"
+                    style="@style/MySwitch"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
+                    android:checked="false"
                     android:text="@string/morning_title"
                     android:textSize="21sp" />
 
-                <CheckBox
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/check_lunch"
-                    android:layout_width="wrap_content"
+                    style="@style/MySwitch"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:text="@string/noon_title"
-                    android:textSize="21sp" />
+                    android:textSize="21sp"
+                    tools:checked="true" />
 
-                <CheckBox
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/check_dinner"
-                    android:layout_width="wrap_content"
+                    style="@style/MySwitch"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:text="@string/evening_title"
-                    android:textSize="21sp" />
+                    android:textSize="21sp"/>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -92,7 +105,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="textCapSentences"
                     android:paddingHorizontal="8dp"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    tools:text="Омепразол" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -120,6 +134,7 @@
                     android:id="@+id/medicine_recipe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/recipe_hit"
                     android:inputType="text"
                     android:paddingHorizontal="8dp"
                     android:textSize="22sp" />
@@ -127,15 +142,16 @@
         </androidx.cardview.widget.CardView>
 
         <Button
-            android:id="@+id/button_ok"
+            android:id="@+id/button_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="32dp"
-            android:backgroundTint="@color/medicine_active"
-            android:paddingHorizontal="50dp"
-            android:text="@string/button_ok"
-            android:textColor="@color/button_ok_text"
+            android:backgroundTint="#41A91D"
+            android:paddingHorizontal="24dp"
+            android:text="@string/button_add"
+            android:textAllCaps="true"
+            android:textColor="#231806"
             android:textSize="24sp" />
     </LinearLayout>
 </ScrollView>
