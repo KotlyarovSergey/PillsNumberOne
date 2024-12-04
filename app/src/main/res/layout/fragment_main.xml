@@ -27,128 +27,144 @@
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
-        <LinearLayout
-            android:id="@+id/linear"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp">
+            android:layout_height="match_parent">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/breakfast_card"
+            <TextView
+                android:id="@+id/hello_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-black"
+                android:layout_marginHorizontal="16dp"
+                android:text="@string/hello_text2"
                 android:visibility="gone"
-                app:cardCornerRadius="15dp"
-                tools:visibility="gone">
+                android:textAlignment="center"
+                android:textColor="@color/arrow_background"
+                android:textSize="38sp" />
 
-                <LinearLayout
-                    android:id="@+id/breakfast_linear"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/breakfast_background"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/breakfast_header"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/morning_title"
-                        android:textAlignment="center"
-                        android:textColor="@color/titles_text"
-                        android:textSize="32sp"
-                        android:textStyle="bold" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_breakfast"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        tools:itemCount="3"
-                        tools:listitem="@layout/medicine_view" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/lunch_card"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:padding="4dp"
-                android:visibility="gone"
-                app:cardCornerRadius="15dp"
-                tools:visibility="gone">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp">
 
-                <LinearLayout
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/breakfast_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/lunch_background"
-                    android:orientation="vertical">
+                    android:layout_marginBottom="8dp"
+                    android:visibility="gone"
+                    app:cardCornerRadius="15dp"
+                    tools:visibility="gone">
 
-                    <TextView
-                        android:id="@+id/lunch_header"
+                    <LinearLayout
+                        android:id="@+id/breakfast_linear"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/noon_title"
-                        android:textAlignment="center"
-                        android:textColor="@color/titles_text"
-                        android:textSize="32sp"
-                        android:textStyle="bold" />
+                        android:background="@color/breakfast_background"
+                        android:orientation="vertical">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_lunch"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        tools:itemCount="2"
-                        tools:listitem="@layout/medicine_view" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:id="@+id/breakfast_header"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/morning_title"
+                            android:textAlignment="center"
+                            android:textColor="@color/titles_text"
+                            android:textSize="32sp"
+                            android:textStyle="bold" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_breakfast"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            tools:itemCount="3"
+                            tools:listitem="@layout/medicine_view" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/dinner_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:visibility="gone"
-                app:cardCornerRadius="15dp"
-                tools:visibility="gone">
-
-                <LinearLayout
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/lunch_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/dinner_background"
-                    android:orientation="vertical">
+                    android:layout_marginBottom="8dp"
+                    android:padding="4dp"
+                    android:visibility="gone"
+                    app:cardCornerRadius="15dp"
+                    tools:visibility="gone">
 
-                    <TextView
-                        android:id="@+id/dinner_header"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/evening_title"
-                        android:textAlignment="center"
-                        android:textColor="@color/titles_text"
-                        android:textSize="32sp"
-                        android:textStyle="bold" />
+                        android:background="@color/lunch_background"
+                        android:orientation="vertical">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_dinner"
+                        <TextView
+                            android:id="@+id/lunch_header"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/noon_title"
+                            android:textAlignment="center"
+                            android:textColor="@color/titles_text"
+                            android:textSize="32sp"
+                            android:textStyle="bold" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_lunch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            tools:itemCount="2"
+                            tools:listitem="@layout/medicine_view" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/dinner_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:visibility="gone"
+                    app:cardCornerRadius="15dp"
+                    tools:visibility="gone">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        tools:itemCount="3"
-                        tools:listitem="@layout/medicine_view" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
+                        android:background="@color/dinner_background"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/dinner_header"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/evening_title"
+                            android:textAlignment="center"
+                            android:textColor="@color/titles_text"
+                            android:textSize="32sp"
+                            android:textStyle="bold" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_dinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            tools:itemCount="3"
+                            tools:listitem="@layout/medicine_view" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </FrameLayout>
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -159,10 +175,10 @@
         android:layout_margin="42dp"
         android:backgroundTint="#558B2F"
         android:contentDescription="@string/button_apply_description"
-        android:src="@drawable/baseline_check_24"
         android:nestedScrollingEnabled="false"
-        app:maxImageSize="48dp"
+        android:src="@drawable/baseline_check_24"
         android:visibility="gone"
+        app:maxImageSize="48dp"
         app:shapeAppearance="?attr/shapeAppearance"
         app:tint="#FFFFFF" />
 

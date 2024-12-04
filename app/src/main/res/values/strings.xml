@@ -44,6 +44,8 @@
     <!--    EditDialog -->
     <string name="edit_medicine_name">Название препарата</string>
     <string name="edit_medicine_recipe">Способ приема</string>
+    <string name="hello_text">Здесь пока пусто.\n Нажмите \"+\" для добавления.</string>
+    <string name="hello_text2">Нажмите \"+\", чтобы добавить пилюльку</string>
 
 
 </resources>

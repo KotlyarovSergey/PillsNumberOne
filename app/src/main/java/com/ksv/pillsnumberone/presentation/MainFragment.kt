@@ -1,7 +1,6 @@
 package com.ksv.pillsnumberone.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -10,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +16,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.MaterialToolbar
@@ -26,6 +25,8 @@ import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.EatingTime
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
 import com.ksv.pillsnumberone.entity.MedicineItem
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
@@ -89,7 +90,7 @@ class MainFragment : Fragment() {
 
         addMenuProvider()
         setRecyclerViews()
-        setEditAndAddButtons()
+        setAddAndApplyButtons()
 
         binding.addButton.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_editFragment)
@@ -102,6 +103,11 @@ class MainFragment : Fragment() {
         binding.breakfastHeader.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+
+        viewModel.emptyAllLists.onEach { isEmpty ->
+            binding.helloTextView.visibility =  if (isEmpty) View.VISIBLE
+            else View.GONE
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
 
@@ -188,36 +194,28 @@ class MainFragment : Fragment() {
         onTimeClick(dinnerMedicineCardAdapter, position)
     }
 
-
-//    private fun onItemLongClick() {
-//        setEditAndAddButtons()
-//    }
-
     private fun onBreakfastItemLongClick() {
         viewModel.setPermissionOnEditTo(EatingTime.BREAKFAST)
         lunchMedicineCardAdapter.denyPermissionToEdit()
         dinnerMedicineCardAdapter.denyPermissionToEdit()
-//        onItemLongClick()
-        setEditAndAddButtons()
+        setAddAndApplyButtons()
     }
 
     private fun onLunchItemLongClick() {
         viewModel.setPermissionOnEditTo(EatingTime.LUNCH)
         breakfastMedicineCardAdapter.denyPermissionToEdit()
         dinnerMedicineCardAdapter.denyPermissionToEdit()
-//        onItemLongClick()
-        setEditAndAddButtons()
+        setAddAndApplyButtons()
     }
 
     private fun onDinnerItemLongClick() {
         viewModel.setPermissionOnEditTo(EatingTime.DINNER)
         breakfastMedicineCardAdapter.denyPermissionToEdit()
         lunchMedicineCardAdapter.denyPermissionToEdit()
-//        onItemLongClick()
-        setEditAndAddButtons()
+        setAddAndApplyButtons()
     }
 
-    private fun setEditAndAddButtons() {
+    private fun setAddAndApplyButtons() {
         val isEditMode = viewModel.editableTime != null
         binding.applyButton.visibility = if (isEditMode) View.VISIBLE else View.GONE
         binding.addButton.visibility = if (isEditMode) View.GONE else View.VISIBLE
@@ -299,7 +297,7 @@ class MainFragment : Fragment() {
         lunchMedicineCardAdapter.finishEdition()
         dinnerMedicineCardAdapter.finishEdition()
         viewModel.clearPermissionOnEdit()
-        setEditAndAddButtons()
+        setAddAndApplyButtons()
     }
 
 }
