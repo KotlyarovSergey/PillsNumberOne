@@ -53,6 +53,8 @@ class MainFragment : Fragment() {
             { dinnerItemClick(it) },
             { dinnerDataChange(it) })
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
