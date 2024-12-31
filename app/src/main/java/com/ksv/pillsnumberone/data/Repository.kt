@@ -38,9 +38,9 @@ class Repository {
             if (canNotBeMoveUp(indexOfMoved)) return
             val newList = _actualData.value.toMutableList()
             Collections.swap(newList, indexOfMoved, indexOfMoved - 1)
-            newList.forEachIndexed { ind, item ->
-                item.index = ind
-            }
+//            newList.forEachIndexed { ind, item ->
+//                item.index = ind
+//            }
             _actualData.value = newList.toList()
         }
     }
@@ -51,9 +51,9 @@ class Repository {
             if (canNotBeMoveDown(indexOfMoved)) return
             val newList = _actualData.value.toMutableList()
             Collections.swap(newList, indexOfMoved, indexOfMoved + 1)
-            newList.forEachIndexed { ind, item ->
-                item.index = ind
-            }
+//            newList.forEachIndexed { ind, item ->
+//                item.index = ind
+//            }
             _actualData.value = newList.toList()
         }
     }
@@ -71,40 +71,54 @@ class Repository {
 
     fun remove(dataItem: DataItem) {
         val newList = _actualData.value.filter { it != dataItem }
-        newList.forEachIndexed { ind, item ->
-            item.index = ind
-        }
+//        newList.forEachIndexed { ind, item ->
+//            item.index = ind
+//        }
         _actualData.value = newList
     }
 
-//    fun remove(position: Int){
-//        val newList = _actualData.value.toMutableList()
-//        newList.removeAt(position)
-//        _actualData.value = newList
-//    }
-
-
     companion object {
         private val DEFAULT_DATA_ITEMS = listOf(
-            DataItem.Caption(0, "Утро", Period.MORNING),
-            DataItem.Pill(1, "Омепразол", "за 30 мин. до еды", Period.MORNING, 0, "6:10", true),
-            DataItem.Pill(2, "Мебиверин", "за 20 мин. до еды", Period.MORNING, 1, "6:20", true),
-            DataItem.Pill(3, "Гастростат", "перед едой", Period.MORNING, 2, time = "6:40"),
-            DataItem.Pill(4, "Бак-Сет", "во время еды", Period.MORNING, 3),
-            DataItem.Pill(5, "Эрмиталь", "во время еды", Period.MORNING, 4),
+            DataItem.Caption(0,"Утро", Period.MORNING),
+            DataItem.Pill(12, "Омепразол", "за 30 мин. до еды", Period.MORNING, 0, "6:10", true),
+            DataItem.Pill(21, "Мебиверин", "за 20 мин. до еды", Period.MORNING, 1, "6:20", true),
+            DataItem.Pill(32, "Гастростат", "перед едой", Period.MORNING, 2, time = "6:40"),
+            DataItem.Pill(14, "Бак-Сет", "во время еды", Period.MORNING, 3),
+            DataItem.Pill(15, "Эрмиталь", "во время еды", Period.MORNING, 4),
 
-            DataItem.Caption(6, "Обед", Period.NOON),
-            DataItem.Pill(7, "Гастростат", "перед едой", Period.NOON, 0),
-            DataItem.Pill(8, "Эрмиталь", "во время еды", Period.NOON, 1),
+            DataItem.Caption(1,"Обед", Period.NOON),
+            DataItem.Pill(17, "Гастростат", "перед едой", Period.NOON, 0),
+            DataItem.Pill(28, "Эрмиталь", "во время еды", Period.NOON, 1),
 
-            DataItem.Caption(9, "Вечер", Period.EVENING),
-            DataItem.Pill(10, "Омепразол", "за 30 мин. до еды", Period.EVENING, 0),
-            DataItem.Pill(11, "Мебиверин", "за 20 мин. до еды", Period.EVENING, 1),
-            DataItem.Pill(12, "Гастростат", "перед едой", Period.EVENING, 2),
-            DataItem.Pill(13, "Бак-Сет", "во время еды", Period.EVENING, 3),
-            DataItem.Pill(14, "Эрмиталь", "во время еды", Period.EVENING, 4),
-            DataItem.Pill(15, "Урсодезоксихол", "перед сном", Period.EVENING, 5)
-
+            DataItem.Caption(2,"Вечер", Period.EVENING),
+            DataItem.Pill(110, "Омепразол", "за 30 мин. до еды", Period.EVENING, 0),
+            DataItem.Pill(114, "Мебиверин", "за 20 мин. до еды", Period.EVENING, 1),
+            DataItem.Pill(212, "Гастростат", "перед едой", Period.EVENING, 2),
+            DataItem.Pill(613, "Бак-Сет", "во время еды", Period.EVENING, 3),
+            DataItem.Pill(314, "Эрмиталь", "во время еды", Period.EVENING, 4),
+            DataItem.Pill(154, "Урсодезоксихол", "перед сном", Period.EVENING, 5)
         )
+
+//        private val DEFAULT_DATA_ITEMS = listOf(
+//            DataItem.Caption(0, "Утро", Period.MORNING),
+//            DataItem.Pill(1, "Омепразол", "за 30 мин. до еды", Period.MORNING, 0, "6:10", true),
+//            DataItem.Pill(2, "Мебиверин", "за 20 мин. до еды", Period.MORNING, 1, "6:20", true),
+//            DataItem.Pill(3, "Гастростат", "перед едой", Period.MORNING, 2, time = "6:40"),
+//            DataItem.Pill(4, "Бак-Сет", "во время еды", Period.MORNING, 3),
+//            DataItem.Pill(5, "Эрмиталь", "во время еды", Period.MORNING, 4),
+//
+//            DataItem.Caption(6, "Обед", Period.NOON),
+//            DataItem.Pill(7, "Гастростат", "перед едой", Period.NOON, 0),
+//            DataItem.Pill(8, "Эрмиталь", "во время еды", Period.NOON, 1),
+//
+//            DataItem.Caption(9, "Вечер", Period.EVENING),
+//            DataItem.Pill(10, "Омепразол", "за 30 мин. до еды", Period.EVENING, 0),
+//            DataItem.Pill(11, "Мебиверин", "за 20 мин. до еды", Period.EVENING, 1),
+//            DataItem.Pill(12, "Гастростат", "перед едой", Period.EVENING, 2),
+//            DataItem.Pill(13, "Бак-Сет", "во время еды", Period.EVENING, 3),
+//            DataItem.Pill(14, "Эрмиталь", "во время еды", Period.EVENING, 4),
+//            DataItem.Pill(15, "Урсодезоксихол", "перед сном", Period.EVENING, 5)
+//
+//        )
     }
 }

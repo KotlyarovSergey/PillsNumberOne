@@ -1,5 +1,6 @@
 package com.ksv.pillsnumberone.presentation
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,51 +11,51 @@ import androidx.viewbinding.ViewBinding
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.databinding.CaptionViewBinding
 import com.ksv.pillsnumberone.databinding.PillViewBinding
+import com.ksv.pillsnumberone.entity.Interaction
 
-typealias OnClick = (DataItem) -> Unit
-//typealias OnClick = (Int) -> Unit
 
-class DataListAdapter(
-    private val onUpClick: OnClick,
-    private val onDownClick: OnClick,
-    private val onRemoveClick: OnClick
-) :
+class DataListAdapter(private val interaction: Interaction) :
     ListAdapter<DataItem, DataListAdapter.DataItemViewHolder>(DiffUtilItemCallback()) {
-
-//    var data = listOf<DataItem>()
-//        set(value) {
-//            field = value
-//            notifyItemRangeChanged(0, value.size)
-//            Log.d("ksvlog", "Adapter.data: $data")
-//        }
 
     sealed class DataItemViewHolder(open val binding: ViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        class PillItemViewHolder(override val binding: PillViewBinding) :
-            DataItemViewHolder(binding) {
-            fun bind(pill: DataItem.Pill, onUpClick: OnClick, onDownClick: OnClick, onRemoveClick: OnClick) {
-//            fun bind(pill: DataItem.Pill, position: Int,  onUpClick: OnClick, onDownClick: OnClick, onRemoveClick: OnClick) {
-                binding.time.text = pill.time
-                binding.recipe.text = pill.recipe
-                binding.title.text = pill.title
-                binding.moveUpButton.setOnClickListener { onUpClick(pill) }
-                binding.moveDownButton.setOnClickListener { onDownClick(pill) }
-                binding.removeButton.setOnClickListener { onRemoveClick(pill) }
-//                binding.moveUpButton.setOnClickListener { onUpClick(position) }
-//                binding.moveDownButton.setOnClickListener { onDownClick(position) }
-//                binding.removeButton.setOnClickListener { onRemoveClick(position) }
-            }
-        }
-
         class CaptionItemViewHolder(override val binding: CaptionViewBinding) :
             DataItemViewHolder(binding) {
-            fun bind(caption: DataItem.Caption,  onUpClick: OnClick, onDownClick: OnClick, onRemoveClick: OnClick) {
-//            fun bind(caption: DataItem.Caption, position: Int,  onUpClick: OnClick, onDownClick: OnClick, onRemoveClick: OnClick) {
+            fun bind(caption: DataItem.Caption) {
                 binding.caption.text = caption.caption
             }
 
         }
+
+        class PillItemViewHolder(override val binding: PillViewBinding) :
+            DataItemViewHolder(binding) {
+            fun bind(
+                pill: DataItem.Pill,
+                interaction: Interaction
+            ) {
+                binding.time.text = pill.time
+                binding.recipe.text = pill.recipe
+                binding.title.text = pill.title
+                binding.root.setOnClickListener { interaction.onItemClick(pill) }
+                binding.root.setOnLongClickListener {
+                    interaction.onItemLongClick(pill)
+                    true
+                }
+                binding.moveUpButton.setOnClickListener { interaction.onUpClick(pill) }
+                binding.moveDownButton.setOnClickListener { interaction.onDownClick(pill) }
+                binding.removeButton.setOnClickListener { interaction.onRemoveClick(pill) }
+                if (pill.finished) {
+                    binding.time.isClickable = false
+                    binding.mainLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_passive))
+                } else {
+                    binding.mainLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_active))
+                    binding.time.setOnClickListener { interaction.onTimeClick(pill) }
+                }
+            }
+        }
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataItemViewHolder {
@@ -68,6 +69,7 @@ class DataListAdapter(
                     )
                 )
             }
+
             R.layout.caption_view -> {
                 DataItemViewHolder.CaptionItemViewHolder(
                     CaptionViewBinding.inflate(
@@ -77,41 +79,48 @@ class DataListAdapter(
                     )
                 )
             }
+
             else -> throw IllegalArgumentException("Invalid ViewType Provided")
         }
     }
 
-//    override fun getItemCount(): Int = data.size
-
     override fun onBindViewHolder(holder: DataItemViewHolder, position: Int) {
-        when(holder){
+        when (holder) {
             is DataItemViewHolder.CaptionItemViewHolder -> {
-//                holder.bind(data[position] as DataItem.Caption, onUpClick, onDownClick, onRemoveClick)
-                holder.bind(currentList[position] as DataItem.Caption, onUpClick, onDownClick, onRemoveClick)
-//                holder.bind(currentList[position] as DataItem.Caption, position, onUpClick, onDownClick, onRemoveClick)
+                holder.bind(currentList[position] as DataItem.Caption)
             }
+
             is DataItemViewHolder.PillItemViewHolder -> {
-//                holder.bind(data[position] as DataItem.Pill, onUpClick, onDownClick, onRemoveClick)
-                holder.bind(currentList[position] as DataItem.Pill, onUpClick, onDownClick, onRemoveClick)
-//                holder.bind(currentList[position] as DataItem.Pill, position, onUpClick, onDownClick, onRemoveClick)
+                holder.bind(
+                    currentList[position] as DataItem.Pill,
+                    interaction
+                )
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-//        return when(data[position]){
-        return when(currentList[position]){
+        return when (currentList[position]) {
             is DataItem.Caption -> R.layout.caption_view
             is DataItem.Pill -> R.layout.pill_view
         }
     }
 
-    class DiffUtilItemCallback: DiffUtil.ItemCallback<DataItem>(){
+    class DiffUtilItemCallback : DiffUtil.ItemCallback<DataItem>() {
         override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean =
-            oldItem.index == newItem.index
+            if (oldItem::class == newItem::class) {
+                when (oldItem) {
+                    is DataItem.Pill -> {
+                        oldItem.id == (newItem as DataItem.Pill).id
+                    }
+
+                    is DataItem.Caption -> {
+                        oldItem.id == (newItem as DataItem.Caption).id
+                    }
+                }
+            } else false
 
         override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean =
             oldItem == newItem
-
     }
 }
