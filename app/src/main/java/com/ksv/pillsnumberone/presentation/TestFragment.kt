@@ -44,32 +44,28 @@ class TestFragment : Fragment() {
         _binding = FragmentTestBinding.inflate(layoutInflater)
         binding.recycler.adapter = dataListAdapter
 
+        binding.applyButton.setOnClickListener {
+            viewModel.finishEdition()
+        }
+
         viewModel.actualData.onEach {
             dataListAdapter.submitList(it)
-            Log.d("ksvlog", "actualData.onEach")
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.setTimeFor.onEach { item ->
-            Log.d("ksvlog", "setTimeFor.onEach")
             item?.let{
-                val timePicker = MaterialTimePicker.Builder()
-                    .setTitleText(requireActivity().getString(R.string.time_picker_title))
-                    .build().apply {
-                        addOnPositiveButtonClickListener {
-                            val hour = this.hour
-                            var min = this.minute.toString()
-                            if (this.minute < 10) min = "0$min"
-                            val timeToDisplay = "$hour:$min"
-                            viewModel.setTime(timeToDisplay)
-                        }
-                        addOnDismissListener {
-                            viewModel.setTimeFinished()
-                        }
-                    }
-                timePicker.show(parentFragmentManager, timePicker::class.java.name)
+                setTime(item)
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
+        viewModel.isEditMode.onEach { isEdit ->
+            if (isEdit){
+                binding.applyButton.visibility = View.VISIBLE
+            } else {
+                binding.applyButton.visibility = View.GONE
+            }
+
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
         return binding.root
     }
 
@@ -78,6 +74,24 @@ class TestFragment : Fragment() {
         _binding = null
     }
 
+
+    private fun setTime(item: DataItem){
+        val timePicker = MaterialTimePicker.Builder()
+            .setTitleText(requireActivity().getString(R.string.time_picker_title))
+            .build().apply {
+                addOnPositiveButtonClickListener {
+                    val hour = this.hour
+                    var min = this.minute.toString()
+                    if (this.minute < 10) min = "0$min"
+                    val timeToDisplay = "$hour:$min"
+                    viewModel.setTime(timeToDisplay)
+                }
+                addOnDismissListener {
+                    viewModel.setTimeFinished()
+                }
+            }
+        timePicker.show(parentFragmentManager, timePicker::class.java.name)
+    }
 
 
 }

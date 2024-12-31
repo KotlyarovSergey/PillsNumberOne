@@ -28,7 +28,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="visible"
+                android:visibility="gone"
                 tools:visibility="visible">
 
                 <ImageButton
@@ -106,7 +106,9 @@
             <FrameLayout
                 android:id="@+id/remove_layout"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <ImageButton
                     android:id="@+id/remove_button"
@@ -116,9 +118,7 @@
                     android:layout_marginHorizontal="8dp"
                     android:backgroundTint="#00000000"
                     android:contentDescription="@string/more_button_description"
-                    android:src="@drawable/baseline_delete_forever_24"
-                    android:visibility="visible"
-                    tools:visibility="visible" />
+                    android:src="@drawable/baseline_delete_forever_24" />
             </FrameLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

@@ -2,6 +2,7 @@ package com.ksv.pillsnumberone.presentation
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -51,6 +52,13 @@ class DataListAdapter(private val interaction: Interaction) :
                 } else {
                     binding.mainLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_active))
                     binding.time.setOnClickListener { interaction.onTimeClick(pill) }
+                }
+                if (pill.editable){
+                    binding.removeLayout.visibility = View.VISIBLE
+                    binding.moveLayout.visibility = View.VISIBLE
+                } else {
+                    binding.removeLayout.visibility = View.GONE
+                    binding.moveLayout.visibility = View.GONE
                 }
             }
         }

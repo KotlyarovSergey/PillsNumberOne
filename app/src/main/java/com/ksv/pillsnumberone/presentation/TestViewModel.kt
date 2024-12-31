@@ -1,11 +1,15 @@
 package com.ksv.pillsnumberone.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ksv.pillsnumberone.data.Repository
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.model.DataItemService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class TestViewModel: ViewModel() {
     private var repository: Repository = Repository()
@@ -16,8 +20,14 @@ class TestViewModel: ViewModel() {
     private val _setTimeFor = MutableStateFlow<DataItem?>(null)
     val setTimeFor = _setTimeFor.asStateFlow()
 
+    private val _isEditMode = MutableStateFlow<Boolean>(false)
+    val isEditMode = _isEditMode.asStateFlow()
+
     init {
         _dataItems.value = repository.getData()
+        dataItemService.isEditMode.onEach {
+            _isEditMode.value = it
+        }.launchIn(viewModelScope)
     }
 
     fun moveUp(movedItem: DataItem) {
@@ -33,7 +43,7 @@ class TestViewModel: ViewModel() {
         dataItemService.click(item)
     }
     fun itemLongClick(item: DataItem){
-
+        dataItemService.longClick(item)
     }
     fun setTimeClick(item: DataItem){
         _setTimeFor.value = item
@@ -45,5 +55,8 @@ class TestViewModel: ViewModel() {
         _setTimeFor.value?.let { item ->
             dataItemService.setTimeFor(item, time)
         }
+    }
+    fun finishEdition(){
+        dataItemService.finishEditionForAll()
     }
 }
