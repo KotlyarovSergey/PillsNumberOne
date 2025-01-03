@@ -1,5 +1,6 @@
 package com.ksv.pillsnumberone.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ksv.pillsnumberone.data.Repository
@@ -7,7 +8,6 @@ import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.model.DataItemService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -16,6 +16,7 @@ class TestViewModel: ViewModel() {
 
     private val _dataItems = MutableStateFlow<List<DataItem>>(emptyList())
     val actualData = _dataItems.asStateFlow()
+
     private val dataItemService = DataItemService(_dataItems)
     private val _setTimeFor = MutableStateFlow<DataItem?>(null)
     val setTimeFor = _setTimeFor.asStateFlow()
@@ -24,7 +25,11 @@ class TestViewModel: ViewModel() {
     val isEditMode = _isEditMode.asStateFlow()
 
     init {
-        _dataItems.value = repository.getData()
+        Log.d("ksvlog", "TestViewModel init")
+        //_dataItems.value = repository.getData()
+        val pills = repository.getPills()
+        _dataItems.value = dataItemService.makeDataList(pills)
+
         dataItemService.isEditMode.onEach {
             _isEditMode.value = it
         }.launchIn(viewModelScope)
@@ -38,6 +43,7 @@ class TestViewModel: ViewModel() {
     }
     fun removeItem(removedItem: DataItem){
         dataItemService.remove(removedItem)
+        finishEdition()
     }
     fun itemClick(item: DataItem){
         dataItemService.click(item)

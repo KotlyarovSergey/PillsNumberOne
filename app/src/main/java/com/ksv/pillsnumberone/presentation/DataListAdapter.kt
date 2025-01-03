@@ -46,14 +46,16 @@ class DataListAdapter(private val interaction: Interaction) :
                 binding.moveUpButton.setOnClickListener { interaction.onUpClick(pill) }
                 binding.moveDownButton.setOnClickListener { interaction.onDownClick(pill) }
                 binding.removeButton.setOnClickListener { interaction.onRemoveClick(pill) }
+                binding.time.setOnClickListener { interaction.onTimeClick(pill) }
+                binding.time.isClickable = true
                 if (pill.finished) {
                     binding.time.isClickable = false
                     binding.mainLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_passive))
                 } else {
                     binding.mainLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_active))
-                    binding.time.setOnClickListener { interaction.onTimeClick(pill) }
                 }
                 if (pill.editable){
+                    binding.time.isClickable = false
                     binding.removeLayout.visibility = View.VISIBLE
                     binding.moveLayout.visibility = View.VISIBLE
                 } else {

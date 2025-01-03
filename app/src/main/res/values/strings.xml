@@ -1,10 +1,16 @@
 <resources>
     <string name="app_name">Пилюльки</string>
 
-    <!--    MainFragment-->
-    <string name="morning_title">Завтрак</string>
+    <!--    Common -->
+    <string name="morning_title">Утро</string>
     <string name="noon_title">Обед</string>
-    <string name="evening_title">Ужин</string>
+    <string name="evening_title">Вечер</string>
+
+
+    <!--    MainFragment-->
+    <string name="breakfast_title">Завтрак</string>
+    <string name="lunch_title">Обед</string>
+    <string name="dinner_title">Ужин</string>
     <string name="floating_button_description">Добавить</string>
     <string name="button_apply_description">Применить</string>
 

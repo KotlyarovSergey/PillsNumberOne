@@ -40,10 +40,19 @@
             android:name="newMedicine"
             app:argType="boolean"
             android:defaultValue="true" />
+        <action
+            android:id="@+id/action_editFragment_to_testFragment"
+            app:destination="@id/testFragment"
+            app:popUpTo="@id/testFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/testFragment"
         android:name="com.ksv.pillsnumberone.presentation.TestFragment"
         android:label="fragment_test"
-        tools:layout="@layout/fragment_test" />
+        tools:layout="@layout/fragment_test" >
+        <action
+            android:id="@+id/action_testFragment_to_editFragment"
+            app:destination="@id/editFragment" />
+    </fragment>
 </navigation>

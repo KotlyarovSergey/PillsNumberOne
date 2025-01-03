@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.ksv.pillsnumberone.Pill
 import com.ksv.pillsnumberone.R
@@ -44,11 +45,16 @@ class TestFragment : Fragment() {
         _binding = FragmentTestBinding.inflate(layoutInflater)
         binding.recycler.adapter = dataListAdapter
 
+        binding.testButton.setOnClickListener {
+            findNavController().navigate(R.id.action_testFragment_to_editFragment)
+        }
+
         binding.applyButton.setOnClickListener {
             viewModel.finishEdition()
         }
 
         viewModel.actualData.onEach {
+//            Log.d("ksvlog", "TestFragment actualData.onEach")
             dataListAdapter.submitList(it)
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
