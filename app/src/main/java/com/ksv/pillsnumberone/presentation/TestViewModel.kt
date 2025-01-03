@@ -35,6 +35,10 @@ class TestViewModel: ViewModel() {
         }.launchIn(viewModelScope)
     }
 
+    fun addItem(pill: DataItem.Pill){
+        dataItemService.add(pill)
+    }
+
     fun moveUp(movedItem: DataItem) {
         dataItemService.moveUpItem(movedItem)
     }

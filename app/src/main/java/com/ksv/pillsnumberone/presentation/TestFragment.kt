@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,7 +25,8 @@ import kotlinx.coroutines.flow.onEach
 class TestFragment : Fragment() {
     private var _binding: FragmentTestBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: TestViewModel by viewModels()
+//    private val viewModel: TestViewModel by viewModels()
+    private val viewModel: TestViewModel by activityViewModels()
 
     private val dataListAdapter = DataListAdapter(
         object : Interaction{
@@ -49,6 +51,10 @@ class TestFragment : Fragment() {
             findNavController().navigate(R.id.action_testFragment_to_editFragment)
         }
 
+        binding.addButton.setOnClickListener {
+            findNavController().navigate(R.id.action_testFragment_to_editFragment)
+        }
+
         binding.applyButton.setOnClickListener {
             viewModel.finishEdition()
         }
@@ -59,16 +65,18 @@ class TestFragment : Fragment() {
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.setTimeFor.onEach { item ->
-            item?.let{
-                setTime(item)
+            if(item != null) {
+                setTime()
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.isEditMode.onEach { isEdit ->
             if (isEdit){
                 binding.applyButton.visibility = View.VISIBLE
+                binding.addButton.visibility = View.GONE
             } else {
                 binding.applyButton.visibility = View.GONE
+                binding.addButton.visibility = View.VISIBLE
             }
 
         }.launchIn(viewLifecycleOwner.lifecycleScope)
@@ -81,7 +89,7 @@ class TestFragment : Fragment() {
     }
 
 
-    private fun setTime(item: DataItem){
+    private fun setTime(){
         val timePicker = MaterialTimePicker.Builder()
             .setTitleText(requireActivity().getString(R.string.time_picker_title))
             .build().apply {

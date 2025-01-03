@@ -11,12 +11,15 @@ import androidx.navigation.fragment.findNavController
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.EatingTime
 import com.ksv.pillsnumberone.databinding.FragmentAddBinding
+import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.MedicineItem
+import com.ksv.pillsnumberone.entity.Period
 
 class AddFragment : Fragment() {
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
-    private val dataViewModel: DataViewModel by activityViewModels()
+//    private val dataViewModel: DataViewModel by activityViewModels()
+    private val testViewModel: TestViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,16 +34,20 @@ class AddFragment : Fragment() {
         binding.buttonAdd.setOnClickListener {
             val title = binding.medicineName.text.toString()
             val recipe = binding.medicineRecipe.text.toString()
-            val medicine = MedicineItem(title, recipe)
+            //val medicine = MedicineItem(title, recipe)
 
             if (checkFillEatingTime()) {
                 if (binding.checkBreakfast.isChecked)
-                    dataViewModel.addItem(medicine, EatingTime.BREAKFAST)
+                    //dataViewModel.addItem(medicine, EatingTime.BREAKFAST)
+                    testViewModel.addItem(DataItem.Pill(0, title, recipe, Period.MORNING))
                 if (binding.checkLunch.isChecked)
-                    dataViewModel.addItem(medicine, EatingTime.LUNCH)
+//                    dataViewModel.addItem(medicine, EatingTime.LUNCH)
+                    testViewModel.addItem(DataItem.Pill(0, title, recipe, Period.NOON))
                 if (binding.checkDinner.isChecked)
-                    dataViewModel.addItem(medicine, EatingTime.DINNER)
-                findNavController().navigate(R.id.action_editFragment_to_mainFragment)
+//                    dataViewModel.addItem(medicine, EatingTime.DINNER)
+                    testViewModel.addItem(DataItem.Pill(0, title, recipe, Period.EVENING))
+//                findNavController().navigate(R.id.action_editFragment_to_mainFragment)
+                findNavController().navigate(R.id.action_editFragment_to_testFragment)
             }
         }
     }

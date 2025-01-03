@@ -45,7 +45,7 @@
         android:backgroundTint="?attr/colorPrimary"
         android:contentDescription="@string/floating_button_description"
         android:src="@drawable/baseline_add_24"
-        android:visibility="gone"
+        android:visibility="visible"
         app:maxImageSize="48dp"
         app:tint="#FFFFFF"
         tools:visibility="visible" />

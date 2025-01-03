@@ -19,13 +19,13 @@ class DataItemService(private val items: MutableStateFlow<List<DataItem>>) {
         val lastIndex = items.value.indexOfLast {
             it is DataItem.Pill && it.period == addedPill.period
         }
-        if (lastIndex > 0) {
+//        if (lastIndex > 0) {
             val newIndex = lastIndex + 1
             items.value = items.value.toMutableList().apply {
                 val indexedItem = addedPill.copy(position = newIndex)
                 this.add(newIndex, indexedItem)
             }
-        }
+//        }
         if (captionOfPeriodNotExist(addedPill.period)){
             addCaptionInPeriod(addedPill.period)
         }
