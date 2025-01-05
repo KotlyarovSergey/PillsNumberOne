@@ -13,14 +13,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class TestViewModel(private val dataItemService2: DataItemService2): ViewModel() {
-    //private var repository: Repository = Repository()
-
-    //private val _dataItems = MutableStateFlow<List<DataItem>>(emptyList())
 
     private val _actualData = MutableStateFlow<List<DataItem>>(emptyList())
     val actualData = _actualData.asStateFlow()
 
-//    private val dataItemService = DataItemService(_dataItems)
     private val _setTimeFor = MutableStateFlow<DataItem?>(null)
     val setTimeFor = _setTimeFor.asStateFlow()
 
@@ -50,16 +46,13 @@ class TestViewModel(private val dataItemService2: DataItemService2): ViewModel()
         dataItemService2.moveDownItem(movedItem)
     }
     fun removeItem(removedItem: DataItem){
-        //dataItemService.remove(removedItem)
         dataItemService2.remove(removedItem)
         finishEdition()
     }
     fun itemClick(item: DataItem){
-        //dataItemService.click(item)
         dataItemService2.onClick(item)
     }
     fun itemLongClick(item: DataItem){
-        //dataItemService.longClick(item)
         dataItemService2.longClick(item)
     }
     fun setTimeClick(item: DataItem){
@@ -70,7 +63,7 @@ class TestViewModel(private val dataItemService2: DataItemService2): ViewModel()
     }
     fun setTime(time: String){
         _setTimeFor.value?.let { item ->
-            //dataItemService.setTimeFor(item, time)
+            dataItemService2.setTimeFor(item, time)
         }
     }
     fun finishEdition(){

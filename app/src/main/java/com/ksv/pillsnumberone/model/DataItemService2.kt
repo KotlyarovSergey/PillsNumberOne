@@ -29,8 +29,6 @@ class DataItemService2(private val pillsDao: PillsDao) {
             val listOfPills = pillsDBList.map { it.toPill() }
             val rightList = makeDataList(listOfPills)
             _actualData.value = rightList
-//            _actualData.emit(rightList)
-//            _actualData.update { rightList }
             _isEditMode.value = checkEdit()
         }.launchIn(CoroutineScope(Dispatchers.Default))
     }
@@ -56,20 +54,16 @@ class DataItemService2(private val pillsDao: PillsDao) {
             if(movedItem is DataItem.Pill) {
                 if (canBeMoveUp(indexOfMoved)) {
                     val previousItem = _actualData.value[indexOfMoved - 1] as DataItem.Pill
-                    val newMovedItem = movedItem.copy(position = previousItem.position)
-                    val newPreviousItem = previousItem.copy(position = movedItem.position)
-                    CoroutineScope(Dispatchers.Default).launch{
-                        pillsDao.update(newMovedItem.toPillDB())
-                        pillsDao.update(newPreviousItem.toPillDB())
-                    }
+                    val updatedMovedItem = movedItem.copy(position = previousItem.position)
+                    val updatedPreviousItem = previousItem.copy(position = movedItem.position)
+                    updatePill(updatedMovedItem)
+                    updatePill(updatedPreviousItem)
 
 //                    val previousItem = _actualData.value[indexOfMoved - 1] as DataItem.Pill
 //                    movedItem.position--
 //                    previousItem.position++
-//                    CoroutineScope(Dispatchers.Default).launch {
-//                        pillsDao.update(movedItem.toPillDB())
-//                        pillsDao.update(previousItem.toPillDB())
-//                    }
+//                    updatePill(movedItem)
+//                    updatePill(previousItem)
                 }
             }
         }
@@ -83,10 +77,8 @@ class DataItemService2(private val pillsDao: PillsDao) {
                     val nextItem = _actualData.value[indexOfMoved + 1] as DataItem.Pill
                     val updatedNextItem = nextItem.copy(position = movedItem.position)
                     val updatedMovedItem = movedItem.copy(position = nextItem.position)
-                    CoroutineScope(Dispatchers.Default).launch{
-                        pillsDao.update(updatedMovedItem.toPillDB())
-                        pillsDao.update(updatedNextItem.toPillDB())
-                    }
+                    updatePill(updatedMovedItem)
+                    updatePill(updatedNextItem)
                 }
             }
         }
@@ -102,9 +94,7 @@ class DataItemService2(private val pillsDao: PillsDao) {
 
         if (clickedItem is DataItem.Pill) {
             val updatedItem = clickedItem.copy(finished = !clickedItem.finished)
-            CoroutineScope(Dispatchers.Default).launch {
-                pillsDao.update(updatedItem.toPillDB())
-            }
+            updatePill(updatedItem)
         }
     }
 
@@ -114,9 +104,7 @@ class DataItemService2(private val pillsDao: PillsDao) {
             if (clickedItem is DataItem.Pill) {
                 if (itCanBeEdit(indexOfClicked)) {
                     val newItem = clickedItem.copy(editable = true)
-                    CoroutineScope(Dispatchers.Default).launch {
-                        pillsDao.update(newItem.toPillDB())
-                    }
+                    updatePill(newItem)
                 }
             }
         }
@@ -126,16 +114,29 @@ class DataItemService2(private val pillsDao: PillsDao) {
         _actualData.value.forEach {
             if (it is DataItem.Pill && it.editable){
                 val newItem = it.copy(editable = false)
-                CoroutineScope(Dispatchers.Default).launch {
-                    pillsDao.update(newItem.toPillDB())
-                }
+                updatePill(newItem)
             }
         }
         // _isEditMode.value = false
     }
 
+    fun setTimeFor(item: DataItem, time: String) {
+        val indexOfItem = _actualData.value.indexOf(item)
+        if (indexOfItem > 0) {
+            if (item is DataItem.Pill) {
+                val itemWithTime = item.copy(time = time)
+                updatePill(itemWithTime)
+            }
+        }
+    }
 
 
+
+    private fun updatePill(pill: DataItem.Pill){
+        CoroutineScope(Dispatchers.Default).launch {
+            pillsDao.update(pill.toPillDB())
+        }
+    }
 
     private fun makeDataList(pills: List<DataItem.Pill>): List<DataItem> {
         val morningPills: MutableList<DataItem> = pills
