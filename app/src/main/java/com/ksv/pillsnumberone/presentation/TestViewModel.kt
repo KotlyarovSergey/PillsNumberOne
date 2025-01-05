@@ -5,19 +5,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ksv.pillsnumberone.data.Repository
 import com.ksv.pillsnumberone.entity.DataItem
-import com.ksv.pillsnumberone.model.DataItemService
+import com.ksv.pillsnumberone.model.DataItemService2
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class TestViewModel: ViewModel() {
-    private var repository: Repository = Repository()
+class TestViewModel(private val dataItemService2: DataItemService2): ViewModel() {
+    //private var repository: Repository = Repository()
 
-    private val _dataItems = MutableStateFlow<List<DataItem>>(emptyList())
-    val actualData = _dataItems.asStateFlow()
+    //private val _dataItems = MutableStateFlow<List<DataItem>>(emptyList())
 
-    private val dataItemService = DataItemService(_dataItems)
+    private val _actualData = MutableStateFlow<List<DataItem>>(emptyList())
+    val actualData = _actualData.asStateFlow()
+
+//    private val dataItemService = DataItemService(_dataItems)
     private val _setTimeFor = MutableStateFlow<DataItem?>(null)
     val setTimeFor = _setTimeFor.asStateFlow()
 
@@ -25,35 +28,39 @@ class TestViewModel: ViewModel() {
     val isEditMode = _isEditMode.asStateFlow()
 
     init {
-        Log.d("ksvlog", "TestViewModel init")
-        //_dataItems.value = repository.getData()
-        val pills = repository.getPills()
-        _dataItems.value = dataItemService.makeDataList(pills)
+        dataItemService2.actualData.onEach { actualData ->
+            Log.d("ksvlog", "TestViewModel Данные из ItemServic'а пришли")
+            _actualData.value = actualData
+//            Log.d("ksvlog", "TestViewModel service2.actualData.onEach\n$actualData")
+        }.launchIn(viewModelScope)
 
-        dataItemService.isEditMode.onEach {
+        dataItemService2.isEditMode.onEach {
             _isEditMode.value = it
         }.launchIn(viewModelScope)
     }
 
     fun addItem(pill: DataItem.Pill){
-        dataItemService.add(pill)
+        dataItemService2.add(pill)
     }
 
     fun moveUp(movedItem: DataItem) {
-        dataItemService.moveUpItem(movedItem)
+        dataItemService2.moveUpItem(movedItem)
     }
     fun moveDown(movedItem: DataItem){
-        dataItemService.moveDownItem(movedItem)
+        dataItemService2.moveDownItem(movedItem)
     }
     fun removeItem(removedItem: DataItem){
-        dataItemService.remove(removedItem)
+        //dataItemService.remove(removedItem)
+        dataItemService2.remove(removedItem)
         finishEdition()
     }
     fun itemClick(item: DataItem){
-        dataItemService.click(item)
+        //dataItemService.click(item)
+        dataItemService2.onClick(item)
     }
     fun itemLongClick(item: DataItem){
-        dataItemService.longClick(item)
+        //dataItemService.longClick(item)
+        dataItemService2.longClick(item)
     }
     fun setTimeClick(item: DataItem){
         _setTimeFor.value = item
@@ -63,10 +70,10 @@ class TestViewModel: ViewModel() {
     }
     fun setTime(time: String){
         _setTimeFor.value?.let { item ->
-            dataItemService.setTimeFor(item, time)
+            //dataItemService.setTimeFor(item, time)
         }
     }
     fun finishEdition(){
-        dataItemService.finishEditionForAll()
+        dataItemService2.finishEditionForAll()
     }
 }

@@ -1,6 +1,5 @@
 package com.ksv.pillsnumberone.presentation
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,9 +34,11 @@ class DataListAdapter(private val interaction: Interaction) :
                 pill: DataItem.Pill,
                 interaction: Interaction
             ) {
-                binding.time.text = pill.time
-                binding.recipe.text = pill.recipe
                 binding.title.text = pill.title
+//                binding.recipe.text = pill.recipe
+                val recipe = "id: ${pill.id}, pos: ${pill.position} \n${pill.recipe}"
+                binding.recipe.text = recipe
+                binding.time.text = pill.time
                 binding.root.setOnClickListener { interaction.onItemClick(pill) }
                 binding.root.setOnLongClickListener {
                     interaction.onItemLongClick(pill)

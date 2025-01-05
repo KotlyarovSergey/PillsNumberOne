@@ -1,6 +1,7 @@
 package com.ksv.pillsnumberone
 
 import android.app.PendingIntent.OnFinished
+import com.ksv.pillsnumberone.entity.Period
 
 data class Pill(
     val id: Int,
@@ -9,17 +10,14 @@ data class Pill(
 )
 
 fun main() {
-    val list = listOf(Pill(1, "A"), Pill(2, "B"), Pill(3, "C"), Pill(4, "D"))
-    println(list)
-    val new = list[1].copy(title = "...", finished = true)
-    val newList = list.toMutableList().apply {
-        this[1] = new
-        this.add(new)
-    }
 
-    println(list)
-    println(newList)
-    println(list.javaClass)
-    println(list::class.java)
+    val noon = Period.NOON
+    val ordinal = noon.ordinal
+    val arr = Period.entries.toTypedArray()
+    val noon2 = arr[ordinal]
+
+    println("$noon $ordinal $noon2")
+
 
 }
+

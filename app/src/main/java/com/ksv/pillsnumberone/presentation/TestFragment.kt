@@ -14,11 +14,13 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.ksv.pillsnumberone.Pill
 import com.ksv.pillsnumberone.R
+import com.ksv.pillsnumberone.data.PillsDataBase
 import com.ksv.pillsnumberone.data.Repository
 import com.ksv.pillsnumberone.databinding.FragmentTestBinding
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Interaction
 import com.ksv.pillsnumberone.entity.Period
+import com.ksv.pillsnumberone.model.DataItemService2
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -26,7 +28,13 @@ class TestFragment : Fragment() {
     private var _binding: FragmentTestBinding? = null
     private val binding get() = _binding!!
 //    private val viewModel: TestViewModel by viewModels()
-    private val viewModel: TestViewModel by activityViewModels()
+    private val viewModel: TestViewModel by activityViewModels{
+        TestViewModelFactory(
+            DataItemService2(
+                PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
+            )
+        )
+    }
 
     private val dataListAdapter = DataListAdapter(
         object : Interaction{
@@ -60,9 +68,23 @@ class TestFragment : Fragment() {
         }
 
         viewModel.actualData.onEach {
-//            Log.d("ksvlog", "TestFragment actualData.onEach")
+//            Log.d("ksvlog", "TestFragment viewModel.actualData.onEach\n$it")
+            Log.d("ksvlog", "TestFragment фрамент обновился")
             dataListAdapter.submitList(it)
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+//
+//        viewModel.data.onEach {
+////            Log.d("ksvlog", "TestFragment data.onEach")
+////            Log.d("ksvlog", it.toString())
+//            dataListAdapter.submitList(it)
+//        }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+
+//        viewModel.actualData.onEach {
+////            Log.d("ksvlog", "TestFragment actualData.onEach")
+//            dataListAdapter.submitList(it)
+//        }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.setTimeFor.onEach { item ->
             if(item != null) {

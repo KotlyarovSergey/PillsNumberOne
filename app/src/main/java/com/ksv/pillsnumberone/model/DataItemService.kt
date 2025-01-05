@@ -57,6 +57,8 @@ class DataItemService(private val items: MutableStateFlow<List<DataItem>>) {
         }
     }
 
+
+
     fun moveUpItem(movedItem: DataItem) {
         val indexOfMoved = items.value.indexOf(movedItem)
         if (indexOfMoved > 0) { // исключаем 0 потому, что 0 должен быть у Caption'a
