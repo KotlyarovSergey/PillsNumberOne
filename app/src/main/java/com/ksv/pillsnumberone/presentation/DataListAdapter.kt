@@ -1,5 +1,6 @@
 package com.ksv.pillsnumberone.presentation
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,7 @@ class DataListAdapter(private val interaction: Interaction) :
                 pill: DataItem.Pill,
                 interaction: Interaction
             ) {
+//                Log.d("ksvlog", "bind: $pill")
                 binding.title.text = pill.title
 //                binding.recipe.text = pill.recipe
                 val recipe = "id: ${pill.id}, pos: ${pill.position} \n${pill.recipe}"

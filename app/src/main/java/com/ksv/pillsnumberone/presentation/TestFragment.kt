@@ -21,14 +21,17 @@ import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Interaction
 import com.ksv.pillsnumberone.entity.Period
 import com.ksv.pillsnumberone.model.DataItemService2
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class TestFragment : Fragment() {
     private var _binding: FragmentTestBinding? = null
     private val binding get() = _binding!!
-//    private val viewModel: TestViewModel by viewModels()
-    private val viewModel: TestViewModel by activityViewModels{
+
+    //    private val viewModel: TestViewModel by viewModels()
+    private val viewModel: TestViewModel by activityViewModels {
         TestViewModelFactory(
             DataItemService2(
                 PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
@@ -37,7 +40,7 @@ class TestFragment : Fragment() {
     }
 
     private val dataListAdapter = DataListAdapter(
-        object : Interaction{
+        object : Interaction {
             override fun onRemoveClick(item: DataItem) = viewModel.removeItem(item)
             override fun onUpClick(item: DataItem) = viewModel.moveUp(item)
             override fun onDownClick(item: DataItem) = viewModel.moveDown(item)
@@ -67,33 +70,21 @@ class TestFragment : Fragment() {
             viewModel.finishEdition()
         }
 
-        viewModel.actualData.onEach {
-//            Log.d("ksvlog", "TestFragment viewModel.actualData.onEach\n$it")
-            Log.d("ksvlog", "TestFragment фрамент обновился")
-            dataListAdapter.submitList(it)
+        viewModel.actualData.onEach { data ->
+            data.let {
+                dataListAdapter.submitList(it)
+            }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-//
-//        viewModel.data.onEach {
-////            Log.d("ksvlog", "TestFragment data.onEach")
-////            Log.d("ksvlog", it.toString())
-//            dataListAdapter.submitList(it)
-//        }.launchIn(viewLifecycleOwner.lifecycleScope)
-
-
-//        viewModel.actualData.onEach {
-////            Log.d("ksvlog", "TestFragment actualData.onEach")
-//            dataListAdapter.submitList(it)
-//        }.launchIn(viewLifecycleOwner.lifecycleScope)
-
         viewModel.setTimeFor.onEach { item ->
-            if(item != null) {
+            if (item != null) {
                 setTime()
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.isEditMode.onEach { isEdit ->
-            if (isEdit){
+            Log.d("ksvlog", "isEdit: $isEdit")
+            if (isEdit) {
                 binding.applyButton.visibility = View.VISIBLE
                 binding.addButton.visibility = View.GONE
             } else {
@@ -111,7 +102,7 @@ class TestFragment : Fragment() {
     }
 
 
-    private fun setTime(){
+    private fun setTime() {
         val timePicker = MaterialTimePicker.Builder()
             .setTitleText(requireActivity().getString(R.string.time_picker_title))
             .build().apply {

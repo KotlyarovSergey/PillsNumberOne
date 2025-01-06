@@ -1,6 +1,5 @@
 package com.ksv.pillsnumberone.model
 
-import android.util.Log
 import com.ksv.pillsnumberone.MyApp
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.PillsDao
@@ -9,26 +8,30 @@ import com.ksv.pillsnumberone.entity.Period
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class DataItemService2(private val pillsDao: PillsDao) {
     private val pillsDB = pillsDao.getAll()
 
-    private val _actualData = MutableStateFlow<List<DataItem>>(emptyList())
-    val actualData = _actualData.asStateFlow()
+    val dataItemList = pillsDB.map { listPillsDB ->
+        makeDataList(listPillsDB.map { it.toPill() })
+    }.stateIn(
+        scope = CoroutineScope(Dispatchers.Default),
+        started = SharingStarted.Eagerly,
+        initialValue = emptyList()
+    )
 
     private val _isEditMode = MutableStateFlow<Boolean>(false)
     val isEditMode = _isEditMode.asStateFlow()
 
     init {
-        pillsDB.onEach { pillsDBList ->
-            Log.d("ksvlog", "DataItemService2 Данные из ДБ пришли")
-            val listOfPills = pillsDBList.map { it.toPill() }
-            val rightList = makeDataList(listOfPills)
-            _actualData.value = rightList
+        dataItemList.onEach {
             _isEditMode.value = checkEdit()
         }.launchIn(CoroutineScope(Dispatchers.Default))
     }
@@ -49,32 +52,26 @@ class DataItemService2(private val pillsDao: PillsDao) {
     }
 
     fun moveUpItem(movedItem: DataItem) {
-        val indexOfMoved = _actualData.value.indexOf(movedItem)
+        val indexOfMoved = dataItemList.value.indexOf(movedItem)
         if (indexOfMoved > 0) { // исключаем 0, потому что 0 должен быть у Caption'a
-            if(movedItem is DataItem.Pill) {
+            if (movedItem is DataItem.Pill) {
                 if (canBeMoveUp(indexOfMoved)) {
-                    val previousItem = _actualData.value[indexOfMoved - 1] as DataItem.Pill
+                    val previousItem = dataItemList.value[indexOfMoved - 1] as DataItem.Pill
                     val updatedMovedItem = movedItem.copy(position = previousItem.position)
                     val updatedPreviousItem = previousItem.copy(position = movedItem.position)
                     updatePill(updatedMovedItem)
                     updatePill(updatedPreviousItem)
-
-//                    val previousItem = _actualData.value[indexOfMoved - 1] as DataItem.Pill
-//                    movedItem.position--
-//                    previousItem.position++
-//                    updatePill(movedItem)
-//                    updatePill(previousItem)
                 }
             }
         }
     }
 
     fun moveDownItem(movedItem: DataItem) {
-        val indexOfMoved = _actualData.value.indexOf(movedItem)
+        val indexOfMoved = dataItemList.value.indexOf(movedItem)
         if (indexOfMoved > 0) {
-            if(movedItem is DataItem.Pill) {
+            if (movedItem is DataItem.Pill) {
                 if (canBeMoveDown(indexOfMoved)) {
-                    val nextItem = _actualData.value[indexOfMoved + 1] as DataItem.Pill
+                    val nextItem = dataItemList.value[indexOfMoved + 1] as DataItem.Pill
                     val updatedNextItem = nextItem.copy(position = movedItem.position)
                     val updatedMovedItem = movedItem.copy(position = nextItem.position)
                     updatePill(updatedMovedItem)
@@ -85,13 +82,6 @@ class DataItemService2(private val pillsDao: PillsDao) {
     }
 
     fun onClick(clickedItem: DataItem) {
-//        if (clickedItem is DataItem.Pill) {
-//            clickedItem.finished = !clickedItem.finished
-//            CoroutineScope(Dispatchers.Default).launch {
-//                pillsDao.update(clickedItem.toPillDB())
-//            }
-//        }
-
         if (clickedItem is DataItem.Pill) {
             val updatedItem = clickedItem.copy(finished = !clickedItem.finished)
             updatePill(updatedItem)
@@ -99,7 +89,7 @@ class DataItemService2(private val pillsDao: PillsDao) {
     }
 
     fun longClick(clickedItem: DataItem) {
-        val indexOfClicked = _actualData.value.indexOf(clickedItem)
+        val indexOfClicked = dataItemList.value.indexOf(clickedItem)
         if (indexOfClicked > 0) {
             if (clickedItem is DataItem.Pill) {
                 if (itCanBeEdit(indexOfClicked)) {
@@ -111,17 +101,16 @@ class DataItemService2(private val pillsDao: PillsDao) {
     }
 
     fun finishEditionForAll() {
-        _actualData.value.forEach {
-            if (it is DataItem.Pill && it.editable){
-                val newItem = it.copy(editable = false)
-                updatePill(newItem)
-            }
+        dataItemList.value.forEach {
+        if (it is DataItem.Pill && it.editable) {
+            val newItem = it.copy(editable = false)
+            updatePill(newItem)
         }
-        // _isEditMode.value = false
+        }
     }
 
     fun setTimeFor(item: DataItem, time: String) {
-        val indexOfItem = _actualData.value.indexOf(item)
+        val indexOfItem = dataItemList.value.indexOf(item)
         if (indexOfItem > 0) {
             if (item is DataItem.Pill) {
                 val itemWithTime = item.copy(time = time)
@@ -132,11 +121,6 @@ class DataItemService2(private val pillsDao: PillsDao) {
 
 
 
-    private fun updatePill(pill: DataItem.Pill){
-        CoroutineScope(Dispatchers.Default).launch {
-            pillsDao.update(pill.toPillDB())
-        }
-    }
 
     private fun makeDataList(pills: List<DataItem.Pill>): List<DataItem> {
         val morningPills: MutableList<DataItem> = pills
@@ -165,9 +149,15 @@ class DataItemService2(private val pillsDao: PillsDao) {
         }
     }
 
+    private fun updatePill(pill: DataItem.Pill) {
+        CoroutineScope(Dispatchers.Default).launch {
+            pillsDao.update(pill.toPillDB())
+        }
+    }
+
     private fun checkEdit(): Boolean {
-        _actualData.value.forEach {
-            if(it is DataItem.Pill){
+        dataItemList.value.forEach {
+            if (it is DataItem.Pill) {
                 if (it.editable)
                     return true
             }
@@ -175,17 +165,15 @@ class DataItemService2(private val pillsDao: PillsDao) {
         return false
     }
 
-    private fun setPosition(pill: DataItem.Pill): DataItem.Pill{
-        val pillsByPeriod = _actualData.value
+    private fun setPosition(pill: DataItem.Pill): DataItem.Pill {
+        val pillsByPeriod = dataItemList.value
             .filter { it is DataItem.Pill && it.period == pill.period }
         val lastPosition = pillsByPeriod.lastIndex + 1
         return pill.copy(position = lastPosition)
-//        pill.position = pillsByPeriod.lastIndex + 1
-//        return pill
     }
 
     private fun itCanBeEdit(checkedIndex: Int): Boolean {
-        _actualData.value.forEachIndexed { index, item ->
+        dataItemList.value.forEachIndexed { index, item ->
             if (item is DataItem.Pill) {
                 if (item.editable && index != checkedIndex)
                     return false
@@ -195,33 +183,29 @@ class DataItemService2(private val pillsDao: PillsDao) {
     }
 
     private fun canNotBeMoveUp(indexOfMoved: Int): Boolean {
-        val previousItem = _actualData.value[indexOfMoved - 1]
+        val previousItem = dataItemList.value[indexOfMoved - 1]
         return previousItem is DataItem.Caption
     }
 
-    private fun canBeMoveUp(indexOfMoved: Int):Boolean{
-        val previousItem = _actualData.value[indexOfMoved - 1]
+    private fun canBeMoveUp(indexOfMoved: Int): Boolean {
+        val previousItem = dataItemList.value[indexOfMoved - 1]
         return previousItem !is DataItem.Caption
     }
 
     private fun canNotBeMoveDown(indexOfMoved: Int): Boolean {
-        if (indexOfMoved == _actualData.value.lastIndex) return true
-        val nextItem = _actualData.value[indexOfMoved + 1]
+        if (indexOfMoved == dataItemList.value.lastIndex) return true
+        val nextItem = dataItemList.value[indexOfMoved + 1]
         return nextItem is DataItem.Caption
     }
 
     private fun canBeMoveDown(indexOfMoved: Int): Boolean {
-        if (indexOfMoved == _actualData.value.lastIndex) return false
-        val nextItem = _actualData.value[indexOfMoved + 1]
+        if (indexOfMoved == dataItemList.value.lastIndex) return false
+        val nextItem = dataItemList.value[indexOfMoved + 1]
         return nextItem !is DataItem.Caption
     }
 
 
-
     companion object {
-        // private val MORNING_CAPTION = DataItem.Caption(0, "Утро", Period.MORNING)
-        // private val NOON_CAPTION = DataItem.Caption(1,"Обед", Period.NOON)
-        // private val EVENING_CAPTION = DataItem.Caption(2, "Вечер", Period.EVENING)
         private val MORNING_CAPTION = DataItem.Caption(
             0,
             MyApp.applicationContext.getString(R.string.morning_title),

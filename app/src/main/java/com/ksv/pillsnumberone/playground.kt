@@ -6,18 +6,21 @@ import com.ksv.pillsnumberone.entity.Period
 data class Pill(
     val id: Int,
     val title: String,
-    val finished: Boolean = false
+    val finished: Boolean = false,
+    var editable: Boolean = false
 )
 
 fun main() {
+    val list = mutableListOf(Pill(0, "A"), Pill(1, "B"), Pill(2, "C"))
+    val list2 = mutableListOf(Pill(0, "A"), Pill(1, "B"), Pill(2, "C"))
+    println(list == list2)
 
-    val noon = Period.NOON
-    val ordinal = noon.ordinal
-    val arr = Period.entries.toTypedArray()
-    val noon2 = arr[ordinal]
+    val pill = Pill(3, "D")
+    list.add(pill)
+    list2.add(pill)
+    list2[3].editable = true
 
-    println("$noon $ordinal $noon2")
-
+    println(list == list2)
 
 }
 
