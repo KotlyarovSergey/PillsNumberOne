@@ -2,6 +2,7 @@ package com.ksv.pillsnumberone.entity
 
 import android.util.Log
 import androidx.room.ColumnInfo
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 sealed class DataItem {
@@ -29,7 +30,6 @@ sealed class DataItem {
                 position = position,
                 time = time,
                 finished = finished,
-                editable = editable
             )
         }
     }

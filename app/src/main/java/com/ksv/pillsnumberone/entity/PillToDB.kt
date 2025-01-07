@@ -2,6 +2,7 @@ package com.ksv.pillsnumberone.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "pills")
@@ -14,7 +15,7 @@ class PillToDB(
     val position: Int = 0,
     val time: String = "0:00",
     val finished: Boolean,
-    val editable: Boolean = false,
+//    val editable: Boolean = false,
 ){
     fun toPill(): DataItem.Pill{
         val periodEnum = try {
@@ -31,7 +32,7 @@ class PillToDB(
             position = position,
             time = time,
             finished = finished,
-            editable = editable
+//            editable = editable
         )
     }
 }

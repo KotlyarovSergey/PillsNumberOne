@@ -59,9 +59,11 @@ class TestFragment : Fragment() {
 
         binding.testButton.setOnClickListener {
             //findNavController().navigate(R.id.action_testFragment_to_editFragment)
-            val pill = (dataListAdapter.currentList[1] as DataItem.Pill).copy(editable = true)
-            val list = dataListAdapter.currentList.toMutableList()
-
+            val list = dataListAdapter.currentList.toMutableList().apply {
+                this[3] = (dataListAdapter.currentList[3] as DataItem.Pill).copy(editable = true)
+            }
+//            list[3] = (dataListAdapter.currentList[3] as DataItem.Pill).copy(editable = true)
+            dataListAdapter.submitList(list)
         }
 
         binding.addButton.setOnClickListener {

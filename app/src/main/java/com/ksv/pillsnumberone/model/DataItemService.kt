@@ -68,26 +68,26 @@ class DataItemService(
         }
     }
 
-//    fun setEditable(clickedItem: DataItem) {
-//        val indexOfClicked = items.indexOf(clickedItem)
-//        if (indexOfClicked > 0) {
-//            if (clickedItem is DataItem.Pill) {
-//                if (itCanBeEdit(indexOfClicked)) {
-//                    val newItem = clickedItem.copy(editable = true)
-//                    updatePill(newItem)
-//                }
-//            }
-//        }
-//    }
+    fun setEditable(clickedItem: DataItem) {
+        val indexOfClicked = items.indexOf(clickedItem)
+        if (indexOfClicked > 0) {
+            if (clickedItem is DataItem.Pill) {
+                if (itCanBeEdit(indexOfClicked)) {
+                    val newItem = clickedItem.copy(editable = true)
+                    updatePill(newItem)
+                }
+            }
+        }
+    }
 
-//    fun finishEdition() {
-//        items.forEach {
-//            if (it is DataItem.Pill && it.editable) {
-//                val newItem = it.copy(editable = false)
-//                updatePill(newItem)
-//            }
-//        }
-//    }
+    fun finishEdition() {
+        items.forEach {
+            if (it is DataItem.Pill && it.editable) {
+                val newItem = it.copy(editable = false)
+                updatePill(newItem)
+            }
+        }
+    }
 
     fun setTimeFor(item: DataItem, time: String) {
         val indexOfItem = items.indexOf(item)
