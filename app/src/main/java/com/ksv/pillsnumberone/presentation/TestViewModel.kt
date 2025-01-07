@@ -3,58 +3,107 @@ package com.ksv.pillsnumberone.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ksv.pillsnumberone.entity.DataItem
-import com.ksv.pillsnumberone.model.DataItemService2
+import com.ksv.pillsnumberone.model.DataItemService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class TestViewModel(private val dataItemService2: DataItemService2): ViewModel() {
+class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
 
-    val actualData = dataItemService2.dataItemList
-    val isEditMode = dataItemService2.isEditMode
+    private val dataFromDB = dataItemService.dataItemList
+    private val _actualData = MutableStateFlow<List<DataItem>>(listOf())
+    val actualData = _actualData.asStateFlow()
+
+    private var editableItemId: Long? = null
+        set(value) {
+            field = value
+            _isEditMode.value = field != null
+        }
+
+    private val _isEditMode = MutableStateFlow(false)
+    val isEditMode = _isEditMode.asStateFlow()
 
     private val _setTimeFor = MutableStateFlow<DataItem?>(null)
     val setTimeFor = _setTimeFor.asStateFlow()
 
-    private val _editableItem = MutableStateFlow<DataItem?>(null)
-    val editableItem = _editableItem.asStateFlow()
+    init {
+        dataFromDB.onEach {
+            _actualData.value = includeEditableItem(it)
+        }.launchIn(viewModelScope)
+    }
 
 
     fun addItem(pill: DataItem.Pill){
-        dataItemService2.add(pill)
+        dataItemService.add(pill)
     }
 
     fun moveUp(movedItem: DataItem) {
-        dataItemService2.moveUpItem(movedItem)
+        if(movedItem is DataItem.Pill)
+            dataItemService.moveUpItemID(movedItem.id)
     }
     fun moveDown(movedItem: DataItem){
-        dataItemService2.moveDownItem(movedItem)
+        if(movedItem is DataItem.Pill)
+            dataItemService.moveDownItemID(movedItem.id)
     }
     fun removeItem(removedItem: DataItem){
-        dataItemService2.remove(removedItem)
         finishEditMode()
+        dataItemService.remove(removedItem)
     }
     fun itemClick(item: DataItem){
-        dataItemService2.switchFinished(item)
+        if(editableItemId == null) {
+            dataItemService.switchFinished(item)
+        }
     }
     fun itemLongClick(item: DataItem){
-
-        dataItemService2.setEditable(item)
+        if(editableItemId == null){
+            editableItemId = (item as DataItem.Pill).id
+            _actualData.value = includeEditableItem(_actualData.value)
+        }
     }
     fun setTimeClick(item: DataItem){
-        _setTimeFor.value = item
+        if(editableItemId == null) {
+            _setTimeFor.value = item
+        }
     }
     fun setTimeFinished(){
         _setTimeFor.value = null
     }
     fun setTime(time: String){
         _setTimeFor.value?.let { item ->
-            dataItemService2.setTimeFor(item, time)
+            dataItemService.setTimeFor(item, time)
         }
     }
     fun finishEditMode(){
-        dataItemService2.finishEditionForAll()
-//        _editableItem.value = null
+        editableItemId?.let {
+            resetEditionForItem(editableItemId!!)
+            editableItemId = null
+        }
+    }
+
+
+
+    private fun includeEditableItem(data: List<DataItem>): List<DataItem>{
+        if(editableItemId != null) {
+            val index = data.indexOfFirst { it is DataItem.Pill && it.id == editableItemId }
+            if(index != -1 ){
+                val editablePill = (data[index] as DataItem.Pill).copy(editable = true)
+                return data.toMutableList().apply {
+                    this[index] = editablePill
+                }
+            }
+        }
+        return data
+    }
+
+    private fun resetEditionForItem(itemId: Long){
+        val index = _actualData.value.indexOfFirst { it is DataItem.Pill && it.id == itemId }
+        if(index != -1){
+            val unEditablePill = (_actualData.value[index] as DataItem.Pill).copy(editable = false)
+            _actualData.value = _actualData.value.toMutableList().apply {
+                this[index] = unEditablePill
+                this.toList()
+            }
+        }
     }
 }

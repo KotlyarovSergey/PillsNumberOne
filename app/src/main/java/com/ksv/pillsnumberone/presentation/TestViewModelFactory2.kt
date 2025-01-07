@@ -3,7 +3,6 @@ package com.ksv.pillsnumberone.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ksv.pillsnumberone.data.PillsDao
-import com.ksv.pillsnumberone.model.DataItemService2
 
 class TestViewModelFactory2(private val pillsDao: PillsDao): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

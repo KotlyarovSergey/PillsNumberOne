@@ -2,10 +2,9 @@ package com.ksv.pillsnumberone.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ksv.pillsnumberone.data.PillsDao
-import com.ksv.pillsnumberone.model.DataItemService2
+import com.ksv.pillsnumberone.model.DataItemService
 
-class TestViewModelFactory(private val service2: DataItemService2): ViewModelProvider.Factory {
+class TestViewModelFactory(private val service2: DataItemService): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(TestViewModel::class.java)) {
             return TestViewModel(service2) as T

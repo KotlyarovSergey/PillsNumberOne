@@ -15,6 +15,7 @@ import com.ksv.pillsnumberone.data.PillsDataBase
 import com.ksv.pillsnumberone.databinding.FragmentTestBinding
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Interaction
+import com.ksv.pillsnumberone.model.DataItemService
 import com.ksv.pillsnumberone.model.DataItemService2
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -23,20 +24,19 @@ class TestFragment : Fragment() {
     private var _binding: FragmentTestBinding? = null
     private val binding get() = _binding!!
 
-    //    private val viewModel: TestViewModel by viewModels()
-//    private val viewModel: TestViewModel by activityViewModels {
-//        TestViewModelFactory(
-//            DataItemService2(
-//                PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
-//            )
-//        )
-//    }
-
-    private val viewModel: TestViewModel2 by activityViewModels {
-        TestViewModelFactory2(
+    private val viewModel: TestViewModel by activityViewModels {
+        TestViewModelFactory(
+            DataItemService(
                 PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
+            )
         )
     }
+//
+//    private val viewModel: TestViewModel2 by activityViewModels {
+//        TestViewModelFactory2(
+//                PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
+//        )
+//    }
 
     private val dataListAdapter = DataListAdapter(
         object : Interaction {
@@ -58,12 +58,7 @@ class TestFragment : Fragment() {
         binding.recycler.adapter = dataListAdapter
 
         binding.testButton.setOnClickListener {
-            //findNavController().navigate(R.id.action_testFragment_to_editFragment)
-            val list = dataListAdapter.currentList.toMutableList().apply {
-                this[3] = (dataListAdapter.currentList[3] as DataItem.Pill).copy(editable = true)
-            }
-//            list[3] = (dataListAdapter.currentList[3] as DataItem.Pill).copy(editable = true)
-            dataListAdapter.submitList(list)
+            findNavController().navigate(R.id.action_testFragment_to_editFragment)
         }
 
         binding.addButton.setOnClickListener {
@@ -76,6 +71,7 @@ class TestFragment : Fragment() {
 
         viewModel.actualData.onEach { data ->
             dataListAdapter.submitList(data)
+            Log.d("ksvlog", "data refresh")
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.setTimeFor.onEach { item ->

@@ -19,8 +19,8 @@ class AddFragment : Fragment() {
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
 //    private val dataViewModel: DataViewModel by activityViewModels()
-//    private val testViewModel: TestViewModel by activityViewModels()
-    private val testViewModel: TestViewModel2 by activityViewModels()
+    private val testViewModel: TestViewModel by activityViewModels()
+//    private val testViewModel: TestViewModel2 by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

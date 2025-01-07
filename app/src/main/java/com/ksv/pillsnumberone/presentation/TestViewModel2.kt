@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ksv.pillsnumberone.data.PillsDao
 import com.ksv.pillsnumberone.entity.DataItem
-import com.ksv.pillsnumberone.model.DataItemService
+import com.ksv.pillsnumberone.model.DataItemService2
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.onEach
 
 class TestViewModel2(private val pillsDao: PillsDao): ViewModel() {
     private val dataFromDB = pillsDao.getAll().map { listPillsDB ->
-        DataItemService.makeDataList(listPillsDB.map { it.toPill() })
+        DataItemService2.makeDataList(listPillsDB.map { it.toPill() })
     }
 
     private val _actualData = MutableStateFlow<List<DataItem>>(listOf())
@@ -41,20 +41,22 @@ class TestViewModel2(private val pillsDao: PillsDao): ViewModel() {
 
 
     fun addItem(pill: DataItem.Pill){
-        DataItemService(actualData.value, pillsDao).add(pill)
+        DataItemService2(actualData.value, pillsDao).add(pill)
     }
     fun moveUp(movedItem: DataItem) {
-        DataItemService(actualData.value, pillsDao).moveUpItem(movedItem)
+        DataItemService2(actualData.value, pillsDao).moveUpItem(movedItem)
     }
     fun moveDown(movedItem: DataItem){
-        DataItemService(actualData.value, pillsDao).moveDownItem(movedItem)
+        DataItemService2(actualData.value, pillsDao).moveDownItem(movedItem)
     }
     fun removeItem(removedItem: DataItem){
         finishEditMode()
-        DataItemService(actualData.value, pillsDao).remove(removedItem)
+        DataItemService2(actualData.value, pillsDao).remove(removedItem)
     }
     fun itemClick(item: DataItem){
-        DataItemService(actualData.value, pillsDao).switchFinished(item)
+        if(editableItemId == null) {
+            DataItemService2(actualData.value, pillsDao).switchFinished(item)
+        }
     }
     fun itemLongClick(item: DataItem){
         if(editableItemId == null){
@@ -63,14 +65,16 @@ class TestViewModel2(private val pillsDao: PillsDao): ViewModel() {
         }
     }
     fun setTimeClick(item: DataItem){
-        _setTimeFor.value = item
+        if(editableItemId == null) {
+            _setTimeFor.value = item
+        }
     }
     fun setTimeFinished(){
         _setTimeFor.value = null
     }
     fun setTime(time: String){
         _setTimeFor.value?.let { item ->
-            DataItemService(actualData.value, pillsDao).setTimeFor(item, time)
+            DataItemService2(actualData.value, pillsDao).setTimeFor(item, time)
         }
     }
     fun finishEditMode(){
