@@ -136,4 +136,5 @@ class DataListAdapter(private val interaction: Interaction) :
         override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean =
             oldItem == newItem
     }
+
 }

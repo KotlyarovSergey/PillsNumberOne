@@ -1,10 +1,13 @@
 package com.ksv.pillsnumberone.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.model.DataItemService2
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class TestViewModel(private val dataItemService2: DataItemService2): ViewModel() {
 
@@ -14,6 +17,8 @@ class TestViewModel(private val dataItemService2: DataItemService2): ViewModel()
     private val _setTimeFor = MutableStateFlow<DataItem?>(null)
     val setTimeFor = _setTimeFor.asStateFlow()
 
+    private val _editableItem = MutableStateFlow<DataItem?>(null)
+    val editableItem = _editableItem.asStateFlow()
 
 
     fun addItem(pill: DataItem.Pill){
@@ -28,13 +33,14 @@ class TestViewModel(private val dataItemService2: DataItemService2): ViewModel()
     }
     fun removeItem(removedItem: DataItem){
         dataItemService2.remove(removedItem)
-        finishEdition()
+        finishEditMode()
     }
     fun itemClick(item: DataItem){
-        dataItemService2.onClick(item)
+        dataItemService2.switchFinished(item)
     }
     fun itemLongClick(item: DataItem){
-        dataItemService2.longClick(item)
+
+        dataItemService2.setEditable(item)
     }
     fun setTimeClick(item: DataItem){
         _setTimeFor.value = item
@@ -47,7 +53,8 @@ class TestViewModel(private val dataItemService2: DataItemService2): ViewModel()
             dataItemService2.setTimeFor(item, time)
         }
     }
-    fun finishEdition(){
+    fun finishEditMode(){
         dataItemService2.finishEditionForAll()
+//        _editableItem.value = null
     }
 }

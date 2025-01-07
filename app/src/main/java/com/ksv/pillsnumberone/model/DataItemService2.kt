@@ -81,14 +81,14 @@ class DataItemService2(private val pillsDao: PillsDao) {
         }
     }
 
-    fun onClick(clickedItem: DataItem) {
-        if (clickedItem is DataItem.Pill) {
-            val updatedItem = clickedItem.copy(finished = !clickedItem.finished)
+    fun switchFinished(finishedItem: DataItem) {
+        if (finishedItem is DataItem.Pill) {
+            val updatedItem = finishedItem.copy(finished = !finishedItem.finished)
             updatePill(updatedItem)
         }
     }
 
-    fun longClick(clickedItem: DataItem) {
+    fun setEditable(clickedItem: DataItem) {
         val indexOfClicked = dataItemList.value.indexOf(clickedItem)
         if (indexOfClicked > 0) {
             if (clickedItem is DataItem.Pill) {
@@ -102,10 +102,10 @@ class DataItemService2(private val pillsDao: PillsDao) {
 
     fun finishEditionForAll() {
         dataItemList.value.forEach {
-        if (it is DataItem.Pill && it.editable) {
-            val newItem = it.copy(editable = false)
-            updatePill(newItem)
-        }
+            if (it is DataItem.Pill && it.editable) {
+                val newItem = it.copy(editable = false)
+                updatePill(newItem)
+            }
         }
     }
 

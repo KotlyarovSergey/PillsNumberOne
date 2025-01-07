@@ -6,36 +6,35 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.timepicker.MaterialTimePicker
-import com.ksv.pillsnumberone.Pill
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.PillsDataBase
-import com.ksv.pillsnumberone.data.Repository
 import com.ksv.pillsnumberone.databinding.FragmentTestBinding
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Interaction
-import com.ksv.pillsnumberone.entity.Period
 import com.ksv.pillsnumberone.model.DataItemService2
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 class TestFragment : Fragment() {
     private var _binding: FragmentTestBinding? = null
     private val binding get() = _binding!!
 
     //    private val viewModel: TestViewModel by viewModels()
-    private val viewModel: TestViewModel by activityViewModels {
-        TestViewModelFactory(
-            DataItemService2(
+//    private val viewModel: TestViewModel by activityViewModels {
+//        TestViewModelFactory(
+//            DataItemService2(
+//                PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
+//            )
+//        )
+//    }
+
+    private val viewModel: TestViewModel2 by activityViewModels {
+        TestViewModelFactory2(
                 PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
-            )
         )
     }
 
@@ -59,7 +58,10 @@ class TestFragment : Fragment() {
         binding.recycler.adapter = dataListAdapter
 
         binding.testButton.setOnClickListener {
-            findNavController().navigate(R.id.action_testFragment_to_editFragment)
+            //findNavController().navigate(R.id.action_testFragment_to_editFragment)
+            val pill = (dataListAdapter.currentList[1] as DataItem.Pill).copy(editable = true)
+            val list = dataListAdapter.currentList.toMutableList()
+
         }
 
         binding.addButton.setOnClickListener {
@@ -67,13 +69,11 @@ class TestFragment : Fragment() {
         }
 
         binding.applyButton.setOnClickListener {
-            viewModel.finishEdition()
+            viewModel.finishEditMode()
         }
 
         viewModel.actualData.onEach { data ->
-            data.let {
-                dataListAdapter.submitList(it)
-            }
+            dataListAdapter.submitList(data)
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.setTimeFor.onEach { item ->
@@ -83,16 +83,28 @@ class TestFragment : Fragment() {
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.isEditMode.onEach { isEdit ->
-            Log.d("ksvlog", "isEdit: $isEdit")
+            //Log.d("ksvlog", "isEdit: $isEdit")
             if (isEdit) {
                 binding.applyButton.visibility = View.VISIBLE
                 binding.addButton.visibility = View.GONE
+
+
+
             } else {
                 binding.applyButton.visibility = View.GONE
                 binding.addButton.visibility = View.VISIBLE
             }
 
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+//        viewModel.editableItem.onEach { editableItem->
+//            editableItem?.let{
+//                binding.applyButton.visibility = View.VISIBLE
+//                binding.addButton.visibility = View.GONE
+//
+//            }
+//        }.launchIn(viewLifecycleOwner.lifecycleScope)
+
         return binding.root
     }
 
