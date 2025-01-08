@@ -24,6 +24,9 @@ class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
     private val _isEditMode = MutableStateFlow(false)
     val isEditMode = _isEditMode.asStateFlow()
 
+    private val _modifiedItem = MutableStateFlow<DataItem?>(null)
+    val modifiedItem = _modifiedItem.asStateFlow()
+
     private val _setTimeFor = MutableStateFlow<DataItem?>(null)
     val setTimeFor = _setTimeFor.asStateFlow()
 
@@ -53,6 +56,8 @@ class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
     fun itemClick(item: DataItem){
         if(editableItemId == null) {
             dataItemService.switchFinished(item)
+        }else if(item is DataItem.Pill && item.id == editableItemId){
+            _modifiedItem.value = item
         }
     }
     fun itemLongClick(item: DataItem){
@@ -80,6 +85,13 @@ class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
             editableItemId = null
         }
     }
+    fun finishModify(){
+        _modifiedItem.value = null
+    }
+    fun modifyPill(pill: DataItem.Pill){
+        dataItemService.modifyPill(pill)
+        _modifiedItem.value = null
+    }
 
 
 
@@ -106,4 +118,6 @@ class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
             }
         }
     }
+
+
 }

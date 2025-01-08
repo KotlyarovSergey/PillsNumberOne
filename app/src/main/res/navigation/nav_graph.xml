@@ -54,5 +54,21 @@
         <action
             android:id="@+id/action_testFragment_to_editFragment"
             app:destination="@id/editFragment" />
+        <action
+            android:id="@+id/action_testFragment_to_editDialog"
+            app:destination="@id/editDialog" />
     </fragment>
+    <dialog
+        android:id="@+id/editDialog"
+        android:name="com.ksv.pillsnumberone.presentation.EditDialog"
+        android:label="EditDialog" >
+        <action
+            android:id="@+id/action_editDialog_to_testFragment"
+            app:destination="@id/testFragment"
+            app:popUpTo="@id/testFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="id"
+            app:argType="long" />
+    </dialog>
 </navigation>

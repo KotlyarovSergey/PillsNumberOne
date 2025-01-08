@@ -88,6 +88,9 @@ class DataItemService(private val pillsDao: PillsDao) {
         }
     }
 
+    fun modifyPill(pill: DataItem.Pill){
+        updatePill(pill)
+    }
 
 
 

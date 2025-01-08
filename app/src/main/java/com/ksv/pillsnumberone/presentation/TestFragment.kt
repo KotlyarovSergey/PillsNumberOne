@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -15,8 +17,8 @@ import com.ksv.pillsnumberone.data.PillsDataBase
 import com.ksv.pillsnumberone.databinding.FragmentTestBinding
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Interaction
+import com.ksv.pillsnumberone.entity.MedicineItem
 import com.ksv.pillsnumberone.model.DataItemService
-import com.ksv.pillsnumberone.model.DataItemService2
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -81,27 +83,24 @@ class TestFragment : Fragment() {
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.isEditMode.onEach { isEdit ->
-            //Log.d("ksvlog", "isEdit: $isEdit")
             if (isEdit) {
                 binding.applyButton.visibility = View.VISIBLE
                 binding.addButton.visibility = View.GONE
-
-
-
             } else {
                 binding.applyButton.visibility = View.GONE
                 binding.addButton.visibility = View.VISIBLE
             }
-
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-//        viewModel.editableItem.onEach { editableItem->
-//            editableItem?.let{
-//                binding.applyButton.visibility = View.VISIBLE
-//                binding.addButton.visibility = View.GONE
-//
-//            }
-//        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        viewModel.modifiedItem.onEach { modifiedItem ->
+            modifiedItem?.let {
+                if (modifiedItem is DataItem.Pill) {
+                    val action = TestFragmentDirections
+                        .actionTestFragmentToEditDialog(modifiedItem.id)
+                    findNavController().navigate(action)
+                }
+            }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         return binding.root
     }
@@ -110,7 +109,6 @@ class TestFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
     private fun setTime() {
         val timePicker = MaterialTimePicker.Builder()
@@ -129,6 +127,4 @@ class TestFragment : Fragment() {
             }
         timePicker.show(parentFragmentManager, timePicker::class.java.name)
     }
-
-
 }
