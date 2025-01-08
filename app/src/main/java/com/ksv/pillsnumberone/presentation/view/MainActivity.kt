@@ -1,4 +1,4 @@
-package com.ksv.pillsnumberone.presentation
+package com.ksv.pillsnumberone.presentation.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

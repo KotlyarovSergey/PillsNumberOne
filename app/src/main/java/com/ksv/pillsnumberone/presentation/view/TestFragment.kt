@@ -1,4 +1,4 @@
-package com.ksv.pillsnumberone.presentation
+package com.ksv.pillsnumberone.presentation.view
 
 import android.os.Bundle
 import android.util.Log
@@ -6,8 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,8 +15,9 @@ import com.ksv.pillsnumberone.data.PillsDataBase
 import com.ksv.pillsnumberone.databinding.FragmentTestBinding
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Interaction
-import com.ksv.pillsnumberone.entity.MedicineItem
 import com.ksv.pillsnumberone.model.DataItemService
+import com.ksv.pillsnumberone.presentation.viewmodel.TestViewModel
+import com.ksv.pillsnumberone.presentation.viewmodel.TestViewModelFactory
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -98,6 +97,7 @@ class TestFragment : Fragment() {
                     val action = TestFragmentDirections
                         .actionTestFragmentToEditDialog(modifiedItem.id)
                     findNavController().navigate(action)
+                    viewModel.resetModifiedItem()
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)

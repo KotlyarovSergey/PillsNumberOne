@@ -1,4 +1,4 @@
-package com.ksv.pillsnumberone.presentation
+package com.ksv.pillsnumberone.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -85,12 +85,12 @@ class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
             editableItemId = null
         }
     }
-    fun finishModify(){
+    fun resetModifiedItem(){
         _modifiedItem.value = null
     }
     fun modifyPill(pill: DataItem.Pill){
         dataItemService.modifyPill(pill)
-        _modifiedItem.value = null
+        resetModifiedItem()
     }
 
 

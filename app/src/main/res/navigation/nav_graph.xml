@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.ksv.pillsnumberone.presentation.MainFragment"
+        android:name="com.ksv.pillsnumberone.presentation.view.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/editFragment"
-        android:name="com.ksv.pillsnumberone.presentation.AddFragment"
+        android:name="com.ksv.pillsnumberone.presentation.view.AddFragment"
         android:label="fragment_edit"
         tools:layout="@layout/fragment_add" >
         <action
@@ -48,7 +48,7 @@
     </fragment>
     <fragment
         android:id="@+id/testFragment"
-        android:name="com.ksv.pillsnumberone.presentation.TestFragment"
+        android:name="com.ksv.pillsnumberone.presentation.view.TestFragment"
         android:label="fragment_test"
         tools:layout="@layout/fragment_test" >
         <action
@@ -60,7 +60,7 @@
     </fragment>
     <dialog
         android:id="@+id/editDialog"
-        android:name="com.ksv.pillsnumberone.presentation.EditDialog"
+        android:name="com.ksv.pillsnumberone.presentation.view.EditDialog"
         android:label="EditDialog" >
         <action
             android:id="@+id/action_editDialog_to_testFragment"

@@ -1,4 +1,4 @@
-package com.ksv.pillsnumberone.presentation
+package com.ksv.pillsnumberone.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

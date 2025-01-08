@@ -1,4 +1,4 @@
-package com.ksv.pillsnumberone.presentation
+package com.ksv.pillsnumberone.presentation.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -25,6 +25,7 @@ import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.EatingTime
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
 import com.ksv.pillsnumberone.entity.MedicineItem
+import com.ksv.pillsnumberone.presentation.viewmodel.DataViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 

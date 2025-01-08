@@ -1,4 +1,4 @@
-package com.ksv.pillsnumberone.presentation
+package com.ksv.pillsnumberone.presentation.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,11 +9,10 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.ksv.pillsnumberone.R
-import com.ksv.pillsnumberone.data.EatingTime
 import com.ksv.pillsnumberone.databinding.FragmentAddBinding
 import com.ksv.pillsnumberone.entity.DataItem
-import com.ksv.pillsnumberone.entity.MedicineItem
 import com.ksv.pillsnumberone.entity.Period
+import com.ksv.pillsnumberone.presentation.viewmodel.TestViewModel
 
 class AddFragment : Fragment() {
     private var _binding: FragmentAddBinding? = null

@@ -1,13 +1,13 @@
-package com.ksv.pillsnumberone.presentation
+package com.ksv.pillsnumberone.presentation.view
 
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.ksv.pillsnumberone.databinding.DialogEditTwoBinding
 import com.ksv.pillsnumberone.entity.DataItem
+import com.ksv.pillsnumberone.presentation.viewmodel.TestViewModel
 
 
 class EditDialog : DialogFragment() {
@@ -39,10 +39,4 @@ class EditDialog : DialogFragment() {
             .create()
         return dialog
     }
-
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        viewModel.finishModify()
-    }
-
 }

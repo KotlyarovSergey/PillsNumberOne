@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/edit_background"
     android:fitsSystemWindows="true"
-    tools:context=".presentation.AddFragment">
+    tools:context=".presentation.view.AddFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
