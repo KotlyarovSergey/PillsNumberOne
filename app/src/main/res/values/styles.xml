@@ -16,20 +16,11 @@
 
         <item name="thumbTint">@drawable/selector_switch_thumb</item>
 
-<!--        <item name="colorPrimary">#41A91D</item>-->
-<!--        <item name="colorOnPrimary">#CE1010</item>-->
-<!--        <item name="colorOnPrimaryContainer">#1D34DE</item>-->
-<!--        <item name="colorOutline">#CFD1DE</item>-->
-<!--        <item name="thumbColor">#CE1010</item>-->
-<!--        <item name="thumbTint">#CE1010</item>-->
-<!--        <item name="colorSwitchThumbNormal">#CE1010</item>-->
-<!--        <item name="colorControlActivated">#CE1010</item>-->
-<!--        <item name="colorSurfaceContainer">#CE1010</item>-->
-<!--        <item name="colorSurfaceContainerLow">#CE1010</item>-->
-<!--        <item name="colorSurfaceContainerLowest">#CE1010</item>-->
-<!--        <item name="colorSurfaceContainerHigh">#CE1010</item>-->
-<!--        <item name="colorSurfaceContainerHighest">#CE1010</item>-->
-<!--        <item name="colorPrimaryDark">#124323</item>-->
     </style>
+
+    <style name="NumberPickerText">
+        <item name="android:textSize">48sp</item>
+    </style>
+
 
 </resources>

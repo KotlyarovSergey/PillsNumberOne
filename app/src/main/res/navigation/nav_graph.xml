@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_testFragment_to_editDialog"
             app:destination="@id/editDialog" />
+        <action
+            android:id="@+id/action_testFragment_to_setTimeDialog"
+            app:destination="@id/setTimeDialog" />
     </fragment>
     <dialog
         android:id="@+id/editDialog"
@@ -70,5 +73,21 @@
         <argument
             android:name="id"
             app:argType="long" />
+    </dialog>
+    <dialog
+        android:id="@+id/setTimeDialog"
+        android:name="com.ksv.pillsnumberone.presentation.view.SetTimeDialog"
+        android:label="SetTimeDialog" >
+        <action
+            android:id="@+id/action_setTimeDialog_to_testFragment"
+            app:destination="@id/testFragment"
+            app:popUpTo="@id/testFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="itemId"
+            app:argType="long" />
+        <argument
+            android:name="time"
+            app:argType="string" />
     </dialog>
 </navigation>

@@ -77,7 +77,10 @@ class TestFragment : Fragment() {
 
         viewModel.setTimeFor.onEach { item ->
             if (item != null) {
-                setTime()
+                val action = TestFragmentDirections
+                    .actionTestFragmentToSetTimeDialog(item.id, item.time)
+                findNavController().navigate(action)
+                viewModel.setTimeFinished()
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
@@ -108,23 +111,5 @@ class TestFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun setTime() {
-        val timePicker = MaterialTimePicker.Builder()
-            .setTitleText(requireActivity().getString(R.string.time_picker_title))
-            .build().apply {
-                addOnPositiveButtonClickListener {
-                    val hour = this.hour
-                    var min = this.minute.toString()
-                    if (this.minute < 10) min = "0$min"
-                    val timeToDisplay = "$hour:$min"
-                    viewModel.setTime(timeToDisplay)
-                }
-                addOnDismissListener {
-                    viewModel.setTimeFinished()
-                }
-            }
-        timePicker.show(parentFragmentManager, timePicker::class.java.name)
     }
 }

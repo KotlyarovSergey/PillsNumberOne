@@ -77,14 +77,12 @@ class DataItemService(private val pillsDao: PillsDao) {
         }
     }
 
-
-    fun setTimeFor(item: DataItem, time: String) {
-        val indexOfItem = dataItemList.value.indexOf(item)
-        if (indexOfItem > 0) {
-            if (item is DataItem.Pill) {
-                val itemWithTime = item.copy(time = time)
-                updatePill(itemWithTime)
-            }
+    fun setTimeFor(itemId: Long, time: String) {
+        val item = dataItemList.value.firstOrNull{ it is DataItem.Pill && it.id == itemId}
+        item?.let {
+            val oldPill = it as DataItem.Pill
+            val newPill = oldPill.copy(time = time)
+            updatePill(newPill)
         }
     }
 

@@ -27,7 +27,7 @@ class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
     private val _modifiedItem = MutableStateFlow<DataItem?>(null)
     val modifiedItem = _modifiedItem.asStateFlow()
 
-    private val _setTimeFor = MutableStateFlow<DataItem?>(null)
+    private val _setTimeFor = MutableStateFlow<DataItem.Pill?>(null)
     val setTimeFor = _setTimeFor.asStateFlow()
 
     init {
@@ -58,6 +58,8 @@ class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
             dataItemService.switchFinished(item)
         }else if(item is DataItem.Pill && item.id == editableItemId){
             _modifiedItem.value = item
+        } else {
+            finishEditMode()
         }
     }
     fun itemLongClick(item: DataItem){
@@ -67,17 +69,15 @@ class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
         }
     }
     fun setTimeClick(item: DataItem){
-        if(editableItemId == null) {
+        if(editableItemId == null && item is DataItem.Pill) {
             _setTimeFor.value = item
         }
     }
     fun setTimeFinished(){
         _setTimeFor.value = null
     }
-    fun setTime(time: String){
-        _setTimeFor.value?.let { item ->
-            dataItemService.setTimeFor(item, time)
-        }
+    fun setTimeFor(itemId: Long, time: String){
+        dataItemService.setTimeFor(itemId, time)
     }
     fun finishEditMode(){
         editableItemId?.let {
@@ -90,7 +90,13 @@ class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
     }
     fun modifyPill(pill: DataItem.Pill){
         dataItemService.modifyPill(pill)
-        resetModifiedItem()
+    }
+    fun getPillByID(id: Long): DataItem.Pill?{
+        val datItem = _actualData.value.firstOrNull { it is DataItem.Pill && it.id == id }
+        datItem?.let {
+            return it as DataItem.Pill
+        }
+        return null
     }
 
 

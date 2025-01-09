@@ -17,8 +17,8 @@ class EditDialog : DialogFragment() {
         val binding = DialogEditTwoBinding.inflate(requireActivity().layoutInflater)
         val itemId = EditDialogArgs.fromBundle(requireArguments()).id
 
-        val pill = viewModel.actualData.value.firstOrNull { it is DataItem.Pill && it.id == itemId }
-        if (pill != null && pill is DataItem.Pill) {
+        val pill = viewModel.getPillByID(itemId)
+        pill?.let {
             binding.edMedicineTitle.setText(pill.title)
             binding.edMedicineRecipe.setText(pill.recipe)
             binding.ok.setOnClickListener {
@@ -30,8 +30,6 @@ class EditDialog : DialogFragment() {
                 dismiss()
             }
             binding.cancel.setOnClickListener { dismiss() }
-        } else {
-            dismiss()
         }
 
         val dialog = AlertDialog.Builder(requireContext())
