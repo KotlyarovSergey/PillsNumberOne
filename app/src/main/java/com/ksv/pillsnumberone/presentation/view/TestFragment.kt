@@ -4,11 +4,20 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.PillsDataBase
@@ -56,11 +65,13 @@ class TestFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTestBinding.inflate(layoutInflater)
-        binding.recycler.adapter = dataListAdapter
+//        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar)
+//        val toolbar = binding.root.findViewById<MaterialToolbar>(R.id.toolbar)
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
 
-        binding.testButton.setOnClickListener {
-            findNavController().navigate(R.id.action_testFragment_to_editFragment)
-        }
+        addMenuProvider()
+
+        binding.recycler.adapter = dataListAdapter
 
         binding.addButton.setOnClickListener {
             findNavController().navigate(R.id.action_testFragment_to_editFragment)
@@ -72,7 +83,7 @@ class TestFragment : Fragment() {
 
         viewModel.actualData.onEach { data ->
             dataListAdapter.submitList(data)
-            Log.d("ksvlog", "data refresh")
+//            Log.d("ksvlog", "data refresh")
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.setTimeFor.onEach { item ->
@@ -111,5 +122,40 @@ class TestFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun addMenuProvider() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_main, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_clear -> {
+                        if (!viewModel.isEditMode.value) menuClearClick()
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun menuClearClick() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder
+            .setTitle(getString(R.string.alert_dialog_clear_title))
+            .setMessage(getString(R.string.alert_dialog_clear_message))
+            .setIcon(R.drawable.baseline_cached_red_24)
+            .setPositiveButton(getString(R.string.alert_dialog_clear_yes)) { _, _ ->
+//                breakfastMedicineCardAdapter.resetAllItems()
+//                lunchMedicineCardAdapter.resetAllItems()
+//                dinnerMedicineCardAdapter.resetAllItems()
+            }
+            .setNegativeButton(getString(R.string.alert_dialog_clear_no)) { _, _ -> }
+        builder.create().show()
     }
 }
