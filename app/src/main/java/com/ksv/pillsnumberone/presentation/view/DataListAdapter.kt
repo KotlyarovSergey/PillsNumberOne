@@ -1,5 +1,6 @@
 package com.ksv.pillsnumberone.presentation.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,11 +36,16 @@ class DataListAdapter(private val interaction: Interaction) :
                 interaction: Interaction
             ) {
 //                Log.d("ksvlog", "bind: $pill")
+                Log.d("ksvlog", "bind: ${pill.id}: ${pill.title} ${pill.time}")
                 binding.title.text = pill.title
-//                binding.recipe.text = pill.recipe
-                val recipe = "id: ${pill.id}, pos: ${pill.position} \n${pill.recipe}"
-                binding.recipe.text = recipe
-                binding.time.text = pill.time
+                binding.recipe.text = pill.recipe
+//                val recipe = "id: ${pill.id}, pos: ${pill.position} \n${pill.recipe}"
+//                binding.recipe.text = recipe
+                if(pill.time != null){
+                    binding.time.visibility = View.VISIBLE
+                    binding.clock.visibility = View.GONE
+                    binding.time.text = pill.time
+                }
                 binding.root.setOnClickListener { interaction.onItemClick(pill) }
                 binding.root.setOnLongClickListener {
                     interaction.onItemLongClick(pill)
@@ -49,9 +55,8 @@ class DataListAdapter(private val interaction: Interaction) :
                 binding.moveDownButton.setOnClickListener { interaction.onDownClick(pill) }
                 binding.removeButton.setOnClickListener { interaction.onRemoveClick(pill) }
                 binding.time.setOnClickListener { interaction.onTimeClick(pill) }
-                binding.time.isClickable = true
+                binding.clock.setOnClickListener { interaction.onTimeClick(pill) }
                 if (pill.finished) {
-                    binding.time.isClickable = false
                     binding.mainLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_passive))
                 } else {
                     binding.mainLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_active))

@@ -64,7 +64,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:orientation="vertical"
-                android:padding="2dp">
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                >
+<!--                android:padding="2dp"-->
 
                 <TextView
                     android:id="@+id/title"
@@ -88,18 +91,28 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="8dp"
-                        android:layout_marginStart="8dp"
                         android:layout_weight="1.0"
                         android:textSize="18sp"
                         tools:text="За 2 чача до еды" />
+<!--                        android:layout_marginStart="8dp"-->
 
                     <TextView
                         android:id="@+id/time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="8dp"
+                        android:visibility="gone"
+                        tools:visibility="visible"
                         android:text="@string/default_time"
                         android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/clock"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="8dp"
+                        android:contentDescription="@string/time_picker_title"
+                        android:src="@drawable/icon_time_24"/>
                 </LinearLayout>
             </LinearLayout>
 

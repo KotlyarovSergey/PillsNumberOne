@@ -52,7 +52,7 @@ class TestFragment : Fragment() {
             override fun onDownClick(item: DataItem) = viewModel.moveDown(item)
             override fun onItemClick(item: DataItem) = viewModel.itemClick(item)
             override fun onItemLongClick(item: DataItem) = viewModel.itemLongClick(item)
-            override fun onTimeClick(item: DataItem) = viewModel.setTimeClick(item)
+            override fun onTimeClick(item: DataItem) = viewModel.onTimeClick(item)
         }
     )
 

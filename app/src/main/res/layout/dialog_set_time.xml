@@ -16,6 +16,7 @@
         android:layout_marginTop="8dp"/>
 
     <LinearLayout
+        android:id="@+id/time_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -36,6 +37,13 @@
 
     </LinearLayout>
 
+    <CheckBox
+        android:id="@+id/reset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reset_time_checkbox"
+        android:textSize="18sp" />
+<!--        android:textAlignment="textEnd"-->
 
     <LinearLayout
         android:layout_width="match_parent"

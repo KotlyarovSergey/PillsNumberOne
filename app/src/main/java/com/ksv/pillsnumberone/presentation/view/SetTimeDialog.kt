@@ -10,7 +10,7 @@ import com.ksv.pillsnumberone.databinding.DialogSetTimeBinding
 import com.ksv.pillsnumberone.presentation.viewmodel.TestViewModel
 import java.util.Calendar
 
-class SetTimeDialog: DialogFragment() {
+class SetTimeDialog : DialogFragment() {
     private val viewModel: TestViewModel by activityViewModels()
     private var _binding: DialogSetTimeBinding? = null
     private val binding get() = _binding!!
@@ -22,7 +22,10 @@ class SetTimeDialog: DialogFragment() {
 
         presetTime(time)
         bindDialog(id)
-
+        binding.reset.setOnCheckedChangeListener { _, isChecked ->
+            binding.hours.isEnabled = !isChecked
+            binding.minutes.isEnabled = !isChecked
+        }
 
         val alertDialog = AlertDialog.Builder(requireContext())
             .setView(binding.root)
@@ -40,13 +43,17 @@ class SetTimeDialog: DialogFragment() {
         _binding = null
     }
 
-    private fun bindDialog(itemID: Long){
+    private fun bindDialog(itemID: Long) {
         binding.ok.setOnClickListener {
-            val hour = binding.hours.value
-            val minute = binding.minutes.value
-            val zero = if (minute < 10) "0" else ""
-            val timeToDisplay = "$hour:$zero$minute"
-            viewModel.setTimeFor(itemID, timeToDisplay)
+            val time = if (binding.reset.isChecked) {
+                null
+            } else {
+                val hour = binding.hours.value
+                val minute = binding.minutes.value
+                val zero = if (minute < 10) "0" else ""
+                "$hour:$zero$minute"
+            }
+            viewModel.setTimeFor(itemID, time)
             dismiss()
         }
         binding.cancel.setOnClickListener {
@@ -54,24 +61,24 @@ class SetTimeDialog: DialogFragment() {
         }
     }
 
-    private fun presetTime(time: String){
+    private fun presetTime(time: String?) {
         binding.hours.minValue = 0
         binding.hours.maxValue = 23
         binding.minutes.minValue = 0
         binding.minutes.maxValue = 59
 
-        if(time == "0:00"){
+        if (time == null) {
             val calendar = Calendar.getInstance()
             val hours = calendar.get(Calendar.HOUR_OF_DAY)
             val minutes = calendar.get(Calendar.MINUTE)
             binding.hours.value = hours
             binding.minutes.value = minutes
-        }else{
+        } else {
             val splitted = time.split(':')
-            if(splitted.size == 2){
+            if (splitted.size == 2) {
                 val hours = splitted[0].toIntOrNull()
                 val minutes = splitted[1].toIntOrNull()
-                if(hours != null && minutes != null){
+                if (hours != null && minutes != null) {
                     binding.hours.value = hours
                     binding.minutes.value = minutes
                 }

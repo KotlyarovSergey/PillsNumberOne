@@ -77,7 +77,7 @@ class DataItemService(private val pillsDao: PillsDao) {
         }
     }
 
-    fun setTimeFor(itemId: Long, time: String) {
+    fun setTimeFor(itemId: Long, time: String?) {
         val item = dataItemList.value.firstOrNull{ it is DataItem.Pill && it.id == itemId}
         item?.let {
             val oldPill = it as DataItem.Pill
@@ -93,8 +93,8 @@ class DataItemService(private val pillsDao: PillsDao) {
     fun resetPills(){
         dataItemList.value.onEach { item ->
             if(item is DataItem.Pill){
-                if(item.finished || item.time != "0:00") {
-                    val resetPill = item.copy(finished = false, time = "0:00")
+                if(item.finished || item.time != null) {
+                    val resetPill = item.copy(finished = false, time = null)
                     updatePill(resetPill)
                 }
             }

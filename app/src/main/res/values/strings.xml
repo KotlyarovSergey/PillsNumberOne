@@ -29,6 +29,7 @@
 
     <!--    TimePicker-->
     <string name="time_picker_title">Время приёма</string>
+    <string name="reset_time_checkbox">Сбросить время</string>
 
     <!--    Alert Dialog-->
     <string name="alert_dialog_clear_title">Сборос</string>

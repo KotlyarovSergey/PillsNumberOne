@@ -17,7 +17,7 @@ sealed class DataItem {
         val recipe: String,
         val period: Period,
         val position: Int = 0,
-        val time: String = "0:00",
+        val time: String? = null,
         val finished: Boolean = false,
         val editable: Boolean = false,
     ): DataItem(){

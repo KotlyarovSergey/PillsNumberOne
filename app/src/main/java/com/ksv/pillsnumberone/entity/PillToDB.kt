@@ -13,7 +13,7 @@ class PillToDB(
     val recipe: String,
     val period: Int,
     val position: Int = 0,
-    val time: String = "0:00",
+    val time: String? = null,
     val finished: Boolean,
 //    val editable: Boolean = false,
 ){

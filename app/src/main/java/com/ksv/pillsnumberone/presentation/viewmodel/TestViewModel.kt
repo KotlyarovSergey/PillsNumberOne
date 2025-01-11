@@ -68,15 +68,20 @@ class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
             _actualData.value = includeEditableItem(_actualData.value)
         }
     }
-    fun setTimeClick(item: DataItem){
-        if(editableItemId == null && item is DataItem.Pill) {
-            _setTimeFor.value = item
+    fun onTimeClick(item: DataItem){
+        if(item is DataItem.Pill){
+            if (!item.finished && !_isEditMode.value){
+                _setTimeFor.value = item
+            }
         }
+//        if(editableItemId == null && item is DataItem.Pill) {
+//            _setTimeFor.value = item
+//        }
     }
     fun setTimeFinished(){
         _setTimeFor.value = null
     }
-    fun setTimeFor(itemId: Long, time: String){
+    fun setTimeFor(itemId: Long, time: String?){
         dataItemService.setTimeFor(itemId, time)
     }
     fun finishEditMode(){
