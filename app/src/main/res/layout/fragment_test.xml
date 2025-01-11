@@ -28,10 +28,10 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
-            tools:listitem="@layout/pill_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/pill_view" />
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -48,7 +48,7 @@
         app:tint="#FFFFFF"
         tools:visibility="visible" />
     <!--        android:nestedScrollingEnabled="false"-->
-<!--        app:shapeAppearance="?attr/shapeAppearance"-->
+    <!--        app:shapeAppearance="?attr/shapeAppearance"-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_button"
@@ -64,7 +64,7 @@
         app:shapeAppearance="?attr/shapeAppearance"
         app:tint="#FFFFFF"
         tools:visibility="visible" />
-<!--        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"-->
-<!--            android:nestedScrollingEnabled="false"-->
+    <!--        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"-->
+    <!--            android:nestedScrollingEnabled="false"-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

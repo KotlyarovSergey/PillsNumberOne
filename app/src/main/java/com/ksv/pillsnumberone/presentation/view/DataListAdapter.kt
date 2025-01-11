@@ -36,12 +36,13 @@ class DataListAdapter(private val interaction: Interaction) :
                 interaction: Interaction
             ) {
 //                Log.d("ksvlog", "bind: $pill")
-                Log.d("ksvlog", "bind: ${pill.id}: ${pill.title} ${pill.time}")
+//                Log.d("ksvlog", "bind: ${pill.id}: ${pill.title} ${pill.time}")
                 binding.title.text = pill.title
                 binding.recipe.text = pill.recipe
-//                val recipe = "id: ${pill.id}, pos: ${pill.position} \n${pill.recipe}"
-//                binding.recipe.text = recipe
-                if(pill.time != null){
+                if(pill.time == null){
+                    binding.time.visibility = View.GONE
+                    binding.clock.visibility = View.VISIBLE
+                } else {
                     binding.time.visibility = View.VISIBLE
                     binding.clock.visibility = View.GONE
                     binding.time.text = pill.time
@@ -56,11 +57,10 @@ class DataListAdapter(private val interaction: Interaction) :
                 binding.removeButton.setOnClickListener { interaction.onRemoveClick(pill) }
                 binding.time.setOnClickListener { interaction.onTimeClick(pill) }
                 binding.clock.setOnClickListener { interaction.onTimeClick(pill) }
-                if (pill.finished) {
-                    binding.mainLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_passive))
-                } else {
-                    binding.mainLayout.setBackgroundColor(binding.root.context.getColor(R.color.medicine_active))
-                }
+                binding.mainLayout.setBackgroundColor(
+                    if(pill.finished) binding.root.context.getColor(R.color.medicine_passive)
+                    else binding.root.context.getColor(R.color.medicine_active)
+                )
                 if (pill.editable){
                     binding.time.isClickable = false
                     binding.removeLayout.visibility = View.VISIBLE
