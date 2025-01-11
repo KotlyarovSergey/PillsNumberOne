@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.databinding.CaptionViewBinding
+import com.ksv.pillsnumberone.databinding.PillView2Binding
 import com.ksv.pillsnumberone.databinding.PillViewBinding
 import com.ksv.pillsnumberone.entity.Interaction
 
@@ -29,7 +30,7 @@ class DataListAdapter(private val interaction: Interaction) :
 
         }
 
-        class PillItemViewHolder(override val binding: PillViewBinding) :
+        class PillItemViewHolder(override val binding: PillView2Binding) :
             DataItemViewHolder(binding) {
             fun bind(
                 pill: DataItem.Pill,
@@ -57,17 +58,22 @@ class DataListAdapter(private val interaction: Interaction) :
                 binding.removeButton.setOnClickListener { interaction.onRemoveClick(pill) }
                 binding.time.setOnClickListener { interaction.onTimeClick(pill) }
                 binding.clock.setOnClickListener { interaction.onTimeClick(pill) }
-                binding.mainLayout.setBackgroundColor(
-                    if(pill.finished) binding.root.context.getColor(R.color.medicine_passive)
+                binding.card.setCardBackgroundColor(
+                    if (pill.editable) binding.root.context.getColor(R.color.white)
+                    else if(pill.finished) binding.root.context.getColor(R.color.medicine_passive)
                     else binding.root.context.getColor(R.color.medicine_active)
                 )
                 if (pill.editable){
                     binding.time.isClickable = false
-                    binding.removeLayout.visibility = View.VISIBLE
-                    binding.moveLayout.visibility = View.VISIBLE
+                    binding.moveUpButton.visibility = View.VISIBLE
+                    binding.moveDownButton.visibility = View.VISIBLE
+                    binding.removeButton.visibility = View.VISIBLE
+                    binding.clock.visibility = View.GONE
+                    binding.time.visibility = View.GONE
                 } else {
-                    binding.removeLayout.visibility = View.GONE
-                    binding.moveLayout.visibility = View.GONE
+                    binding.moveUpButton.visibility = View.GONE
+                    binding.moveDownButton.visibility = View.GONE
+                    binding.removeButton.visibility = View.GONE
                 }
             }
         }
@@ -79,7 +85,7 @@ class DataListAdapter(private val interaction: Interaction) :
         return when (viewType) {
             R.layout.pill_view -> {
                 DataItemViewHolder.PillItemViewHolder(
-                    PillViewBinding.inflate(
+                    PillView2Binding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
