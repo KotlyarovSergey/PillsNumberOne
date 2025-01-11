@@ -32,7 +32,7 @@
 
     <!--    Alert Dialog-->
     <string name="alert_dialog_clear_title">Сборос</string>
-    <string name="alert_dialog_clear_message">Сбросить все пилюльки</string>
+    <string name="alert_dialog_clear_message">Сбросить время и отметки для всех пилюльлек?</string>
     <string name="alert_dialog_clear_yes">Да</string>
     <string name="alert_dialog_clear_no">Нет</string>
     <string name="alert_dialog_ok">OK</string>

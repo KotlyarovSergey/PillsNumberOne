@@ -1,7 +1,6 @@
 package com.ksv.pillsnumberone.presentation.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -17,8 +16,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.timepicker.MaterialTimePicker
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.PillsDataBase
 import com.ksv.pillsnumberone.databinding.FragmentTestBinding
@@ -65,22 +62,22 @@ class TestFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTestBinding.inflate(layoutInflater)
-//        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar)
-//        val toolbar = binding.root.findViewById<MaterialToolbar>(R.id.toolbar)
+
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
-
-        addMenuProvider()
-
         binding.recycler.adapter = dataListAdapter
+        addMenuProvider()
+        addLiveDataObservers()
+        addButtonClickListeners()
 
-        binding.addButton.setOnClickListener {
-            findNavController().navigate(R.id.action_testFragment_to_editFragment)
-        }
+        return binding.root
+    }
 
-        binding.applyButton.setOnClickListener {
-            viewModel.finishEditMode()
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
+    private fun addLiveDataObservers(){
         viewModel.actualData.onEach { data ->
             dataListAdapter.submitList(data)
 //            Log.d("ksvlog", "data refresh")
@@ -115,13 +112,15 @@ class TestFragment : Fragment() {
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
-
-        return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun addButtonClickListeners(){
+        binding.addButton.setOnClickListener {
+            findNavController().navigate(R.id.action_testFragment_to_editFragment)
+        }
+        binding.applyButton.setOnClickListener {
+            viewModel.finishEditMode()
+        }
     }
 
     private fun addMenuProvider() {
@@ -134,7 +133,7 @@ class TestFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menu_clear -> {
-                        if (!viewModel.isEditMode.value) menuClearClick()
+                        if (!viewModel.isEditMode.value) onMenuClearClick()
                         true
                     }
 
@@ -144,18 +143,17 @@ class TestFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun menuClearClick() {
+    private fun onMenuClearClick() {
         val builder = AlertDialog.Builder(requireContext())
         builder
             .setTitle(getString(R.string.alert_dialog_clear_title))
             .setMessage(getString(R.string.alert_dialog_clear_message))
             .setIcon(R.drawable.baseline_cached_red_24)
             .setPositiveButton(getString(R.string.alert_dialog_clear_yes)) { _, _ ->
-//                breakfastMedicineCardAdapter.resetAllItems()
-//                lunchMedicineCardAdapter.resetAllItems()
-//                dinnerMedicineCardAdapter.resetAllItems()
+                viewModel.resetPills()
             }
             .setNegativeButton(getString(R.string.alert_dialog_clear_no)) { _, _ -> }
         builder.create().show()
     }
+
 }

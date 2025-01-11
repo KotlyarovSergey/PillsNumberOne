@@ -90,6 +90,17 @@ class DataItemService(private val pillsDao: PillsDao) {
         updatePill(pill)
     }
 
+    fun resetPills(){
+        dataItemList.value.onEach { item ->
+            if(item is DataItem.Pill){
+                if(item.finished || item.time != "0:00") {
+                    val resetPill = item.copy(finished = false, time = "0:00")
+                    updatePill(resetPill)
+                }
+            }
+        }
+    }
+
 
 
     private fun makeDataList(pills: List<DataItem.Pill>): List<DataItem> {

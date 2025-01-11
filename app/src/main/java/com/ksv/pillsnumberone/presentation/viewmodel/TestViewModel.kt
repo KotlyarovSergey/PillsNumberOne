@@ -98,6 +98,9 @@ class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
         }
         return null
     }
+    fun resetPills(){
+        dataItemService.resetPills()
+    }
 
 
 
