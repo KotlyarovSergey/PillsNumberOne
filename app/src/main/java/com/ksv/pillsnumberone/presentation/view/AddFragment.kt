@@ -6,20 +6,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ksv.pillsnumberone.R
+import com.ksv.pillsnumberone.data.PillsDataBase
 import com.ksv.pillsnumberone.databinding.FragmentAddBinding
-import com.ksv.pillsnumberone.entity.DataItem
-import com.ksv.pillsnumberone.entity.Period
-import com.ksv.pillsnumberone.presentation.viewmodel.TestViewModel
+import com.ksv.pillsnumberone.model.DataItemService
+import com.ksv.pillsnumberone.presentation.viewmodel.AddPillViewModel
+import com.ksv.pillsnumberone.presentation.viewmodel.AppPIllViewModelProvider
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class AddFragment : Fragment() {
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
-//    private val dataViewModel: DataViewModel by activityViewModels()
-    private val testViewModel: TestViewModel by activityViewModels()
+
+    //    private val dataViewModel: DataViewModel by activityViewModels()
+//    private val testViewModel: TestViewModel by activityViewModels()
 //    private val testViewModel: TestViewModel2 by activityViewModels()
+    private val viewModel: AddPillViewModel by viewModels {
+        AppPIllViewModelProvider(
+            DataItemService(
+                PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
+            )
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,27 +45,43 @@ class AddFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonAdd.setOnClickListener {
-            val title = binding.medicineName.text.toString()
-            val recipe = binding.medicineRecipe.text.toString()
-            //val medicine = MedicineItem(title, recipe)
+            viewModel.morningCheck = binding.checkBreakfast.isChecked
+            viewModel.noonCheck = binding.checkLunch.isChecked
+            viewModel.eveningCheck = binding.checkDinner.isChecked
+            viewModel.title = binding.medicineName.text.toString()
+            viewModel.recipe = binding.medicineRecipe.text.toString()
+            viewModel.onAddClick()
 
-            if (checkFillEatingTime()) {
-                if (binding.checkBreakfast.isChecked)
-                    //dataViewModel.addItem(medicine, EatingTime.BREAKFAST)
-//                    testViewModel.addItem(DataItem.Pill(0, title, recipe, Period.MORNING))
-                    testViewModel.addItem(DataItem.Pill(title = title, recipe = recipe, period = Period.MORNING))
-                if (binding.checkLunch.isChecked)
-//                    dataViewModel.addItem(medicine, EatingTime.LUNCH)
-//                    testViewModel.addItem(DataItem.Pill(0, title, recipe, Period.NOON))
-                    testViewModel.addItem(DataItem.Pill(title = title, recipe = recipe, period = Period.NOON))
-                if (binding.checkDinner.isChecked)
-//                    dataViewModel.addItem(medicine, EatingTime.DINNER)
-//                    testViewModel.addItem(DataItem.Pill(0, title, recipe, Period.EVENING))
-                    testViewModel.addItem(DataItem.Pill(title = title, recipe = recipe, period = Period.EVENING))
-//                findNavController().navigate(R.id.action_editFragment_to_mainFragment)
-                findNavController().navigate(R.id.action_editFragment_to_testFragment)
-            }
+//            val title = binding.medicineName.text.toString()
+//            val recipe = binding.medicineRecipe.text.toString()
+//            //val medicine = MedicineItem(title, recipe)
+//
+//            if (checkFillEatingTime()) {
+//                if (binding.checkBreakfast.isChecked)
+//                    testViewModel.addItem(DataItem.Pill(title = title, recipe = recipe, period = Period.MORNING))
+//                if (binding.checkLunch.isChecked)
+//                    testViewModel.addItem(DataItem.Pill(title = title, recipe = recipe, period = Period.NOON))
+//                if (binding.checkDinner.isChecked)
+//                    testViewModel.addItem(DataItem.Pill(title = title, recipe = recipe, period = Period.EVENING))
+//                findNavController().navigate(R.id.action_editFragment_to_testFragment)
+//            }
         }
+
+        viewModel.backToMainFragment.onEach { goBack ->
+            if (goBack)
+                findNavController().navigate(R.id.action_editFragment_to_testFragment)
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+        viewModel.errorNotChecked.onEach { isError ->
+            if (isError) {
+                Toast.makeText(
+                    requireContext(),
+                    getText(R.string.need_check_message),
+                    Toast.LENGTH_SHORT
+                ).show()
+                viewModel.errorWasMessaged()
+            }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onDestroyView() {
@@ -60,19 +89,19 @@ class AddFragment : Fragment() {
         _binding = null
     }
 
-    private fun checkFillEatingTime(): Boolean {
-        return if (!binding.checkBreakfast.isChecked
-            && !binding.checkLunch.isChecked
-            && !binding.checkDinner.isChecked
-        ) {
-            Toast.makeText(
-                requireContext(),
-                getText(R.string.need_check_message),
-                Toast.LENGTH_SHORT
-            ).show()
-            false
-        } else true
-    }
+//    private fun checkFillEatingTime(): Boolean {
+//        return if (!binding.checkBreakfast.isChecked
+//            && !binding.checkLunch.isChecked
+//            && !binding.checkDinner.isChecked
+//        ) {
+//            Toast.makeText(
+//                requireContext(),
+//                getText(R.string.need_check_message),
+//                Toast.LENGTH_SHORT
+//            ).show()
+//            false
+//        } else true
+//    }
 
 
 }
