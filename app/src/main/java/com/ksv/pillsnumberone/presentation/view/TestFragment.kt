@@ -38,12 +38,6 @@ class TestFragment : Fragment() {
             )
         )
     }
-//
-//    private val viewModel: TestViewModel2 by activityViewModels {
-//        TestViewModelFactory2(
-//                PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
-//        )
-//    }
 
     private val dataListAdapter = DataListAdapter(
         object : Interaction {
@@ -55,7 +49,6 @@ class TestFragment : Fragment() {
             override fun onTimeClick(item: DataItem) = viewModel.onTimeClick(item)
         }
     )
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,7 +70,7 @@ class TestFragment : Fragment() {
         _binding = null
     }
 
-    private fun addLiveDataObservers(){
+    private fun addLiveDataObservers() {
         viewModel.actualData.onEach { data ->
             dataListAdapter.submitList(data)
 //            Log.d("ksvlog", "data refresh")
@@ -112,9 +105,13 @@ class TestFragment : Fragment() {
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+        viewModel.emptyDataHint.onEach { showHint ->
+            showHideHint(showHint)
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun addButtonClickListeners(){
+    private fun addButtonClickListeners() {
         binding.addButton.setOnClickListener {
             findNavController().navigate(R.id.action_testFragment_to_editFragment)
         }
@@ -133,7 +130,8 @@ class TestFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menu_clear -> {
-                        if (!viewModel.isEditMode.value) onMenuClearClick()
+                        if (!viewModel.isEditMode.value && !viewModel.emptyDataHint.value)
+                            onMenuClearClick()
                         true
                     }
 
@@ -154,6 +152,18 @@ class TestFragment : Fragment() {
             }
             .setNegativeButton(getString(R.string.alert_dialog_clear_no)) { _, _ -> }
         builder.create().show()
+    }
+
+    private fun showHideHint(show: Boolean){
+        if (show) {
+            binding.arrow.visibility = View.VISIBLE
+            binding.emptyListText.visibility = View.VISIBLE
+            binding.clickPlusText.visibility = View.VISIBLE
+        } else {
+            binding.arrow.visibility = View.GONE
+            binding.emptyListText.visibility = View.GONE
+            binding.clickPlusText.visibility = View.GONE
+        }
     }
 
 }

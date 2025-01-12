@@ -33,7 +33,7 @@
 
     <!--    Alert Dialog-->
     <string name="alert_dialog_clear_title">Сборос</string>
-    <string name="alert_dialog_clear_message">Сбросить время и отметки для всех пилюльлек?</string>
+    <string name="alert_dialog_clear_message">Сбросить время и отметки для всех пилюлек?</string>
     <string name="alert_dialog_clear_yes">Да</string>
     <string name="alert_dialog_clear_no">Нет</string>
     <string name="alert_dialog_ok">OK</string>
@@ -53,6 +53,8 @@
     <string name="edit_medicine_name">Название препарата</string>
     <string name="edit_medicine_recipe">Способ приема</string>
     <string name="hello_text">Здесь пока пусто.\n Нажмите \"+\" для добавления.</string>
+    <string name="empty_data_text">Здесь пока пусто</string>
+    <string name="click_plus_text">Нажмите \"+\", чтобы добавить пилюльку</string>
     <string name="hello_text2">Нажмите \"+\", чтобы добавить пилюльку</string>
 
 

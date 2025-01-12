@@ -30,9 +30,13 @@ class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
     private val _setTimeFor = MutableStateFlow<DataItem.Pill?>(null)
     val setTimeFor = _setTimeFor.asStateFlow()
 
+    private val _emptyDataHint = MutableStateFlow(false)
+    val emptyDataHint = _emptyDataHint.asStateFlow()
+
     init {
         dataFromDB.onEach {
             _actualData.value = includeEditableItem(it)
+            _emptyDataHint.value = _actualData.value.isEmpty()
         }.launchIn(viewModelScope)
     }
 
@@ -74,9 +78,6 @@ class TestViewModel(private val dataItemService: DataItemService): ViewModel() {
                 _setTimeFor.value = item
             }
         }
-//        if(editableItemId == null && item is DataItem.Pill) {
-//            _setTimeFor.value = item
-//        }
     }
     fun setTimeFinished(){
         _setTimeFor.value = null
