@@ -5,16 +5,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import com.ksv.pillsnumberone.databinding.DialogEditTwoBinding
-import com.ksv.pillsnumberone.entity.DataItem
-import com.ksv.pillsnumberone.presentation.viewmodel.TestViewModel
+import com.ksv.pillsnumberone.databinding.DialogEditBinding
+import com.ksv.pillsnumberone.presentation.viewmodel.DataViewModel
 
 
 class EditDialog : DialogFragment() {
-    private val viewModel: TestViewModel by activityViewModels()
+    private val viewModel: DataViewModel by activityViewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val binding = DialogEditTwoBinding.inflate(requireActivity().layoutInflater)
+        val binding = DialogEditBinding.inflate(requireActivity().layoutInflater)
         val itemId = EditDialogArgs.fromBundle(requireArguments()).id
 
         val pill = viewModel.getPillByID(itemId)

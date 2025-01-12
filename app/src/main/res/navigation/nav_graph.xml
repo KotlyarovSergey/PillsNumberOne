@@ -6,40 +6,10 @@
     app:startDestination="@id/testFragment">
 
     <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.ksv.pillsnumberone.presentation.view.MainFragment"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main">
-        <action
-            android:id="@+id/action_mainFragment_to_editFragment"
-            app:destination="@id/editFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/editFragment"
+        android:id="@+id/addFragment"
         android:name="com.ksv.pillsnumberone.presentation.view.AddFragment"
         android:label="fragment_edit"
         tools:layout="@layout/fragment_add">
-        <action
-            android:id="@+id/action_editFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true" />
-        <argument
-            android:name="title"
-            android:defaultValue=""
-            app:argType="string" />
-        <argument
-            android:name="recipe"
-            android:defaultValue=""
-            app:argType="string" />
-        <argument
-            android:name="times"
-            android:defaultValue="BREAKFAST"
-            app:argType="com.ksv.pillsnumberone.data.EatingTime" />
-        <argument
-            android:name="newMedicine"
-            android:defaultValue="true"
-            app:argType="boolean" />
         <action
             android:id="@+id/action_editFragment_to_testFragment"
             app:destination="@id/testFragment"
@@ -48,12 +18,12 @@
     </fragment>
     <fragment
         android:id="@+id/testFragment"
-        android:name="com.ksv.pillsnumberone.presentation.view.TestFragment"
+        android:name="com.ksv.pillsnumberone.presentation.view.MainFragment"
         android:label="fragment_test"
-        tools:layout="@layout/fragment_test">
+        tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_testFragment_to_editFragment"
-            app:destination="@id/editFragment" />
+            app:destination="@id/addFragment" />
         <action
             android:id="@+id/action_testFragment_to_editDialog"
             app:destination="@id/editDialog" />
@@ -64,7 +34,8 @@
     <dialog
         android:id="@+id/editDialog"
         android:name="com.ksv.pillsnumberone.presentation.view.EditDialog"
-        android:label="EditDialog">
+        android:label="EditDialog"
+        tools:layout="@layout/dialog_edit">
         <action
             android:id="@+id/action_editDialog_to_testFragment"
             app:destination="@id/testFragment"
@@ -77,7 +48,8 @@
     <dialog
         android:id="@+id/setTimeDialog"
         android:name="com.ksv.pillsnumberone.presentation.view.SetTimeDialog"
-        android:label="SetTimeDialog">
+        android:label="SetTimeDialog"
+        tools:layout="@layout/dialog_set_time">
         <action
             android:id="@+id/action_setTimeDialog_to_testFragment"
             app:destination="@id/testFragment"

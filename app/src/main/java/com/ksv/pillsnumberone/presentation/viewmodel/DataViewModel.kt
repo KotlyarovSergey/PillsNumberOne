@@ -2,95 +2,137 @@ package com.ksv.pillsnumberone.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ksv.pillsnumberone.data.Repository
-import com.ksv.pillsnumberone.data.EatingTime
-import com.ksv.pillsnumberone.entity.MedicineItem
+import com.ksv.pillsnumberone.entity.DataItem
+import com.ksv.pillsnumberone.model.DataItemService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-class DataViewModel : ViewModel() {
-    private var _breakfastMedicineList: MutableList<MedicineItem>
-    private var _lunchMedicineList: MutableList<MedicineItem>
-    private var _dinnerMedicineList: MutableList<MedicineItem>
-    private var _editableTime: EatingTime? = null
-    val editableTime get() = _editableTime
-    private val _emptyAllLists = MutableStateFlow(false)
-    val emptyAllLists = _emptyAllLists.asStateFlow()
+class DataViewModel(private val dataItemService: DataItemService): ViewModel() {
+
+    private val dataFromDB = dataItemService.dataItemList
+    private val _actualData = MutableStateFlow<List<DataItem>>(listOf())
+    val actualData = _actualData.asStateFlow()
+
+    private var editableItemId: Long? = null
+        set(value) {
+            field = value
+            _isEditMode.value = field != null
+        }
+
+    private val _isEditMode = MutableStateFlow(false)
+    val isEditMode = _isEditMode.asStateFlow()
+
+    private val _modifiedItem = MutableStateFlow<DataItem?>(null)
+    val modifiedItem = _modifiedItem.asStateFlow()
+
+    private val _setTimeFor = MutableStateFlow<DataItem.Pill?>(null)
+    val setTimeFor = _setTimeFor.asStateFlow()
+
+    private val _emptyDataHint = MutableStateFlow(false)
+    val emptyDataHint = _emptyDataHint.asStateFlow()
 
     init {
-        val repo = Repository()
-        val allData = repo.load()
-        _breakfastMedicineList =
-            (allData[EatingTime.BREAKFAST.title] ?: emptyList()).toMutableList()
-        _lunchMedicineList = (allData[EatingTime.LUNCH.title] ?: emptyList()).toMutableList()
-        _dinnerMedicineList = (allData[EatingTime.DINNER.title] ?: emptyList()).toMutableList()
-
-        _breakfastMedicineList.forEach { it.editable = false }
-        _lunchMedicineList.forEach { it.editable = false }
-        _dinnerMedicineList.forEach { it.editable = false }
-
-        checkEmptyLists()
+        dataFromDB.onEach {
+            _actualData.value = includeEditableItem(it)
+            _emptyDataHint.value = _actualData.value.isEmpty()
+        }.launchIn(viewModelScope)
     }
 
-    private fun checkEmptyLists() {
-        _emptyAllLists.value =
-            _breakfastMedicineList.isEmpty() &&
-            _lunchMedicineList.isEmpty() &&
-            _dinnerMedicineList.isEmpty()
 
+    fun addItem(pill: DataItem.Pill){
+        dataItemService.add(pill)
     }
 
-    fun saveBreakfastList(medicineList: List<MedicineItem>) {
-        _breakfastMedicineList = medicineList.toMutableList()
-        checkEmptyLists()
-        saveData()
+    fun moveUp(movedItem: DataItem) {
+        if(movedItem is DataItem.Pill)
+            dataItemService.moveUpItemID(movedItem.id)
+    }
+    fun moveDown(movedItem: DataItem){
+        if(movedItem is DataItem.Pill)
+            dataItemService.moveDownItemID(movedItem.id)
+    }
+    fun removeItem(removedItem: DataItem){
+        finishEditMode()
+        dataItemService.remove(removedItem)
+    }
+    fun itemClick(item: DataItem){
+        if(editableItemId == null) {
+            dataItemService.switchFinished(item)
+        }else if(item is DataItem.Pill && item.id == editableItemId){
+            _modifiedItem.value = item
+        } else {
+            finishEditMode()
+        }
+    }
+    fun itemLongClick(item: DataItem){
+        if(editableItemId == null){
+            editableItemId = (item as DataItem.Pill).id
+            _actualData.value = includeEditableItem(_actualData.value)
+        }
+    }
+    fun onTimeClick(item: DataItem){
+        if(item is DataItem.Pill){
+            if (!item.finished && !_isEditMode.value){
+                _setTimeFor.value = item
+            }
+        }
+    }
+    fun setTimeFinished(){
+        _setTimeFor.value = null
+    }
+    fun setTimeFor(itemId: Long, time: String?){
+        dataItemService.setTimeFor(itemId, time)
+    }
+    fun finishEditMode(){
+        editableItemId?.let {
+            resetEditionForItem(editableItemId!!)
+            editableItemId = null
+        }
+    }
+    fun resetModifiedItem(){
+        _modifiedItem.value = null
+    }
+    fun modifyPill(pill: DataItem.Pill){
+        dataItemService.modifyPill(pill)
+    }
+    fun getPillByID(id: Long): DataItem.Pill?{
+        val datItem = _actualData.value.firstOrNull { it is DataItem.Pill && it.id == id }
+        datItem?.let {
+            return it as DataItem.Pill
+        }
+        return null
+    }
+    fun resetPills(){
+        dataItemService.resetPills()
     }
 
-    fun saveLunchList(medicineList: List<MedicineItem>) {
-        _lunchMedicineList = medicineList.toMutableList()
-        checkEmptyLists()
-        saveData()
+
+
+    private fun includeEditableItem(data: List<DataItem>): List<DataItem>{
+        if(editableItemId != null) {
+            val index = data.indexOfFirst { it is DataItem.Pill && it.id == editableItemId }
+            if(index != -1 ){
+                val editablePill = (data[index] as DataItem.Pill).copy(editable = true)
+                return data.toMutableList().apply {
+                    this[index] = editablePill
+                }
+            }
+        }
+        return data
     }
 
-    fun saveDinnerList(medicineList: List<MedicineItem>) {
-        _dinnerMedicineList = medicineList.toMutableList()
-        checkEmptyLists()
-        saveData()
-    }
-
-    private fun saveData() {
-        viewModelScope.let {
-            val repo = Repository()
-            repo.save(
-                mapOf(
-                    EatingTime.BREAKFAST.title to _breakfastMedicineList,
-                    EatingTime.LUNCH.title to _lunchMedicineList,
-                    EatingTime.DINNER.title to _dinnerMedicineList
-                )
-            )
+    private fun resetEditionForItem(itemId: Long){
+        val index = _actualData.value.indexOfFirst { it is DataItem.Pill && it.id == itemId }
+        if(index != -1){
+            val unEditablePill = (_actualData.value[index] as DataItem.Pill).copy(editable = false)
+            _actualData.value = _actualData.value.toMutableList().apply {
+                this[index] = unEditablePill
+                this.toList()
+            }
         }
     }
 
-    fun getBreakfastList(): List<MedicineItem> = _breakfastMedicineList
-    fun getLunchList(): List<MedicineItem> = _lunchMedicineList
-    fun getDinnerList(): List<MedicineItem> = _dinnerMedicineList
-
-    fun clearPermissionOnEdit() {
-        _editableTime = null
-    }
-
-    fun setPermissionOnEditTo(eatingTime: EatingTime) {
-        _editableTime = eatingTime
-    }
-
-    fun addItem(item: MedicineItem, time: EatingTime) {
-        when (time) {
-            EatingTime.BREAKFAST -> _breakfastMedicineList.add(item)
-            EatingTime.LUNCH -> _lunchMedicineList.add(item)
-            EatingTime.DINNER -> _dinnerMedicineList.add(item)
-        }
-        saveData()
-        checkEmptyLists()
-    }
 
 }

@@ -1,6 +1,5 @@
 package com.ksv.pillsnumberone.presentation.view
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.databinding.CaptionViewBinding
-import com.ksv.pillsnumberone.databinding.PillView2Binding
 import com.ksv.pillsnumberone.databinding.PillViewBinding
 import com.ksv.pillsnumberone.entity.Interaction
 
@@ -30,7 +28,7 @@ class DataListAdapter(private val interaction: Interaction) :
 
         }
 
-        class PillItemViewHolder(override val binding: PillView2Binding) :
+        class PillItemViewHolder(override val binding: PillViewBinding) :
             DataItemViewHolder(binding) {
             fun bind(
                 pill: DataItem.Pill,
@@ -85,7 +83,7 @@ class DataListAdapter(private val interaction: Interaction) :
         return when (viewType) {
             R.layout.pill_view -> {
                 DataItemViewHolder.PillItemViewHolder(
-                    PillView2Binding.inflate(
+                    PillViewBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false

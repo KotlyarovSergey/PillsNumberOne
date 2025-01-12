@@ -8,8 +8,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
@@ -18,120 +16,107 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.timepicker.MaterialTimePicker
 import com.ksv.pillsnumberone.R
-import com.ksv.pillsnumberone.data.EatingTime
+import com.ksv.pillsnumberone.data.PillsDataBase
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
-import com.ksv.pillsnumberone.entity.MedicineItem
+import com.ksv.pillsnumberone.entity.DataItem
+import com.ksv.pillsnumberone.entity.Interaction
+import com.ksv.pillsnumberone.model.DataItemService
 import com.ksv.pillsnumberone.presentation.viewmodel.DataViewModel
+import com.ksv.pillsnumberone.presentation.viewmodel.DataViewModelFactory
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: DataViewModel by activityViewModels()
-    private lateinit var onBackPressedCallback: OnBackPressedCallback
 
-    private val breakfastMedicineCardAdapter =
-        MedicineCardAdapter(
-            { breakfastTimeClick(it) },
-            { onBreakfastItemLongClick() },
-            { breakfastItemClick(it) },
-            { breakfastDataChange(it) })
-    private val lunchMedicineCardAdapter =
-        MedicineCardAdapter(
-            { lunchTimeClick(it) },
-            { onLunchItemLongClick() },
-            { lunchItemClick(it) },
-            { lunchDataChange(it) })
-    private val dinnerMedicineCardAdapter =
-        MedicineCardAdapter(
-            { dinnerTimeClick(it) },
-            { onDinnerItemLongClick() },
-            { dinnerItemClick(it) },
-            { dinnerDataChange(it) })
+    private val viewModel: DataViewModel by activityViewModels {
+        DataViewModelFactory(
+            DataItemService(
+                PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
+            )
+        )
+    }
 
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val dispatcher = requireActivity().onBackPressedDispatcher
-        onBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (viewModel.editableTime != null) {
-                    applyChange()
-                } else {
-                    onBackPressedCallback.isEnabled = false
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
-                }
-            }
+    private val dataListAdapter = DataListAdapter(
+        object : Interaction {
+            override fun onRemoveClick(item: DataItem) = viewModel.removeItem(item)
+            override fun onUpClick(item: DataItem) = viewModel.moveUp(item)
+            override fun onDownClick(item: DataItem) = viewModel.moveDown(item)
+            override fun onItemClick(item: DataItem) = viewModel.itemClick(item)
+            override fun onItemLongClick(item: DataItem) = viewModel.itemLongClick(item)
+            override fun onTimeClick(item: DataItem) = viewModel.onTimeClick(item)
         }
-        dispatcher.addCallback(this, onBackPressedCallback)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        onBackPressedCallback.isEnabled = true
-    }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainBinding.inflate(layoutInflater)
+
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        binding.recycler.adapter = dataListAdapter
+        addMenuProvider()
+        addLiveDataObservers()
+        addButtonClickListeners()
+
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar)
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
-        addMenuProvider()
-        setRecyclerViews()
-        setAddAndApplyButtons()
+    private fun addLiveDataObservers() {
+        viewModel.actualData.onEach { data ->
+            dataListAdapter.submitList(data)
+//            Log.d("ksvlog", "data refresh")
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        binding.addButton.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_editFragment)
-        }
+        viewModel.setTimeFor.onEach { item ->
+            if (item != null) {
+                val action = MainFragmentDirections
+                    .actionTestFragmentToSetTimeDialog(item.id, item.time)
+                findNavController().navigate(action)
+                viewModel.setTimeFinished()
+            }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        binding.applyButton.setOnClickListener {
-            applyChange()
-        }
+        viewModel.isEditMode.onEach { isEdit ->
+            if (isEdit) {
+                binding.applyButton.visibility = View.VISIBLE
+                binding.addButton.visibility = View.GONE
+            } else {
+                binding.applyButton.visibility = View.GONE
+                binding.addButton.visibility = View.VISIBLE
+            }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        binding.breakfastHeader.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
+        viewModel.modifiedItem.onEach { modifiedItem ->
+            modifiedItem?.let {
+                if (modifiedItem is DataItem.Pill) {
+                    val action = MainFragmentDirections
+                        .actionTestFragmentToEditDialog(modifiedItem.id)
+                    findNavController().navigate(action)
+                    viewModel.resetModifiedItem()
+                }
+            }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        viewModel.emptyAllLists.onEach { isEmpty ->
-            binding.helloTextView.visibility =  if (isEmpty) View.VISIBLE
-            else View.GONE
+        viewModel.emptyDataHint.onEach { showHint ->
+            showHideHint(showHint)
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-
-    private fun setRecyclerViews() {
-        binding.recyclerBreakfast.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerBreakfast.adapter = breakfastMedicineCardAdapter
-        breakfastMedicineCardAdapter.setData(viewModel.getBreakfastList())
-
-        binding.recyclerLunch.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerLunch.adapter = lunchMedicineCardAdapter
-        lunchMedicineCardAdapter.setData(viewModel.getLunchList())
-
-        binding.recyclerDinner.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerDinner.adapter = dinnerMedicineCardAdapter
-        dinnerMedicineCardAdapter.setData(viewModel.getDinnerList())
-
-        when (viewModel.editableTime) {
-            EatingTime.BREAKFAST -> breakfastMedicineCardAdapter.denyPermissionToEdit()
-            EatingTime.LUNCH -> lunchMedicineCardAdapter.denyPermissionToEdit()
-            EatingTime.DINNER -> dinnerMedicineCardAdapter.denyPermissionToEdit()
-            null -> {}
+    private fun addButtonClickListeners() {
+        binding.addButton.setOnClickListener {
+            findNavController().navigate(R.id.action_testFragment_to_editFragment)
+        }
+        binding.applyButton.setOnClickListener {
+            viewModel.finishEditMode()
         }
     }
 
@@ -145,7 +130,8 @@ class MainFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menu_clear -> {
-                        if (viewModel.editableTime == null) menuClearClick()
+                        if (!viewModel.isEditMode.value && !viewModel.emptyDataHint.value)
+                            onMenuClearClick()
                         true
                     }
 
@@ -155,152 +141,29 @@ class MainFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun menuClearClick() {
+    private fun onMenuClearClick() {
         val builder = AlertDialog.Builder(requireContext())
         builder
             .setTitle(getString(R.string.alert_dialog_clear_title))
             .setMessage(getString(R.string.alert_dialog_clear_message))
-            .setIcon(R.drawable.baseline_cached_red_24)
+            .setIcon(R.drawable.icon_refresh_red)
             .setPositiveButton(getString(R.string.alert_dialog_clear_yes)) { _, _ ->
-                breakfastMedicineCardAdapter.resetAllItems()
-                lunchMedicineCardAdapter.resetAllItems()
-                dinnerMedicineCardAdapter.resetAllItems()
+                viewModel.resetPills()
             }
             .setNegativeButton(getString(R.string.alert_dialog_clear_no)) { _, _ -> }
         builder.create().show()
     }
 
-    private fun onTimeClick(adapter: MedicineCardAdapter, position: Int) {
-        val timePicker = MaterialTimePicker.Builder()
-            .setTitleText(requireActivity().getString(R.string.time_picker_title))
-            .build().apply {
-                addOnPositiveButtonClickListener {
-                    val hour = this.hour
-                    var min = this.minute.toString()
-                    if (this.minute < 10) min = "0$min"
-                    val timeToDisplay = "$hour:$min"
-                    adapter.setTimeAt(position, timeToDisplay)
-                }
-            }
-        timePicker.show(parentFragmentManager, timePicker::class.java.name)
-    }
-
-    private fun breakfastTimeClick(position: Int) {
-        onTimeClick(breakfastMedicineCardAdapter, position)
-    }
-
-    private fun lunchTimeClick(position: Int) {
-        onTimeClick(lunchMedicineCardAdapter, position)
-    }
-
-    private fun dinnerTimeClick(position: Int) {
-        onTimeClick(dinnerMedicineCardAdapter, position)
-    }
-
-    private fun onBreakfastItemLongClick() {
-        viewModel.setPermissionOnEditTo(EatingTime.BREAKFAST)
-        lunchMedicineCardAdapter.denyPermissionToEdit()
-        dinnerMedicineCardAdapter.denyPermissionToEdit()
-        setAddAndApplyButtons()
-    }
-
-    private fun onLunchItemLongClick() {
-        viewModel.setPermissionOnEditTo(EatingTime.LUNCH)
-        breakfastMedicineCardAdapter.denyPermissionToEdit()
-        dinnerMedicineCardAdapter.denyPermissionToEdit()
-        setAddAndApplyButtons()
-    }
-
-    private fun onDinnerItemLongClick() {
-        viewModel.setPermissionOnEditTo(EatingTime.DINNER)
-        breakfastMedicineCardAdapter.denyPermissionToEdit()
-        lunchMedicineCardAdapter.denyPermissionToEdit()
-        setAddAndApplyButtons()
-    }
-
-    private fun setAddAndApplyButtons() {
-        val isEditMode = viewModel.editableTime != null
-        binding.applyButton.visibility = if (isEditMode) View.VISIBLE else View.GONE
-        binding.addButton.visibility = if (isEditMode) View.GONE else View.VISIBLE
-    }
-
-    private fun onItemClick(adapter: MedicineCardAdapter, position: Int) {
-        val oldMedicineItem = adapter.getItemAt(position) ?: MedicineItem("", "")
-        binding.applyButton.visibility = View.GONE
-
-        val view = layoutInflater.inflate(R.layout.dialog_edit, null)
-        view.findViewById<EditText>(R.id.ed_medicine_title).setText(oldMedicineItem.title)
-        view.findViewById<EditText>(R.id.ed_medicine_recipe).setText(oldMedicineItem.recipe)
-
-        AlertDialog.Builder(requireContext())
-            .setView(view)
-            .setPositiveButton(getString(R.string.alert_dialog_ok)) { _, _ ->
-                val title = view.findViewById<EditText>(R.id.ed_medicine_title).text.toString()
-                val recipe = view.findViewById<EditText>(R.id.ed_medicine_recipe).text.toString()
-                val newMedicineItem =
-                    MedicineItem(
-                        title,
-                        recipe,
-                        oldMedicineItem.finished,
-                        oldMedicineItem.time,
-                        editable = true
-                    )
-                adapter.updateItemAt(position, newMedicineItem)
-            }
-            .setOnDismissListener {
-                binding.applyButton.visibility = View.VISIBLE
-            }
-            .create().show()
-    }
-
-    private fun breakfastItemClick(position: Int) {
-        onItemClick(breakfastMedicineCardAdapter, position)
-    }
-
-    private fun lunchItemClick(position: Int) {
-        onItemClick(lunchMedicineCardAdapter, position)
-    }
-
-    private fun dinnerItemClick(position: Int) {
-        onItemClick(dinnerMedicineCardAdapter, position)
-    }
-
-    private fun breakfastDataChange(medicineList: List<MedicineItem>) {
-        ifItemWasDelete(viewModel.getBreakfastList().size, medicineList.size)
-        binding.breakfastCard.visibility =
-            if (medicineList.isEmpty()) View.GONE
-            else View.VISIBLE
-        viewModel.saveBreakfastList(medicineList)
-    }
-
-    private fun lunchDataChange(medicineList: List<MedicineItem>) {
-        ifItemWasDelete(viewModel.getLunchList().size, medicineList.size)
-        binding.lunchCard.visibility =
-            if (medicineList.isEmpty()) View.GONE
-            else View.VISIBLE
-        viewModel.saveLunchList(medicineList)
-    }
-
-    private fun dinnerDataChange(medicineList: List<MedicineItem>) {
-        ifItemWasDelete(viewModel.getDinnerList().size, medicineList.size)
-        binding.dinnerCard.visibility =
-            if (medicineList.isEmpty()) View.GONE
-            else View.VISIBLE
-        viewModel.saveDinnerList(medicineList)
-    }
-
-    private fun ifItemWasDelete(vmListSize: Int, adapterListSize: Int) {
-        if (vmListSize - adapterListSize == 1) {
-            applyChange()
+    private fun showHideHint(show: Boolean){
+        if (show) {
+            binding.arrow.visibility = View.VISIBLE
+            binding.emptyListText.visibility = View.VISIBLE
+            binding.clickPlusText.visibility = View.VISIBLE
+        } else {
+            binding.arrow.visibility = View.GONE
+            binding.emptyListText.visibility = View.GONE
+            binding.clickPlusText.visibility = View.GONE
         }
-    }
-
-    private fun applyChange() {
-        breakfastMedicineCardAdapter.finishEdition()
-        lunchMedicineCardAdapter.finishEdition()
-        dinnerMedicineCardAdapter.finishEdition()
-        viewModel.clearPermissionOnEdit()
-        setAddAndApplyButtons()
     }
 
 }

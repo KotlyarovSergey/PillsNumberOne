@@ -18,8 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways" />
-
     </com.google.android.material.appbar.AppBarLayout>
+
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -27,144 +27,12 @@
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <FrameLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/hello_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="sans-serif-black"
-                android:layout_marginHorizontal="16dp"
-                android:text="@string/hello_text2"
-                android:visibility="gone"
-                android:textAlignment="center"
-                android:textColor="@color/arrow_background"
-                android:textSize="38sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/breakfast_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:visibility="gone"
-                    app:cardCornerRadius="15dp"
-                    tools:visibility="gone">
-
-                    <LinearLayout
-                        android:id="@+id/breakfast_linear"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/breakfast_background"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/breakfast_header"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="@string/breakfast_title"
-                            android:textAlignment="center"
-                            android:textColor="@color/titles_text"
-                            android:textSize="32sp"
-                            android:textStyle="bold" />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recycler_breakfast"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:nestedScrollingEnabled="false"
-                            tools:itemCount="3"
-                            tools:listitem="@layout/medicine_view" />
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/lunch_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:padding="4dp"
-                    android:visibility="gone"
-                    app:cardCornerRadius="15dp"
-                    tools:visibility="gone">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/lunch_background"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/lunch_header"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="@string/lunch_title"
-                            android:textAlignment="center"
-                            android:textColor="@color/titles_text"
-                            android:textSize="32sp"
-                            android:textStyle="bold" />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recycler_lunch"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:nestedScrollingEnabled="false"
-                            tools:itemCount="2"
-                            tools:listitem="@layout/medicine_view" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/dinner_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="4dp"
-                    android:visibility="gone"
-                    app:cardCornerRadius="15dp"
-                    tools:visibility="gone">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/dinner_background"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/dinner_header"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="@string/dinner_title"
-                            android:textAlignment="center"
-                            android:textColor="@color/titles_text"
-                            android:textSize="32sp"
-                            android:textStyle="bold" />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recycler_dinner"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:nestedScrollingEnabled="false"
-                            tools:itemCount="3"
-                            tools:listitem="@layout/medicine_view" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
-        </FrameLayout>
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/pill_view" />
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -172,28 +40,87 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
-        android:layout_margin="42dp"
+        android:layout_marginBottom="42dp"
         android:backgroundTint="#558B2F"
         android:contentDescription="@string/button_apply_description"
-        android:nestedScrollingEnabled="false"
-        android:src="@drawable/baseline_check_24"
+        android:src="@drawable/icon_apply"
         android:visibility="gone"
-        app:maxImageSize="48dp"
-        app:shapeAppearance="?attr/shapeAppearance"
-        app:tint="#FFFFFF" />
+        app:maxImageSize="42dp"
+        app:tint="#FFFFFF"
+        tools:visibility="visible" />
+    <!--        android:nestedScrollingEnabled="false"-->
+    <!--        app:shapeAppearance="?attr/shapeAppearance"-->
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="42dp"
-        android:backgroundTint="?attr/colorPrimary"
-        android:contentDescription="@string/floating_button_description"
-        android:nestedScrollingEnabled="false"
-        android:src="@drawable/baseline_add_24"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-        app:maxImageSize="48dp"
-        app:shapeAppearance="?attr/shapeAppearance"
-        app:tint="#FFFFFF" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/empty_list_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:text="@string/empty_data_text"
+            android:textAlignment="center"
+            android:textSize="38sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/click_plus_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+
+        <TextView
+            android:id="@+id/click_plus_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:text="@string/click_plus_text"
+            android:textAlignment="center"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/button_add"
+            android:src="@drawable/arrow2"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/add_button"
+            app:layout_constraintEnd_toStartOf="@id/add_button"
+            tools:visibility="visible" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="42dp"
+            android:backgroundTint="?attr/colorPrimary"
+            android:contentDescription="@string/floating_button_description"
+            android:src="@drawable/icon_add"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:maxImageSize="42dp"
+            app:shapeAppearance="?attr/shapeAppearance"
+            app:tint="#FFFFFF"
+            tools:visibility="visible" />
+        <!--        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"-->
+        <!--            android:nestedScrollingEnabled="false"-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

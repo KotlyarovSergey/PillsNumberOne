@@ -7,11 +7,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.ksv.pillsnumberone.databinding.DialogSetTimeBinding
-import com.ksv.pillsnumberone.presentation.viewmodel.TestViewModel
+import com.ksv.pillsnumberone.presentation.viewmodel.DataViewModel
 import java.util.Calendar
 
 class SetTimeDialog : DialogFragment() {
-    private val viewModel: TestViewModel by activityViewModels()
+    private val viewModel: DataViewModel by activityViewModels()
     private var _binding: DialogSetTimeBinding? = null
     private val binding get() = _binding!!
 
