@@ -10,14 +10,15 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.logging.SimpleFormatter
 
-data class Pill(
-    val id: Int,
-    val title: String,
-    val finished: Boolean = false,
-    var editable: Boolean = false
-)
 
 fun main() {
+    data class Pill(
+        val id: Int,
+        val title: String,
+        val finished: Boolean = false,
+        var editable: Boolean = false
+    )
+
     val calendar = Calendar.getInstance()
     val hours = calendar.get(Calendar.HOUR_OF_DAY)
     val minutes = calendar.get(Calendar.MINUTE)

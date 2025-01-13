@@ -66,11 +66,12 @@ class DataViewModel(private val dataItemService: DataItemService): ViewModel() {
             finishEditMode()
         }
     }
-    fun itemLongClick(item: DataItem){
+    fun itemLongClick(item: DataItem): Boolean{
         if(editableItemId == null){
             editableItemId = (item as DataItem.Pill).id
             _actualData.value = includeEditableItem(_actualData.value)
         }
+        return true
     }
     fun onTimeClick(item: DataItem){
         if(item is DataItem.Pill){

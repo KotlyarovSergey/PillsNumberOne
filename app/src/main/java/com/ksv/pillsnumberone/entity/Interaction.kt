@@ -5,6 +5,6 @@ interface Interaction {
     fun onUpClick(item: DataItem)
     fun onDownClick(item: DataItem)
     fun onItemClick(item: DataItem)
-    fun onItemLongClick(item: DataItem)
+    fun onItemLongClick(item: DataItem): Boolean
     fun onTimeClick(item: DataItem)
 }

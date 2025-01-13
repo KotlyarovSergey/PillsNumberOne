@@ -1,7 +1,6 @@
 package com.ksv.pillsnumberone.presentation.view
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -21,61 +20,10 @@ class DataListAdapter(private val interaction: Interaction) :
         RecyclerView.ViewHolder(binding.root) {
 
         class CaptionItemViewHolder(override val binding: CaptionViewBinding) :
-            DataItemViewHolder(binding) {
-            fun bind(caption: DataItem.Caption) {
-                binding.caption.text = caption.caption
-            }
-
-        }
+            DataItemViewHolder(binding)
 
         class PillItemViewHolder(override val binding: PillViewBinding) :
-            DataItemViewHolder(binding) {
-            fun bind(
-                pill: DataItem.Pill,
-                interaction: Interaction
-            ) {
-//                Log.d("ksvlog", "bind: $pill")
-//                Log.d("ksvlog", "bind: ${pill.id}: ${pill.title} ${pill.time}")
-                binding.title.text = pill.title
-                binding.recipe.text = pill.recipe
-                if(pill.time == null){
-                    binding.time.visibility = View.GONE
-                    binding.clock.visibility = View.VISIBLE
-                } else {
-                    binding.time.visibility = View.VISIBLE
-                    binding.clock.visibility = View.GONE
-                    binding.time.text = pill.time
-                }
-                binding.root.setOnClickListener { interaction.onItemClick(pill) }
-                binding.root.setOnLongClickListener {
-                    interaction.onItemLongClick(pill)
-                    true
-                }
-                binding.moveUpButton.setOnClickListener { interaction.onUpClick(pill) }
-                binding.moveDownButton.setOnClickListener { interaction.onDownClick(pill) }
-                binding.removeButton.setOnClickListener { interaction.onRemoveClick(pill) }
-                binding.time.setOnClickListener { interaction.onTimeClick(pill) }
-                binding.clock.setOnClickListener { interaction.onTimeClick(pill) }
-                binding.card.setCardBackgroundColor(
-                    if (pill.editable) binding.root.context.getColor(R.color.white)
-                    else if(pill.finished) binding.root.context.getColor(R.color.medicine_passive)
-                    else binding.root.context.getColor(R.color.medicine_active)
-                )
-                if (pill.editable){
-                    binding.time.isClickable = false
-                    binding.moveUpButton.visibility = View.VISIBLE
-                    binding.moveDownButton.visibility = View.VISIBLE
-                    binding.removeButton.visibility = View.VISIBLE
-                    binding.clock.visibility = View.GONE
-                    binding.time.visibility = View.GONE
-                } else {
-                    binding.moveUpButton.visibility = View.GONE
-                    binding.moveDownButton.visibility = View.GONE
-                    binding.removeButton.visibility = View.GONE
-                }
-            }
-        }
-
+            DataItemViewHolder(binding)
 
     }
 
@@ -90,7 +38,6 @@ class DataListAdapter(private val interaction: Interaction) :
                     )
                 )
             }
-
             R.layout.caption_view -> {
                 DataItemViewHolder.CaptionItemViewHolder(
                     CaptionViewBinding.inflate(
@@ -100,7 +47,6 @@ class DataListAdapter(private val interaction: Interaction) :
                     )
                 )
             }
-
             else -> throw IllegalArgumentException("Invalid ViewType Provided")
         }
     }
@@ -108,21 +54,19 @@ class DataListAdapter(private val interaction: Interaction) :
     override fun onBindViewHolder(holder: DataItemViewHolder, position: Int) {
         when (holder) {
             is DataItemViewHolder.CaptionItemViewHolder -> {
-                holder.bind(currentList[position] as DataItem.Caption)
+                holder.binding.periodCaption = currentList[position] as DataItem.PeriodCaption
             }
 
             is DataItemViewHolder.PillItemViewHolder -> {
-                holder.bind(
-                    currentList[position] as DataItem.Pill,
-                    interaction
-                )
+                holder.binding.pill = currentList[position] as DataItem.Pill
+                holder.binding.interaction = interaction
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (currentList[position]) {
-            is DataItem.Caption -> R.layout.caption_view
+            is DataItem.PeriodCaption -> R.layout.caption_view
             is DataItem.Pill -> R.layout.pill_view
         }
     }
@@ -131,13 +75,8 @@ class DataListAdapter(private val interaction: Interaction) :
         override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean =
             if (oldItem::class == newItem::class) {
                 when (oldItem) {
-                    is DataItem.Pill -> {
-                        oldItem.id == (newItem as DataItem.Pill).id
-                    }
-
-                    is DataItem.Caption -> {
-                        oldItem.id == (newItem as DataItem.Caption).id
-                    }
+                    is DataItem.Pill -> oldItem.id == (newItem as DataItem.Pill).id
+                    is DataItem.PeriodCaption -> oldItem.id == (newItem as DataItem.PeriodCaption).id
                 }
             } else false
 

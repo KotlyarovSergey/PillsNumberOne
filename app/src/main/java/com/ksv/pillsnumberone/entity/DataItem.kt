@@ -1,12 +1,7 @@
 package com.ksv.pillsnumberone.entity
 
-import android.util.Log
-import androidx.room.ColumnInfo
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
-
 sealed class DataItem {
-    data class Caption(
+    data class PeriodCaption(
         val id: Int,
         val caption: String,
         val period: Period

@@ -108,19 +108,19 @@ class DataItemService(private val pillsDao: PillsDao) {
             .filter { pill -> pill.period == Period.MORNING }
             .sortedBy { it.position }
             .toMutableList()
-        if (morningPills.isNotEmpty()) morningPills.add(0, MORNING_CAPTION)
+        if (morningPills.isNotEmpty()) morningPills.add(0, MORNING_Period_CAPTION)
 
         val noonPills: MutableList<DataItem> = pills
             .filter { it.period == Period.NOON }
             .sortedBy { it.position }
             .toMutableList()
-        if (noonPills.isNotEmpty()) noonPills.add(0, NOON_CAPTION)
+        if (noonPills.isNotEmpty()) noonPills.add(0, NOON_Period_CAPTION)
 
         val eveningPills: MutableList<DataItem> = pills
             .filter { it.period == Period.EVENING }
             .sortedBy { it.position }
             .toMutableList()
-        if (eveningPills.isNotEmpty()) eveningPills.add(0, EVENING_CAPTION)
+        if (eveningPills.isNotEmpty()) eveningPills.add(0, EVENING_Period_CAPTION)
 
         return mutableListOf<DataItem>().apply {
             addAll(morningPills)
@@ -145,13 +145,13 @@ class DataItemService(private val pillsDao: PillsDao) {
 
     private fun canBeMoveUp(indexOfMoved: Int): Boolean {
         val previousItem = dataItemList.value[indexOfMoved - 1]
-        return previousItem !is DataItem.Caption
+        return previousItem !is DataItem.PeriodCaption
     }
 
     private fun canBeMoveDown(indexOfMoved: Int): Boolean {
         if (indexOfMoved == dataItemList.value.lastIndex) return false
         val nextItem = dataItemList.value[indexOfMoved + 1]
-        return nextItem !is DataItem.Caption
+        return nextItem !is DataItem.PeriodCaption
     }
 
     private fun reBasePositionsInPeriod(deletedItem: DataItem.Pill){
@@ -166,17 +166,17 @@ class DataItemService(private val pillsDao: PillsDao) {
     }
 
     companion object {
-        private val MORNING_CAPTION = DataItem.Caption(
+        private val MORNING_Period_CAPTION = DataItem.PeriodCaption(
             0,
             MyApp.applicationContext.getString(R.string.morning_title),
             Period.MORNING
         )
-        private val NOON_CAPTION = DataItem.Caption(
+        private val NOON_Period_CAPTION = DataItem.PeriodCaption(
             1,
             MyApp.applicationContext.getString(R.string.noon_title),
             Period.NOON
         )
-        private val EVENING_CAPTION = DataItem.Caption(
+        private val EVENING_Period_CAPTION = DataItem.PeriodCaption(
             2,
             MyApp.applicationContext.getString(R.string.evening_title),
             Period.EVENING
