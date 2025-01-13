@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="pill"
+            type="com.ksv.pillsnumberone.entity.DataItem.Pill" />
+
+        <variable
+            name="interaction"
+            type="com.ksv.pillsnumberone.entity.Interaction" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <FrameLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0043A047"
+        android:padding="4dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:backgroundTint="@{ pill.editable ? @color/white : (pill.finished ? @color/medicine_passive : @color/medicine_active)}"
+            android:onClick="@{ () -> interaction.onItemClick(pill)}"
+            android:onLongClick="@{ () -> interaction.onItemLongClick(pill)}"
+            app:cardCornerRadius="15dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/main_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="@{pill.title}"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Алмагель" />
+
+                <TextView
+                    android:id="@+id/recipe"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:text="@{pill.recipe}"
+                    android:textSize="22sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    tools:text="За 2 чача до еды много-много текста на пять-шесть строчек" />
+                <!--                    android:layout_marginBottom="8dp"-->
+                <!--                tools:text="За 2 чача до еды"-->
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
+</layout>

@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.databinding.CaptionViewBinding
-import com.ksv.pillsnumberone.databinding.PillViewBinding
+//import com.ksv.pillsnumberone.databinding.PillViewBinding
+import com.ksv.pillsnumberone.databinding.PillViewTwoBinding
 import com.ksv.pillsnumberone.entity.Interaction
 
 
@@ -22,7 +23,7 @@ class DataListAdapter(private val interaction: Interaction) :
         class CaptionItemViewHolder(override val binding: CaptionViewBinding) :
             DataItemViewHolder(binding)
 
-        class PillItemViewHolder(override val binding: PillViewBinding) :
+        class PillItemViewHolder(override val binding: PillViewTwoBinding) :
             DataItemViewHolder(binding)
 
     }
@@ -31,7 +32,7 @@ class DataListAdapter(private val interaction: Interaction) :
         return when (viewType) {
             R.layout.pill_view -> {
                 DataItemViewHolder.PillItemViewHolder(
-                    PillViewBinding.inflate(
+                    PillViewTwoBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
@@ -60,6 +61,7 @@ class DataListAdapter(private val interaction: Interaction) :
             is DataItemViewHolder.PillItemViewHolder -> {
                 holder.binding.pill = currentList[position] as DataItem.Pill
                 holder.binding.interaction = interaction
+//                holder.binding.recipe.text = (currentList[position] as DataItem.Pill).recipe
             }
         }
     }
