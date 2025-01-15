@@ -24,9 +24,15 @@ class AddPillViewModel(private val dataItemService: DataItemService): ViewModel(
         if(!morningCheck && !noonCheck && !eveningCheck){
             _errorNotChecked.value = true
         } else {
-            if(morningCheck) dataItemService.add(DataItem.Pill(title = title, recipe = recipe, period = Period.MORNING))
-            if(noonCheck) dataItemService.add(DataItem.Pill(title = title, recipe = recipe, period = Period.NOON))
-            if(eveningCheck) dataItemService.add(DataItem.Pill(title = title, recipe = recipe, period = Period.EVENING))
+            val list = mutableListOf<DataItem.Pill>()
+            if(morningCheck)
+                list.add(DataItem.Pill(title = title, recipe = recipe, period = Period.MORNING))
+            if(noonCheck)
+                list.add(DataItem.Pill(title = title, recipe = recipe, period = Period.NOON))
+            if(eveningCheck)
+                list.add(DataItem.Pill(title = title, recipe = recipe, period = Period.EVENING))
+            dataItemService.addPills(list)
+
             _backToMainFragment.value = true
         }
     }

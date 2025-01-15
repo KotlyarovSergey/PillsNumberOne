@@ -59,7 +59,7 @@ class DataViewModel(private val dataItemService: DataItemService): ViewModel() {
     }
     fun itemClick(item: DataItem){
         if(editableItemId == null) {
-            dataItemService.switchFinished(item)
+            dataItemService.switchFinishedState(item)
         }else if(item is DataItem.Pill && item.id == editableItemId){
             _modifiedItem.value = item
         } else {

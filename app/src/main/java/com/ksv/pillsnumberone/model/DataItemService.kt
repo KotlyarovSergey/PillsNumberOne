@@ -26,9 +26,17 @@ class DataItemService(private val pillsDao: PillsDao) {
 
 
     fun add(addedPill: DataItem.Pill) {
-        val pillWithRightPosition = setPosition(addedPill)
+        val pillWithRightPosition = setLastPosition(addedPill)
         CoroutineScope(Dispatchers.Default).launch {
             pillsDao.insert(pillWithRightPosition.toPillDB())
+        }
+    }
+
+    fun addPills(pills: List<DataItem.Pill>){
+        val withLastPositions = pills.map { setLastPosition(it) }
+        val listForDB = withLastPositions.map { it.toPillDB() }
+        CoroutineScope(Dispatchers.Default).launch {
+            pillsDao.insertPills(listForDB)
         }
     }
 
@@ -37,7 +45,7 @@ class DataItemService(private val pillsDao: PillsDao) {
             CoroutineScope(Dispatchers.Default).launch {
                 pillsDao.delete(deletedItem.toPillDB())
             }
-            reBasePositionsInPeriod(deletedItem)
+            rebasePositionsInPeriod(deletedItem)
         }
     }
 
@@ -49,8 +57,7 @@ class DataItemService(private val pillsDao: PillsDao) {
                 val previousItem = dataItemList.value[indexOfMoved - 1] as DataItem.Pill
                 val updatedMovedItem = movedItem.copy(position = previousItem.position)
                 val updatedPreviousItem = previousItem.copy(position = movedItem.position)
-                updatePill(updatedMovedItem)
-                updatePill(updatedPreviousItem)
+                updatePills(updatedMovedItem, updatedPreviousItem)
             }
         }
     }
@@ -63,14 +70,13 @@ class DataItemService(private val pillsDao: PillsDao) {
                 val nextItem = dataItemList.value[indexOfMoved + 1] as DataItem.Pill
                 val updatedNextItem = nextItem.copy(position = movedItem.position)
                 val updatedMovedItem = movedItem.copy(position = nextItem.position)
-                updatePill(updatedMovedItem)
-                updatePill(updatedNextItem)
+                updatePills(updatedNextItem, updatedMovedItem)
             }
 
         }
     }
 
-    fun switchFinished(finishedItem: DataItem) {
+    fun switchFinishedState(finishedItem: DataItem) {
         if (finishedItem is DataItem.Pill) {
             val updatedItem = finishedItem.copy(finished = !finishedItem.finished)
             updatePill(updatedItem)
@@ -91,15 +97,18 @@ class DataItemService(private val pillsDao: PillsDao) {
     }
 
     fun resetPills(){
+        val listToUpdate = mutableListOf<DataItem.Pill>()
         dataItemList.value.onEach { item ->
             if(item is DataItem.Pill){
                 if(item.finished || item.time != null) {
                     val resetPill = item.copy(finished = false, time = null)
-                    updatePill(resetPill)
+                    listToUpdate.add(resetPill)
                 }
             }
         }
+        updatePills(listToUpdate)
     }
+
 
 
 
@@ -136,7 +145,20 @@ class DataItemService(private val pillsDao: PillsDao) {
         }
     }
 
-    private fun setPosition(pill: DataItem.Pill): DataItem.Pill {
+    private fun updatePills(pill1: DataItem.Pill, pill2: DataItem.Pill) {
+        CoroutineScope(Dispatchers.Default).launch {
+            pillsDao.updateBoth(pill1.toPillDB(), pill2.toPillDB())
+        }
+    }
+
+    private fun updatePills(pills: List<DataItem.Pill>) {
+        val pillsToDB = pills.map { it.toPillDB() }
+        CoroutineScope(Dispatchers.Default).launch {
+            pillsDao.updateList(pillsToDB)
+        }
+    }
+
+    private fun setLastPosition(pill: DataItem.Pill): DataItem.Pill {
         val pillsByPeriod = dataItemList.value
             .filter { it is DataItem.Pill && it.period == pill.period }
         val lastPosition = pillsByPeriod.lastIndex + 1
@@ -154,15 +176,18 @@ class DataItemService(private val pillsDao: PillsDao) {
         return nextItem !is DataItem.PeriodCaption
     }
 
-    private fun reBasePositionsInPeriod(deletedItem: DataItem.Pill){
+    private fun rebasePositionsInPeriod(deletedItem: DataItem.Pill){
         val period = deletedItem.period
         val deletedPosition = deletedItem.position
+
+        val rebasedList = mutableListOf<DataItem.Pill>()
         dataItemList.value.forEach {
             if (it is DataItem.Pill && it.period == period && it.position > deletedPosition){
                 val newPill = it.copy(position = it.position - 1)
-                updatePill(newPill)
+                rebasedList.add(newPill)
             }
         }
+        updatePills(rebasedList)
     }
 
     companion object {

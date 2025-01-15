@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.ksv.pillsnumberone.entity.PillToDB
@@ -14,8 +15,17 @@ interface PillsDao {
     @Insert
     suspend fun insert(pill: PillToDB)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertPills(pills: List<PillToDB>)
+
     @Update
     suspend fun update(pill: PillToDB)
+
+    @Update
+    suspend fun updateBoth(pill1: PillToDB, pill2: PillToDB)
+
+    @Update
+    suspend fun updateList(pills: List<PillToDB>)
 
     @Delete
     suspend fun delete(pill: PillToDB)

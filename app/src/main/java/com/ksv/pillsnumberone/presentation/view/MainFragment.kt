@@ -1,6 +1,7 @@
 package com.ksv.pillsnumberone.presentation.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -18,7 +19,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.PillsDataBase
-import com.ksv.pillsnumberone.databinding.FragmentMainTwoBinding
+import com.ksv.pillsnumberone.databinding.FragmentMainBinding
+//import com.ksv.pillsnumberone.databinding.FragmentMainTwoBinding
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Interaction
 import com.ksv.pillsnumberone.model.DataItemService
@@ -28,7 +30,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class MainFragment : Fragment() {
-    private var _binding: FragmentMainTwoBinding? = null
+    private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: DataViewModel by activityViewModels {
@@ -54,9 +56,9 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMainTwoBinding.inflate(layoutInflater)
+        _binding = FragmentMainBinding.inflate(layoutInflater)
 
-        //(activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
         binding.recycler.adapter = dataListAdapter
         addMenuProvider()
         addLiveDataObservers()
@@ -73,7 +75,7 @@ class MainFragment : Fragment() {
     private fun addLiveDataObservers() {
         viewModel.actualData.onEach { data ->
             dataListAdapter.submitList(data)
-//            Log.d("ksvlog", "data refresh")
+            Log.d("ksvlog", "data refresh")
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.setTimeFor.onEach { item ->
@@ -155,15 +157,15 @@ class MainFragment : Fragment() {
     }
 
     private fun showHideHint(show: Boolean){
-//        if (show) {
-//            binding.arrow.visibility = View.VISIBLE
-//            binding.emptyListText.visibility = View.VISIBLE
-//            binding.clickPlusText.visibility = View.VISIBLE
-//        } else {
-//            binding.arrow.visibility = View.GONE
-//            binding.emptyListText.visibility = View.GONE
-//            binding.clickPlusText.visibility = View.GONE
-//        }
+        if (show) {
+            binding.arrow.visibility = View.VISIBLE
+            binding.emptyListText.visibility = View.VISIBLE
+            binding.clickPlusText.visibility = View.VISIBLE
+        } else {
+            binding.arrow.visibility = View.GONE
+            binding.emptyListText.visibility = View.GONE
+            binding.clickPlusText.visibility = View.GONE
+        }
     }
 
 }
