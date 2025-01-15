@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.PillsDataBase
 import com.ksv.pillsnumberone.databinding.FragmentAddBinding
-import com.ksv.pillsnumberone.model.DataItemService
+import com.ksv.pillsnumberone.model.PillsService
 import com.ksv.pillsnumberone.presentation.viewmodel.AddPillViewModel
 import com.ksv.pillsnumberone.presentation.viewmodel.AppPIllViewModelProvider
 import kotlinx.coroutines.flow.launchIn
@@ -22,12 +22,9 @@ class AddFragment : Fragment() {
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
 
-    //    private val dataViewModel: DataViewModel by activityViewModels()
-//    private val testViewModel: TestViewModel by activityViewModels()
-//    private val testViewModel: TestViewModel2 by activityViewModels()
     private val viewModel: AddPillViewModel by viewModels {
         AppPIllViewModelProvider(
-            DataItemService(
+            PillsService(
                 PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
             )
         )
@@ -51,20 +48,6 @@ class AddFragment : Fragment() {
             viewModel.title = binding.medicineName.text.toString()
             viewModel.recipe = binding.medicineRecipe.text.toString()
             viewModel.onAddClick()
-
-//            val title = binding.medicineName.text.toString()
-//            val recipe = binding.medicineRecipe.text.toString()
-//            //val medicine = MedicineItem(title, recipe)
-//
-//            if (checkFillEatingTime()) {
-//                if (binding.checkBreakfast.isChecked)
-//                    testViewModel.addItem(DataItem.Pill(title = title, recipe = recipe, period = Period.MORNING))
-//                if (binding.checkLunch.isChecked)
-//                    testViewModel.addItem(DataItem.Pill(title = title, recipe = recipe, period = Period.NOON))
-//                if (binding.checkDinner.isChecked)
-//                    testViewModel.addItem(DataItem.Pill(title = title, recipe = recipe, period = Period.EVENING))
-//                findNavController().navigate(R.id.action_editFragment_to_testFragment)
-//            }
         }
 
         viewModel.backToMainFragment.onEach { goBack ->

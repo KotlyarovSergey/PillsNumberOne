@@ -10,7 +10,6 @@ import androidx.viewbinding.ViewBinding
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.databinding.CaptionViewBinding
 import com.ksv.pillsnumberone.databinding.PillViewBinding
-//import com.ksv.pillsnumberone.databinding.PillViewTwoBinding
 import com.ksv.pillsnumberone.entity.Interaction
 
 

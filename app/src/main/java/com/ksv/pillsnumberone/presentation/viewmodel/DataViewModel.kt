@@ -2,16 +2,21 @@ package com.ksv.pillsnumberone.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ksv.pillsnumberone.MyApp
+import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.entity.DataItem
-import com.ksv.pillsnumberone.model.DataItemService
+import com.ksv.pillsnumberone.entity.Period
+import com.ksv.pillsnumberone.model.PillsService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class DataViewModel(private val dataItemService: DataItemService): ViewModel() {
+//class DataViewModel(private val dataItemService: DataItemService): ViewModel() {
+class DataViewModel(private val pillService: PillsService): ViewModel() {
 
-    private val dataFromDB = dataItemService.dataItemList
+//    private val dataFromDB = pillService.dataItemList
+    private val pillsFromDB = pillService.pillsList
     private val _actualData = MutableStateFlow<List<DataItem>>(listOf())
     val actualData = _actualData.asStateFlow()
 
@@ -34,36 +39,40 @@ class DataViewModel(private val dataItemService: DataItemService): ViewModel() {
     val emptyDataHint = _emptyDataHint.asStateFlow()
 
     init {
-        dataFromDB.onEach {
-            _actualData.value = includeEditableItem(it)
+        pillsFromDB.onEach {
+            val dataItemList = makeDataList(it)
+            _actualData.value = includeEditableItem(dataItemList)
             _emptyDataHint.value = _actualData.value.isEmpty()
         }.launchIn(viewModelScope)
     }
 
 
     fun addItem(pill: DataItem.Pill){
-        dataItemService.add(pill)
+        pillService.add(pill)
     }
 
     fun moveUp(movedItem: DataItem) {
         if(movedItem is DataItem.Pill)
-            dataItemService.moveUpItemID(movedItem.id)
+            pillService.moveUpPillID(movedItem.id)
     }
     fun moveDown(movedItem: DataItem){
         if(movedItem is DataItem.Pill)
-            dataItemService.moveDownItemID(movedItem.id)
+            pillService.moveDownPillID(movedItem.id)
     }
     fun removeItem(removedItem: DataItem){
         finishEditMode()
-        dataItemService.remove(removedItem)
+        if(removedItem is DataItem.Pill)
+            pillService.remove(removedItem)
     }
     fun itemClick(item: DataItem){
-        if(editableItemId == null) {
-            dataItemService.switchFinishedState(item)
-        }else if(item is DataItem.Pill && item.id == editableItemId){
-            _modifiedItem.value = item
-        } else {
-            finishEditMode()
+        if(item is DataItem.Pill) {
+            if (editableItemId == null) {
+                pillService.switchFinishedState(item)
+            } else if (item.id == editableItemId) {
+                _modifiedItem.value = item
+            } else {
+                finishEditMode()
+            }
         }
     }
     fun itemLongClick(item: DataItem): Boolean{
@@ -84,7 +93,7 @@ class DataViewModel(private val dataItemService: DataItemService): ViewModel() {
         _setTimeFor.value = null
     }
     fun setTimeFor(itemId: Long, time: String?){
-        dataItemService.setTimeFor(itemId, time)
+        pillService.setTimeFor(itemId, time)
     }
     fun finishEditMode(){
         editableItemId?.let {
@@ -96,7 +105,7 @@ class DataViewModel(private val dataItemService: DataItemService): ViewModel() {
         _modifiedItem.value = null
     }
     fun modifyPill(pill: DataItem.Pill){
-        dataItemService.modifyPill(pill)
+        pillService.modifyPill(pill)
     }
     fun getPillByID(id: Long): DataItem.Pill?{
         val datItem = _actualData.value.firstOrNull { it is DataItem.Pill && it.id == id }
@@ -106,7 +115,7 @@ class DataViewModel(private val dataItemService: DataItemService): ViewModel() {
         return null
     }
     fun resetPills(){
-        dataItemService.resetPills()
+        pillService.resetPills()
     }
 
 
@@ -135,5 +144,48 @@ class DataViewModel(private val dataItemService: DataItemService): ViewModel() {
         }
     }
 
+    private fun makeDataList(pills: List<DataItem.Pill>): List<DataItem> {
+        val morningPills: MutableList<DataItem> = pills
+            .filter { pill -> pill.period == Period.MORNING }
+            .sortedBy { it.position }
+            .toMutableList()
+        if (morningPills.isNotEmpty()) morningPills.add(0, MORNING_CAPTION)
+
+        val noonPills: MutableList<DataItem> = pills
+            .filter { it.period == Period.NOON }
+            .sortedBy { it.position }
+            .toMutableList()
+        if (noonPills.isNotEmpty()) noonPills.add(0, NOON_CAPTION)
+
+        val eveningPills: MutableList<DataItem> = pills
+            .filter { it.period == Period.EVENING }
+            .sortedBy { it.position }
+            .toMutableList()
+        if (eveningPills.isNotEmpty()) eveningPills.add(0, EVENING_CAPTION)
+
+        return mutableListOf<DataItem>().apply {
+            addAll(morningPills)
+            addAll(noonPills)
+            addAll(eveningPills)
+        }
+    }
+
+    companion object {
+        private val MORNING_CAPTION = DataItem.PeriodCaption(
+            0,
+            MyApp.applicationContext.getString(R.string.morning_title),
+            Period.MORNING
+        )
+        private val NOON_CAPTION = DataItem.PeriodCaption(
+            1,
+            MyApp.applicationContext.getString(R.string.noon_title),
+            Period.NOON
+        )
+        private val EVENING_CAPTION = DataItem.PeriodCaption(
+            2,
+            MyApp.applicationContext.getString(R.string.evening_title),
+            Period.EVENING
+        )
+    }
 
 }

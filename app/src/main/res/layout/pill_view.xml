@@ -83,6 +83,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="4dp"
                     android:text="@{pill.title}"
+                    android:maxLines="1"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@id/recipe"

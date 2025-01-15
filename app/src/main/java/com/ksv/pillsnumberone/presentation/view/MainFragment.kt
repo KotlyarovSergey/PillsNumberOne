@@ -20,10 +20,9 @@ import androidx.navigation.fragment.findNavController
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.PillsDataBase
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
-//import com.ksv.pillsnumberone.databinding.FragmentMainTwoBinding
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Interaction
-import com.ksv.pillsnumberone.model.DataItemService
+import com.ksv.pillsnumberone.model.PillsService
 import com.ksv.pillsnumberone.presentation.viewmodel.DataViewModel
 import com.ksv.pillsnumberone.presentation.viewmodel.DataViewModelFactory
 import kotlinx.coroutines.flow.launchIn
@@ -35,7 +34,8 @@ class MainFragment : Fragment() {
 
     private val viewModel: DataViewModel by activityViewModels {
         DataViewModelFactory(
-            DataItemService(
+//            DataItemService(
+            PillsService(
                 PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
             )
         )
@@ -75,7 +75,7 @@ class MainFragment : Fragment() {
     private fun addLiveDataObservers() {
         viewModel.actualData.onEach { data ->
             dataListAdapter.submitList(data)
-            Log.d("ksvlog", "data refresh")
+//            Log.d("ksvlog", "data refresh")
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.setTimeFor.onEach { item ->
