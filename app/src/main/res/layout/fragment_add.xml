@@ -1,157 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/edit_background"
-    android:fitsSystemWindows="true"
-    tools:context=".presentation.view.AddFragment">
+    tools:context=".presentation.view.AddPillFragment">
 
-    <LinearLayout
+    <data>
+        <variable
+            name="viewModel"
+            type="com.ksv.pillsnumberone.presentation.viewmodel.AddPillViewModel" />
+    </data>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
-        <TextView
-            android:id="@+id/fragment_title"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="28dp"
-            android:paddingHorizontal="24dp"
-            android:text="@string/edit_title_new"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@color/edit_text"
-            android:textSize="36sp" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/times_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp">
-
-            <LinearLayout
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/medicine_active"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp"
+                android:layout_marginVertical="16dp"
+                android:paddingHorizontal="24dp"
+                android:textStyle="bold"
+                android:text="@string/edit_title_new"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="36sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:paddingVertical="8dp">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:text="@string/eating_time_title"
-                    android:textSize="24sp" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/check_breakfast"
-                    style="@style/MySwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    android:checked="false"
-                    android:text="@string/breakfast_title"
-                    android:textSize="21sp" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/check_lunch"
-                    style="@style/MySwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    android:text="@string/lunch_title"
-                    android:textSize="21sp"
-                    tools:checked="true" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/check_dinner"
-                    style="@style/MySwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    android:text="@string/dinner_title"
-                    android:textSize="21sp"/>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="12dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/medicine_active"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/medicine_name"
-                    android:textSize="24sp" />
-
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/medicine_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/medicine_name"
                     android:inputType="textCapSentences"
-                    android:paddingHorizontal="8dp"
-                    android:textSize="22sp"
-                    tools:text="Омепразол" />
+                    android:text="@={viewModel.title}"
+                    android:textSize="22sp" />
+                <!--                    tools:text="Омепразол" -->
+            </com.google.android.material.textfield.TextInputLayout>
 
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="12dp">
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/medicine_active"
-                android:orientation="vertical"
-                android:padding="8dp">
+                android:paddingVertical="8dp">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/medicine_recipe"
-                    android:textSize="24sp" />
-
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/medicine_recipe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/recipe_hit"
-                    android:inputType="text"
-                    android:paddingHorizontal="8dp"
+                    android:hint="@string/medicine_recipe"
+                    android:inputType="textCapSentences"
+                    android:text="@={viewModel.recipe}"
                     android:textSize="22sp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+                <!--                    tools:text="Омепразол" -->
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/button_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="32dp"
-            android:backgroundTint="#41A91D"
-            android:paddingHorizontal="24dp"
-            android:text="@string/button_add"
-            android:textAllCaps="true"
-            android:textColor="#231806"
-            android:textSize="24sp" />
-    </LinearLayout>
-</ScrollView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/times_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="16dp">
+                <!--            android:elevation="16dp"-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp"
+                        android:text="@string/eating_time_title"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/check_breakfast"
+                        style="@style/MySwitch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="8dp"
+                        android:checked="@={viewModel.morningCheck}"
+                        android:text="@string/morning_title"
+                        android:textSize="21sp" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/check_lunch"
+                        style="@style/MySwitch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="8dp"
+                        android:checked="@={viewModel.noonCheck}"
+                        android:text="@string/noon_title"
+                        android:textSize="21sp"
+                        tools:checked="true" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/check_dinner"
+                        style="@style/MySwitch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="8dp"
+                        android:checked="@={viewModel.eveningCheck}"
+                        android:text="@string/evening_title"
+                        android:textSize="21sp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/button_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="32dp"
+                android:onClick="@{() -> viewModel.onAddClick()}"
+                android:paddingHorizontal="24dp"
+                android:text="@string/button_add"
+                android:textAllCaps="true"
+                android:textSize="24sp" />
+        </LinearLayout>
+    </ScrollView>
+</layout>

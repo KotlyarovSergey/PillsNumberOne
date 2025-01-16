@@ -42,7 +42,7 @@
     <!--    AddFragment -->
     <string name="edit_title_edit">Изменить пилюльку</string>
     <string name="edit_title_new">Добавить пилюльку</string>
-    <string name="eating_time_title">Период веремени</string>
+    <string name="eating_time_title">Период веремени:</string>
     <string name="medicine_name">Название препарата</string>
     <string name="medicine_recipe">Способ приема</string>
     <string name="recipe_hit">за 30 мин до еды, 2шт</string>

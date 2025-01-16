@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/addFragment"
-        android:name="com.ksv.pillsnumberone.presentation.view.AddFragment"
+        android:name="com.ksv.pillsnumberone.presentation.view.AddPillFragment"
         android:label="fragment_edit"
         tools:layout="@layout/fragment_add">
         <action

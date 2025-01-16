@@ -18,7 +18,7 @@ import com.ksv.pillsnumberone.presentation.viewmodel.AppPIllViewModelProvider
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class AddFragment : Fragment() {
+class AddPillFragment : Fragment() {
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
 
@@ -35,20 +35,9 @@ class AddFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.buttonAdd.setOnClickListener {
-            viewModel.morningCheck = binding.checkBreakfast.isChecked
-            viewModel.noonCheck = binding.checkLunch.isChecked
-            viewModel.eveningCheck = binding.checkDinner.isChecked
-            viewModel.title = binding.medicineName.text.toString()
-            viewModel.recipe = binding.medicineRecipe.text.toString()
-            viewModel.onAddClick()
-        }
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel.backToMainFragment.onEach { goBack ->
             if (goBack)
@@ -65,26 +54,11 @@ class AddFragment : Fragment() {
                 viewModel.errorWasMessaged()
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+        return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-//    private fun checkFillEatingTime(): Boolean {
-//        return if (!binding.checkBreakfast.isChecked
-//            && !binding.checkLunch.isChecked
-//            && !binding.checkDinner.isChecked
-//        ) {
-//            Toast.makeText(
-//                requireContext(),
-//                getText(R.string.need_check_message),
-//                Toast.LENGTH_SHORT
-//            ).show()
-//            false
-//        } else true
-//    }
-
-
 }
