@@ -2,6 +2,7 @@ package com.ksv.pillsnumberone.data
 
 
 import com.ksv.pillsnumberone.data.old.FileDataSource
+import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.PillToDB
 import com.ksv.pillsnumberone.entity.old.MedicineItem
 import com.ksv.pillsnumberone.util.OldDataConverter
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class RepositoryNew(
+class Repository(
     private val fileDataSource: FileDataSource,
     private val pillsDao: PillsDao
 ) {
@@ -37,5 +38,40 @@ class RepositoryNew(
         }
     }
 
+    fun insert(pill: DataItem.Pill){
+        CoroutineScope(Dispatchers.Default).launch{
+            pillsDao.insert(pill.toPillDB())
+        }
+    }
+
+    fun insert(pills: List<DataItem.Pill>){
+        CoroutineScope(Dispatchers.Default).launch {
+            pillsDao.insertPills(pills.map { it.toPillDB() })
+        }
+    }
+
+    fun remove(pill: DataItem.Pill){
+        CoroutineScope(Dispatchers.Default).launch{
+            pillsDao.delete(pill.toPillDB())
+        }
+    }
+
+    fun remove(pills: List<DataItem.Pill>){
+        CoroutineScope(Dispatchers.Default).launch{
+            pillsDao.deletePills(pills.map { it.toPillDB() })
+        }
+    }
+
+    fun update(pill: DataItem.Pill){
+        CoroutineScope(Dispatchers.Default).launch{
+            pillsDao.update(pill.toPillDB())
+        }
+    }
+
+    fun update(pills: List<DataItem.Pill>){
+        CoroutineScope(Dispatchers.Default).launch{
+            pillsDao.updateList(pills.map { it.toPillDB() })
+        }
+    }
 
 }

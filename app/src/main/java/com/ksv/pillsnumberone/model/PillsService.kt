@@ -1,7 +1,6 @@
 package com.ksv.pillsnumberone.model
 
-import com.ksv.pillsnumberone.data.PillsDao
-import com.ksv.pillsnumberone.data.RepositoryNew
+import com.ksv.pillsnumberone.data.Repository
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Period
 import kotlinx.coroutines.CoroutineScope
@@ -9,13 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
-class PillsService(
-    private val pillsDao: PillsDao,
-    repository: RepositoryNew
-) {
-//    private val pillsDB = pillsDao.getAll()
+class PillsService(private val repository: Repository) {
     private val pillsDB = repository.pillDB
 
     val pillsList = pillsDB.map { listPillsDB ->
@@ -26,27 +20,29 @@ class PillsService(
         initialValue = emptyList()
     )
 
-
     fun add(addedPill: DataItem.Pill) {
         val pillWithRightPosition = setLastPosition(addedPill)
-        CoroutineScope(Dispatchers.Default).launch {
-            pillsDao.insert(pillWithRightPosition.toPillDB())
-        }
+//        CoroutineScope(Dispatchers.Default).launch {
+//            pillsDao.insert(pillWithRightPosition.toPillDB())
+//        }
+        repository.insert(pillWithRightPosition)
     }
 
     fun addPills(pills: List<DataItem.Pill>) {
         val withLastPositions = pills.map { setLastPosition(it) }
-        val listForDB = withLastPositions.map { it.toPillDB() }
-        CoroutineScope(Dispatchers.Default).launch {
-            pillsDao.insertPills(listForDB)
-        }
+        //val listForDB = withLastPositions.map { it.toPillDB() }
+//        CoroutineScope(Dispatchers.Default).launch {
+//            pillsDao.insertPills(listForDB)
+//        }
+        repository.insert(withLastPositions)
     }
 
     fun remove(removedPill: DataItem.Pill) {
         shiftPositions(removedPill.period, removedPill.position)
-        CoroutineScope(Dispatchers.Default).launch {
-            pillsDao.delete(removedPill.toPillDB())
-        }
+//        CoroutineScope(Dispatchers.Default).launch {
+//            pillsDao.delete(removedPill.toPillDB())
+//        }
+        repository.remove(removedPill)
     }
 
     fun moveUpPillID(id: Long) {
@@ -98,22 +94,25 @@ class PillsService(
     }
 
     private fun updatePill(pill: DataItem.Pill) {
-        CoroutineScope(Dispatchers.Default).launch {
-            pillsDao.update(pill.toPillDB())
-        }
+//        CoroutineScope(Dispatchers.Default).launch {
+//            pillsDao.update(pill.toPillDB())
+//        }
+        repository.update(pill)
     }
 
     private fun updatePills(pill1: DataItem.Pill, pill2: DataItem.Pill) {
-        CoroutineScope(Dispatchers.Default).launch {
-            pillsDao.updateBoth(pill1.toPillDB(), pill2.toPillDB())
-        }
+//        CoroutineScope(Dispatchers.Default).launch {
+//            pillsDao.updateBoth(pill1.toPillDB(), pill2.toPillDB())
+//        }
+        repository.update(listOf(pill1, pill2))
     }
 
     private fun updatePills(pills: List<DataItem.Pill>) {
-        val pillsToDB = pills.map { it.toPillDB() }
-        CoroutineScope(Dispatchers.Default).launch {
-            pillsDao.updateList(pillsToDB)
-        }
+//        val pillsToDB = pills.map { it.toPillDB() }
+//        CoroutineScope(Dispatchers.Default).launch {
+//            pillsDao.updateList(pillsToDB)
+//        }
+        repository.update(pills)
     }
 
     private fun setLastPosition(pill: DataItem.Pill): DataItem.Pill {
@@ -136,7 +135,7 @@ class PillsService(
         return pillsList.value.firstOrNull { it.period == movedPill.period && it.position == nextPos }
     }
 
-    private fun swapPills(pill1: DataItem.Pill, pill2: DataItem.Pill){
+    private fun swapPills(pill1: DataItem.Pill, pill2: DataItem.Pill) {
         val updatedPill1 = pill1.copy(position = pill2.position)
         val updatedPill2 = pill2.copy(position = pill1.position)
         updatePills(updatedPill1, updatedPill2)

@@ -29,6 +29,10 @@ interface PillsDao {
     @Delete
     suspend fun delete(pill: PillToDB)
 
+    @Delete
+    suspend fun deletePills(pills: List<PillToDB>)
+
+
     @Query("SELECT * FROM pills")
     fun getAll(): Flow<List<PillToDB>>
 
