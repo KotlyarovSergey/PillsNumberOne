@@ -11,6 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.PillsDataBase
+import com.ksv.pillsnumberone.data.RepositoryNew
+import com.ksv.pillsnumberone.data.old.FileDataSource
 import com.ksv.pillsnumberone.databinding.FragmentAddBinding
 import com.ksv.pillsnumberone.model.PillsService
 import com.ksv.pillsnumberone.presentation.viewmodel.AddPillViewModel
@@ -25,7 +27,11 @@ class AddPillFragment : Fragment() {
     private val viewModel: AddPillViewModel by viewModels {
         AppPIllViewModelProvider(
             PillsService(
-                PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
+                PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao,
+                RepositoryNew(
+                    FileDataSource(requireContext().applicationContext),
+                    PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
+                )
             )
         )
     }

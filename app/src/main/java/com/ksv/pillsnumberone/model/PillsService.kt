@@ -3,6 +3,7 @@ package com.ksv.pillsnumberone.model
 import com.ksv.pillsnumberone.MyApp
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.PillsDao
+import com.ksv.pillsnumberone.data.RepositoryNew
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Period
 import kotlinx.coroutines.CoroutineScope
@@ -12,8 +13,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class PillsService(private val pillsDao: PillsDao) {
-    private val pillsDB = pillsDao.getAll()
+class PillsService(
+    private val pillsDao: PillsDao,
+    repository: RepositoryNew
+) {
+//    private val pillsDB = pillsDao.getAll()
+    private val pillsDB = repository.pillDB
 
     val pillsList = pillsDB.map { listPillsDB ->
         listPillsDB.map { it.toPill() }

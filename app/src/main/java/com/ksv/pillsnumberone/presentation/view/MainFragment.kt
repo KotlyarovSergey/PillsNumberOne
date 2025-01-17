@@ -19,6 +19,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.PillsDataBase
+import com.ksv.pillsnumberone.data.RepositoryNew
+import com.ksv.pillsnumberone.data.old.FileDataSource
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Interaction
@@ -34,9 +36,12 @@ class MainFragment : Fragment() {
 
     private val viewModel: DataViewModel by activityViewModels {
         DataViewModelFactory(
-//            DataItemService(
             PillsService(
-                PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
+                PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao,
+                RepositoryNew(
+                    FileDataSource(requireContext().applicationContext),
+                    PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
+                )
             )
         )
     }
