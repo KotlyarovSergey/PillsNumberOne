@@ -4,30 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="pill"
             type="com.ksv.pillsnumberone.entity.DataItem.Pill" />
+
         <variable
             name="interaction"
             type="com.ksv.pillsnumberone.entity.Interaction" />
+
         <import type="android.view.View" />
+
+        <import type="com.ksv.pillsnumberone.entity.Period" />
     </data>
 
     <FrameLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0043A047"
+        android:background="@{pill.period == Period.MORNING ? @color/colorCustomColor1Container : (pill.period == Period.NOON ? @color/colorCustomColor4 : @color/colorCustomColor6)}"
         android:padding="4dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card"
+            style="@style/Widget.Material3.CardView.Elevated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:backgroundTint="@{ pill.editable ? @color/md_theme_secondaryContainer : (pill.finished ? @color/md_theme_tertiary : @color/md_theme_primaryContainer)}"
+            android:elevation="46dp"
             android:onClick="@{ () -> interaction.onItemClick(pill)}"
             android:onLongClick="@{ () -> interaction.onItemLongClick(pill)}"
-            android:layout_marginHorizontal="4dp"
-            android:backgroundTint="@{ pill.editable ? @color/white : (pill.finished ? @color/medicine_passive : @color/medicine_active)}"
             app:cardCornerRadius="15dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,7 +49,6 @@
                     android:id="@+id/move_up_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/medicine_active"
                     android:backgroundTint="#00000000"
                     android:contentDescription="@string/move_up_button_description"
                     android:minWidth="36dp"
@@ -61,7 +67,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="4dp"
-                    android:background="@color/medicine_active"
                     android:backgroundTint="#00000000"
                     android:contentDescription="@string/move_down_button_description"
                     android:minWidth="36dp"
@@ -82,8 +87,9 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="4dp"
-                    android:text="@{pill.title}"
                     android:maxLines="1"
+                    android:text="@{pill.title}"
+                    android:textColor="@{ pill.editable ? @color/md_theme_onSecondaryContainer : (pill.finished ? @color/md_theme_onTertiary : @color/md_theme_onPrimaryContainer)}"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@id/recipe"
@@ -97,14 +103,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
+                    android:textColor="@{ pill.editable ? @color/md_theme_onSecondaryContainer : (pill.finished ? @color/md_theme_onTertiary : @color/md_theme_onPrimaryContainer)}"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/time"
                     app:layout_constraintStart_toStartOf="@id/title"
                     app:layout_constraintTop_toBottomOf="@id/title"
                     tools:text="За 2 чача до еды много-много текста на пять-шесть строчек" />
-<!--                    android:text="@{pill.recipe}"-->
-<!--                    android:layout_marginBottom="8dp"-->
+                <!--                    android:text="@{pill.recipe}"-->
+                <!--                    android:layout_marginBottom="8dp"-->
                 <!--                tools:text="За 2 чача до еды"-->
 
                 <TextView
@@ -114,6 +121,7 @@
                     android:layout_marginHorizontal="8dp"
                     android:onClick="@{()-> interaction.onTimeClick(pill)}"
                     android:text="@{pill.time}"
+                    android:textColor="@{ pill.editable ? @color/md_theme_onSecondaryContainer : (pill.finished ? @color/md_theme_onTertiary : @color/md_theme_onPrimaryContainer)}"
                     android:textSize="18sp"
                     android:visibility="@{(pill.time == null || pill.editable) ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="@id/recipe"

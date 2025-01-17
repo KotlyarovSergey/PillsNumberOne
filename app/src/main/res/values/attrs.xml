@@ -1,0 +1,14 @@
+<resources>
+    <attr name="colorCustomColor1" format="color" />
+    <attr name="colorOnCustomColor1" format="color" />
+    <attr name="colorCustomColor1Container" format="color" />
+    <attr name="colorOnCustomColor1Container" format="color" />
+    <attr name="colorCustomColor4" format="color" />
+    <attr name="colorOnCustomColor4" format="color" />
+    <attr name="colorCustomColor4Container" format="color" />
+    <attr name="colorOnCustomColor4Container" format="color" />
+    <attr name="colorCustomColor6" format="color" />
+    <attr name="colorOnCustomColor6" format="color" />
+    <attr name="colorCustomColor6Container" format="color" />
+    <attr name="colorOnCustomColor6Container" format="color" />
+</resources>

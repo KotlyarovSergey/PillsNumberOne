@@ -9,20 +9,22 @@
         <variable
             name="periodCaption"
             type="com.ksv.pillsnumberone.entity.DataItem.PeriodCaption" />
+        <import type="com.ksv.pillsnumberone.entity.Period"/>
     </data>
 
 <FrameLayout
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#0043A047"
+    android:background="@{periodCaption.period == Period.MORNING ? @color/colorCustomColor1Container : (periodCaption.period == Period.NOON ? @color/colorCustomColor4 : @color/colorCustomColor6)}"
     android:padding="4dp">
+<!--    android:background="#0043A047"-->
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="0dp"
-        app:cardCornerRadius="15dp">
+<!--    <androidx.cardview.widget.CardView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="0dp"-->
+<!--        app:cardCornerRadius="15dp">-->
 
         <TextView
             android:id="@+id/caption"
@@ -32,10 +34,11 @@
             android:layout_marginTop="2dp"
             android:textSize="24sp"
             android:textStyle="bold"
+            android:textColor="@{periodCaption.period == Period.MORNING ? @color/colorOnCustomColor1Container : (periodCaption.period == Period.NOON ? @color/colorOnCustomColor4 : @color/colorOnCustomColor6)}"
             android:text="@{periodCaption.caption}"
             android:textAlignment="center"
             tools:text="Алмагель" />
 
-    </androidx.cardview.widget.CardView>
+<!--    </androidx.cardview.widget.CardView>-->
 </FrameLayout>
 </layout>
