@@ -27,51 +27,66 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="16dp"
                 android:paddingHorizontal="24dp"
-                android:textStyle="bold"
                 android:text="@string/edit_title_new"
                 android:textAlignment="center"
                 android:textAllCaps="true"
-                android:textSize="36sp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="8dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/medicine_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/medicine_name"
-                    android:inputType="textCapSentences"
-                    android:text="@={viewModel.title}"
-                    android:textSize="22sp" />
-                <!--                    tools:text="Омепразол" -->
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="8dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/medicine_recipe"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/medicine_recipe"
-                    android:inputType="text"
-                    android:text="@={viewModel.recipe}"
-                    android:textSize="22sp" />
-                <!--                    tools:text="Омепразол" -->
-            </com.google.android.material.textfield.TextInputLayout>
+                android:textSize="36sp"
+                android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/times_card"
+                style="@style/Widget.Material3.CardView.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
+                app:cardElevation="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="8dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/medicine_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/medicine_name"
+                            android:inputType="textCapSentences"
+                            android:text="@={viewModel.title}"
+                            android:textSize="22sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="8dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/medicine_recipe"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/medicine_recipe"
+                            android:inputType="text"
+                            android:text="@={viewModel.recipe}"
+                            android:textSize="22sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/times_card"
                 style="@style/Widget.Material3.CardView.Outlined"
-                app:cardElevation="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="8dp">
                 <!--            android:elevation="16dp"-->
 
                 <LinearLayout
@@ -98,7 +113,7 @@
                         android:checked="@={viewModel.morningCheck}"
                         android:text="@string/morning_title"
                         android:textSize="21sp" />
-<!--                        style="@style/MySwitch"-->
+                    <!--                        style="@style/MySwitch"-->
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/check_lunch"
@@ -109,7 +124,7 @@
                         android:text="@string/noon_title"
                         android:textSize="21sp"
                         tools:checked="true" />
-<!--                        style="@style/MySwitch"-->
+                    <!--                        style="@style/MySwitch"-->
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/check_dinner"
@@ -119,7 +134,7 @@
                         android:checked="@={viewModel.eveningCheck}"
                         android:text="@string/evening_title"
                         android:textSize="21sp" />
-<!--                        style="@style/MySwitch"-->
+                    <!--                        style="@style/MySwitch"-->
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

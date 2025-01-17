@@ -2,7 +2,6 @@ package com.ksv.pillsnumberone.data.old
 
 import android.content.Context
 import android.widget.Toast
-import com.ksv.pillsnumberone.MyApp
 import com.ksv.pillsnumberone.entity.old.MedicineItem
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

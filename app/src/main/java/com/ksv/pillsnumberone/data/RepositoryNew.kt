@@ -2,7 +2,6 @@ package com.ksv.pillsnumberone.data
 
 
 import com.ksv.pillsnumberone.data.old.FileDataSource
-import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.PillToDB
 import com.ksv.pillsnumberone.entity.old.MedicineItem
 import com.ksv.pillsnumberone.util.OldDataConverter
@@ -10,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 

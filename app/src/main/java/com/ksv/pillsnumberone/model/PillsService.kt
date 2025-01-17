@@ -1,7 +1,5 @@
 package com.ksv.pillsnumberone.model
 
-import com.ksv.pillsnumberone.MyApp
-import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.PillsDao
 import com.ksv.pillsnumberone.data.RepositoryNew
 import com.ksv.pillsnumberone.entity.DataItem

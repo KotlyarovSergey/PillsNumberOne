@@ -1,6 +1,5 @@
 package com.ksv.pillsnumberone.util
 
-import androidx.collection.objectListOf
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Period
 import com.ksv.pillsnumberone.entity.old.EatingTime
