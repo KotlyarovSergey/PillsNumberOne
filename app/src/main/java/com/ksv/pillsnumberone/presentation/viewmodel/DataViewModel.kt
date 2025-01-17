@@ -41,8 +41,10 @@ class DataViewModel(private val pillService: PillsService): ViewModel() {
     init {
         pillsFromDB.onEach {
             val dataItemList = makeDataList(it)
-            _actualData.value = includeEditableItem(dataItemList)
+            _actualData.value = includeEditableItemToActualData(dataItemList)
             _emptyDataHint.value = _actualData.value.isEmpty()
+
+            pillService.checkAndRepairPositions()
         }.launchIn(viewModelScope)
     }
 
@@ -78,7 +80,7 @@ class DataViewModel(private val pillService: PillsService): ViewModel() {
     fun itemLongClick(item: DataItem): Boolean{
         if(editableItemId == null){
             editableItemId = (item as DataItem.Pill).id
-            _actualData.value = includeEditableItem(_actualData.value)
+            _actualData.value = includeEditableItemToActualData(_actualData.value)
         }
         return true
     }
@@ -120,7 +122,7 @@ class DataViewModel(private val pillService: PillsService): ViewModel() {
 
 
 
-    private fun includeEditableItem(data: List<DataItem>): List<DataItem>{
+    private fun includeEditableItemToActualData(data: List<DataItem>): List<DataItem>{
         if(editableItemId != null) {
             val index = data.indexOfFirst { it is DataItem.Pill && it.id == editableItemId }
             if(index != -1 ){

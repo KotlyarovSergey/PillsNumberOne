@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 
 class PillsService(private val repository: Repository) {
@@ -14,6 +15,8 @@ class PillsService(private val repository: Repository) {
 
     val pillsList = pillsDB.map { listPillsDB ->
         listPillsDB.map { it.toPill() }
+    }.onEach {
+        checkAndRepairPositions(it)
     }.stateIn(
         scope = CoroutineScope(Dispatchers.Default),
         started = SharingStarted.Eagerly,
@@ -22,26 +25,16 @@ class PillsService(private val repository: Repository) {
 
     fun add(addedPill: DataItem.Pill) {
         val pillWithRightPosition = setLastPosition(addedPill)
-//        CoroutineScope(Dispatchers.Default).launch {
-//            pillsDao.insert(pillWithRightPosition.toPillDB())
-//        }
         repository.insert(pillWithRightPosition)
     }
 
-    fun addPills(pills: List<DataItem.Pill>) {
+    fun add(pills: List<DataItem.Pill>) {
         val withLastPositions = pills.map { setLastPosition(it) }
-        //val listForDB = withLastPositions.map { it.toPillDB() }
-//        CoroutineScope(Dispatchers.Default).launch {
-//            pillsDao.insertPills(listForDB)
-//        }
         repository.insert(withLastPositions)
     }
 
     fun remove(removedPill: DataItem.Pill) {
         shiftPositions(removedPill.period, removedPill.position)
-//        CoroutineScope(Dispatchers.Default).launch {
-//            pillsDao.delete(removedPill.toPillDB())
-//        }
         repository.remove(removedPill)
     }
 
@@ -67,19 +60,19 @@ class PillsService(private val repository: Repository) {
 
     fun switchFinishedState(pill: DataItem.Pill) {
         val updatedPill = pill.copy(finished = !pill.finished)
-        updatePill(updatedPill)
+        repository.update(updatedPill)
     }
 
     fun setTimeFor(id: Long, time: String?) {
         val pill = pillsList.value.firstOrNull { it.id == id }
         pill?.let {
             val newPill = it.copy(time = time)
-            updatePill(newPill)
+            repository.update(newPill)
         }
     }
 
     fun modifyPill(pill: DataItem.Pill) {
-        updatePill(pill)
+        repository.update(pill)
     }
 
     fun resetPills() {
@@ -90,30 +83,38 @@ class PillsService(private val repository: Repository) {
                 pillsToUpdate.add(resetPill)
             }
         }
-        updatePills(pillsToUpdate)
+        repository.update(pillsToUpdate)
     }
 
-    private fun updatePill(pill: DataItem.Pill) {
-//        CoroutineScope(Dispatchers.Default).launch {
-//            pillsDao.update(pill.toPillDB())
-//        }
-        repository.update(pill)
+    fun checkAndRepairPositions(pills: List<DataItem.Pill>){
+        listOf(Period.MORNING, Period.NOON, Period.EVENING).forEach { period ->
+            val listByPeriod = pillsList.value.filter { it.period == period }
+            val errorContain = listByPeriod.map { it.position }.toSet().size != listByPeriod.size
+            if (errorContain){
+                var ind = 0
+                val rebased = listByPeriod
+                    .sortedBy { it.position }
+                    .map { it.copy(position = ind++) }
+                repository.update(rebased)
+            }
+        }
     }
 
-    private fun updatePills(pill1: DataItem.Pill, pill2: DataItem.Pill) {
-//        CoroutineScope(Dispatchers.Default).launch {
-//            pillsDao.updateBoth(pill1.toPillDB(), pill2.toPillDB())
-//        }
-        repository.update(listOf(pill1, pill2))
+    fun checkAndRepairPositions(){
+        listOf(Period.MORNING, Period.NOON, Period.EVENING).forEach { period ->
+            val listByPeriod = pillsList.value.filter { it.period == period }
+            val errorContain = listByPeriod.map { it.position }.toSet().size != listByPeriod.size
+            if (errorContain){
+                var ind = 0
+                val rebased = listByPeriod
+                    .sortedBy { it.position }
+                    .map { it.copy(position = ind++) }
+                repository.update(rebased)
+            }
+        }
     }
 
-    private fun updatePills(pills: List<DataItem.Pill>) {
-//        val pillsToDB = pills.map { it.toPillDB() }
-//        CoroutineScope(Dispatchers.Default).launch {
-//            pillsDao.updateList(pillsToDB)
-//        }
-        repository.update(pills)
-    }
+
 
     private fun setLastPosition(pill: DataItem.Pill): DataItem.Pill {
         val pillsByPeriod = pillsList.value
@@ -138,7 +139,7 @@ class PillsService(private val repository: Repository) {
     private fun swapPills(pill1: DataItem.Pill, pill2: DataItem.Pill) {
         val updatedPill1 = pill1.copy(position = pill2.position)
         val updatedPill2 = pill2.copy(position = pill1.position)
-        updatePills(updatedPill1, updatedPill2)
+        repository.update(listOf(updatedPill1, updatedPill2))
     }
 
     private fun shiftPositions(period: Period, startIndex: Int) {
@@ -149,6 +150,6 @@ class PillsService(private val repository: Repository) {
                 rebasedList.add(newPill)
             }
         }
-        updatePills(rebasedList)
+        repository.update(rebasedList)
     }
 }

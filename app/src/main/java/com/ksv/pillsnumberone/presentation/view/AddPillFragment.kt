@@ -27,7 +27,6 @@ class AddPillFragment : Fragment() {
     private val viewModel: AddPillViewModel by viewModels {
         AppPIllViewModelProvider(
             PillsService(
-//                PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao,
                 Repository(
                     FileDataSource(requireContext().applicationContext),
                     PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao

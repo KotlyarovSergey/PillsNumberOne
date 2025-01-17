@@ -31,7 +31,7 @@ class AddPillViewModel(private val pillsService: PillsService): ViewModel() {
                 addedPillsList.add(DataItem.Pill(title = title, recipe = recipe, period = Period.NOON))
             if(eveningCheck)
                 addedPillsList.add(DataItem.Pill(title = title, recipe = recipe, period = Period.EVENING))
-            pillsService.addPills(addedPillsList)
+            pillsService.add(addedPillsList)
 
             _backToMainFragment.value = true
         }

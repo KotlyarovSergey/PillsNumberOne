@@ -37,9 +37,12 @@ class OldDataConverter {
 
     private fun medicineListToPillsList(medicineList: List<MedicineItem>, period: Period): List<DataItem.Pill>{
         val pillsList = mutableListOf<DataItem.Pill>()
-        medicineList.forEach {
-            pillsList.add(medicineToPill(it, period))
+        medicineList.forEachIndexed { index, medicineItem ->
+            pillsList.add(
+                medicineToPill(medicineItem, period).copy(position = index)
+            )
         }
+
         return pillsList
     }
 

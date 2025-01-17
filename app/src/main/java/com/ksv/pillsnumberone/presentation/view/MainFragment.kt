@@ -36,7 +36,6 @@ class MainFragment : Fragment() {
     private val viewModel: DataViewModel by activityViewModels {
         DataViewModelFactory(
             PillsService(
-//                PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao,
                 Repository(
                     FileDataSource(requireContext().applicationContext),
                     PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
