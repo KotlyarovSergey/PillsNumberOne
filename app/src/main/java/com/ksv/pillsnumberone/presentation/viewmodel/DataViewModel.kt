@@ -8,15 +8,16 @@ import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Period
 import com.ksv.pillsnumberone.model.PillsService
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 
-//class DataViewModel(private val dataItemService: DataItemService): ViewModel() {
 class DataViewModel(private val pillService: PillsService): ViewModel() {
 
-//    private val dataFromDB = pillService.dataItemList
     private val pillsFromDB = pillService.pillsList
+
     private val _actualData = MutableStateFlow<List<DataItem>>(listOf())
     val actualData = _actualData.asStateFlow()
 
