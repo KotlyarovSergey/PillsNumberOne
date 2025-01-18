@@ -1,30 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="periodCaption"
             type="com.ksv.pillsnumberone.entity.DataItem.PeriodCaption" />
-        <import type="com.ksv.pillsnumberone.entity.Period"/>
+
+        <import type="com.ksv.pillsnumberone.entity.Period" />
     </data>
 
-<FrameLayout
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@{periodCaption.period == Period.MORNING ? @color/colorCustomColor1Container : (periodCaption.period == Period.NOON ? @color/colorCustomColor4 : @color/colorCustomColor6)}"
-    android:padding="4dp">
-<!--    android:background="#0043A047"-->
-
-<!--    <androidx.cardview.widget.CardView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="0dp"-->
-<!--        app:cardCornerRadius="15dp">-->
+    <FrameLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp">
+        <!--    android:background="@{periodCaption.period == Period.MORNING ? @color/colorCustomColor1Container : (periodCaption.period == Period.NOON ? @color/colorCustomColor2Container : @color/colorCustomColor3Container)}"-->
 
         <TextView
             android:id="@+id/caption"
@@ -32,13 +24,13 @@
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:layout_marginTop="2dp"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@{periodCaption.period == Period.MORNING ? @color/colorOnCustomColor1Container : (periodCaption.period == Period.NOON ? @color/colorOnCustomColor4 : @color/colorOnCustomColor6)}"
             android:text="@{periodCaption.caption}"
             android:textAlignment="center"
+            android:textColor="@color/md_theme_onPrimaryContainer"
+            android:textSize="24sp"
+            android:textStyle="bold"
             tools:text="Алмагель" />
+        <!--            android:textColor="@{periodCaption.period == Period.MORNING ? @color/colorOnCustomColor1Container : (periodCaption.period == Period.NOON ? @color/colorOnCustomColor2Container : @color/colorOnCustomColor3Container)}"-->
 
-<!--    </androidx.cardview.widget.CardView>-->
-</FrameLayout>
+    </FrameLayout>
 </layout>

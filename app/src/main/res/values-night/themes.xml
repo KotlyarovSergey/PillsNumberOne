@@ -56,13 +56,13 @@
         <item name="colorOnCustomColor1">@color/colorOnCustomColor1</item>
         <item name="colorCustomColor1Container">@color/colorCustomColor1Container</item>
         <item name="colorOnCustomColor1Container">@color/colorOnCustomColor1Container</item>
-        <item name="colorCustomColor4">@color/colorCustomColor4</item>
-        <item name="colorOnCustomColor4">@color/colorOnCustomColor4</item>
-        <item name="colorCustomColor4Container">@color/colorCustomColor4Container</item>
-        <item name="colorOnCustomColor4Container">@color/colorOnCustomColor4Container</item>
-        <item name="colorCustomColor6">@color/colorCustomColor6</item>
-        <item name="colorOnCustomColor6">@color/colorOnCustomColor6</item>
-        <item name="colorCustomColor6Container">@color/colorCustomColor6Container</item>
-        <item name="colorOnCustomColor6Container">@color/colorOnCustomColor6Container</item>
+        <item name="colorCustomColor2">@color/colorCustomColor2</item>
+        <item name="colorOnCustomColor2">@color/colorOnCustomColor2</item>
+        <item name="colorCustomColor2Container">@color/colorCustomColor2Container</item>
+        <item name="colorOnCustomColor2Container">@color/colorOnCustomColor2Container</item>
+        <item name="colorCustomColor3">@color/colorCustomColor3</item>
+        <item name="colorOnCustomColor3">@color/colorOnCustomColor3</item>
+        <item name="colorCustomColor3Container">@color/colorCustomColor3Container</item>
+        <item name="colorOnCustomColor3Container">@color/colorOnCustomColor3Container</item>
     </style>
 </resources>

@@ -50,14 +50,14 @@
         <item name="colorOnCustomColor1">@color/colorOnCustomColor1_mediumContrast</item>
         <item name="colorCustomColor1Container">@color/colorCustomColor1Container_mediumContrast</item>
         <item name="colorOnCustomColor1Container">@color/colorOnCustomColor1Container_mediumContrast</item>
-        <item name="colorCustomColor4">@color/colorCustomColor4_mediumContrast</item>
-        <item name="colorOnCustomColor4">@color/colorOnCustomColor4_mediumContrast</item>
-        <item name="colorCustomColor4Container">@color/colorCustomColor4Container_mediumContrast</item>
-        <item name="colorOnCustomColor4Container">@color/colorOnCustomColor4Container_mediumContrast</item>
-        <item name="colorCustomColor6">@color/colorCustomColor6_mediumContrast</item>
-        <item name="colorOnCustomColor6">@color/colorOnCustomColor6_mediumContrast</item>
-        <item name="colorCustomColor6Container">@color/colorCustomColor6Container_mediumContrast</item>
-        <item name="colorOnCustomColor6Container">@color/colorOnCustomColor6Container_mediumContrast</item>
+        <item name="colorCustomColor2">@color/colorCustomColor2_mediumContrast</item>
+        <item name="colorOnCustomColor2">@color/colorOnCustomColor2_mediumContrast</item>
+        <item name="colorCustomColor2Container">@color/colorCustomColor2Container_mediumContrast</item>
+        <item name="colorOnCustomColor2Container">@color/colorOnCustomColor2Container_mediumContrast</item>
+        <item name="colorCustomColor3">@color/colorCustomColor3_mediumContrast</item>
+        <item name="colorOnCustomColor3">@color/colorOnCustomColor3_mediumContrast</item>
+        <item name="colorCustomColor3Container">@color/colorCustomColor3Container_mediumContrast</item>
+        <item name="colorOnCustomColor3Container">@color/colorOnCustomColor3Container_mediumContrast</item>
     </style>
     <style name="ThemeOverlay.AppTheme.HighContrast" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/md_theme_primary_highContrast</item>
@@ -110,13 +110,13 @@
         <item name="colorOnCustomColor1">@color/colorOnCustomColor1_highContrast</item>
         <item name="colorCustomColor1Container">@color/colorCustomColor1Container_highContrast</item>
         <item name="colorOnCustomColor1Container">@color/colorOnCustomColor1Container_highContrast</item>
-        <item name="colorCustomColor4">@color/colorCustomColor4_highContrast</item>
-        <item name="colorOnCustomColor4">@color/colorOnCustomColor4_highContrast</item>
-        <item name="colorCustomColor4Container">@color/colorCustomColor4Container_highContrast</item>
-        <item name="colorOnCustomColor4Container">@color/colorOnCustomColor4Container_highContrast</item>
-        <item name="colorCustomColor6">@color/colorCustomColor6_highContrast</item>
-        <item name="colorOnCustomColor6">@color/colorOnCustomColor6_highContrast</item>
-        <item name="colorCustomColor6Container">@color/colorCustomColor6Container_highContrast</item>
-        <item name="colorOnCustomColor6Container">@color/colorOnCustomColor6Container_highContrast</item>
+        <item name="colorCustomColor2">@color/colorCustomColor2_highContrast</item>
+        <item name="colorOnCustomColor2">@color/colorOnCustomColor2_highContrast</item>
+        <item name="colorCustomColor2Container">@color/colorCustomColor2Container_highContrast</item>
+        <item name="colorOnCustomColor2Container">@color/colorOnCustomColor2Container_highContrast</item>
+        <item name="colorCustomColor3">@color/colorCustomColor3_highContrast</item>
+        <item name="colorOnCustomColor3">@color/colorOnCustomColor3_highContrast</item>
+        <item name="colorCustomColor3Container">@color/colorCustomColor3Container_highContrast</item>
+        <item name="colorOnCustomColor3Container">@color/colorOnCustomColor3Container_highContrast</item>
     </style>
 </resources>

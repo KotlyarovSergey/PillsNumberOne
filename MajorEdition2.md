@@ -6,4 +6,4 @@
 * ~~Своя ViewModel для AddFragment~~
 * Material Design
 * ~~Data Binding (AddFragment!)~~
-
+* Редактирование на месте

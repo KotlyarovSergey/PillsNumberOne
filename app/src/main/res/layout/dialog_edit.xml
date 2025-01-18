@@ -14,15 +14,12 @@
         android:text="@string/edit_title_edit"
         android:textAlignment="center"
         android:textSize="28sp" />
-<!--        android:textColor="#EFC6B9"-->
-<!--        android:background="@color/edit_background"-->
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
         app:endIconMode="clear_text">
-<!--        app:endIconTint="#C62828"-->
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ed_medicine_title"
@@ -39,7 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
         app:endIconMode="clear_text">
-<!--        app:endIconTint="#C62828"-->
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ed_medicine_recipe"
@@ -77,14 +73,5 @@
             android:textSize="18sp" />
 
     </LinearLayout>
-
-    <!--    <Button-->
-    <!--        android:id="@+id/ed_button_ok"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_gravity="center"-->
-    <!--        android:layout_marginBottom="8dp"-->
-    <!--        android:text="@string/button_ok"-->
-    <!--        android:textSize="21sp" />-->
 
 </LinearLayout>

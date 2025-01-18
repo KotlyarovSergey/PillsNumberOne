@@ -88,8 +88,6 @@ class PillsService(private val repository: Repository) {
     }
 
 
-
-
     private fun checkAndRepairPositions(pills: List<DataItem.Pill>) {
         listOf(Period.MORNING, Period.NOON, Period.EVENING).forEach { period ->
             val listByPeriod = pills.filter { it.period == period }
