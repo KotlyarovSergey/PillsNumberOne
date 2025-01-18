@@ -1,5 +1,6 @@
 package com.ksv.pillsnumberone.model
 
+import android.util.Log
 import com.ksv.pillsnumberone.data.Repository
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Period
@@ -86,11 +87,14 @@ class PillsService(private val repository: Repository) {
         repository.update(pillsToUpdate)
     }
 
-    fun checkAndRepairPositions(pills: List<DataItem.Pill>){
+
+
+
+    private fun checkAndRepairPositions(pills: List<DataItem.Pill>) {
         listOf(Period.MORNING, Period.NOON, Period.EVENING).forEach { period ->
-            val listByPeriod = pillsList.value.filter { it.period == period }
+            val listByPeriod = pills.filter { it.period == period }
             val errorContain = listByPeriod.map { it.position }.toSet().size != listByPeriod.size
-            if (errorContain){
+            if (errorContain) {
                 var ind = 0
                 val rebased = listByPeriod
                     .sortedBy { it.position }
@@ -99,22 +103,6 @@ class PillsService(private val repository: Repository) {
             }
         }
     }
-
-    fun checkAndRepairPositions(){
-        listOf(Period.MORNING, Period.NOON, Period.EVENING).forEach { period ->
-            val listByPeriod = pillsList.value.filter { it.period == period }
-            val errorContain = listByPeriod.map { it.position }.toSet().size != listByPeriod.size
-            if (errorContain){
-                var ind = 0
-                val rebased = listByPeriod
-                    .sortedBy { it.position }
-                    .map { it.copy(position = ind++) }
-                repository.update(rebased)
-            }
-        }
-    }
-
-
 
     private fun setLastPosition(pill: DataItem.Pill): DataItem.Pill {
         val pillsByPeriod = pillsList.value

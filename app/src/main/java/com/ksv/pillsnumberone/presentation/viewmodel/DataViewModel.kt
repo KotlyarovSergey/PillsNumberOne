@@ -43,8 +43,6 @@ class DataViewModel(private val pillService: PillsService): ViewModel() {
             val dataItemList = makeDataList(it)
             _actualData.value = includeEditableItemToActualData(dataItemList)
             _emptyDataHint.value = _actualData.value.isEmpty()
-
-            pillService.checkAndRepairPositions()
         }.launchIn(viewModelScope)
     }
 
