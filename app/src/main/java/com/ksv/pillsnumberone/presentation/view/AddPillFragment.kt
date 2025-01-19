@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ksv.pillsnumberone.R
-import com.ksv.pillsnumberone.data.PillsDataBase
+import com.ksv.pillsnumberone.data.AppDataBase
 import com.ksv.pillsnumberone.data.Repository
 import com.ksv.pillsnumberone.data.old.FileDataSource
 import com.ksv.pillsnumberone.databinding.FragmentAddBinding
@@ -29,7 +29,7 @@ class AddPillFragment : Fragment() {
             PillsService(
                 Repository(
                     FileDataSource(requireContext().applicationContext),
-                    PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
+                    AppDataBase.getInstance(requireContext().applicationContext).getPillsDao
                 )
             )
         )

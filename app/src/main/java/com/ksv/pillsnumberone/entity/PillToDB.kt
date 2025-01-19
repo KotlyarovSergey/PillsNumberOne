@@ -13,8 +13,7 @@ class PillToDB(
     val period: Int,
     val position: Int = 0,
     val time: String? = null,
-    val finished: Boolean,
-//    val editable: Boolean = false,
+    val finished: Boolean
 ){
     fun toPill(): DataItem.Pill{
         val periodEnum = try {
@@ -30,8 +29,7 @@ class PillToDB(
             period = periodEnum,
             position = position,
             time = time,
-            finished = finished,
-//            editable = editable
+            finished = finished
         )
     }
 }

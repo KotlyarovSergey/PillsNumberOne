@@ -6,21 +6,23 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.ksv.pillsnumberone.entity.PillToDB
 
-@Database(entities = [PillToDB::class], version = 1, exportSchema = false)
-abstract class PillsDataBase: RoomDatabase() {
+@Database(entities = [PillToDB::class], version = 1)
+abstract class AppDataBase: RoomDatabase() {
     abstract val getPillsDao: PillsDao
 
     companion object{
-        @Volatile
-        private var INSTANCE: PillsDataBase? = null
+        private const val DB_NAME = "app_database"
 
-        fun getInstance(context: Context): PillsDataBase{
+        @Volatile
+        private var INSTANCE: AppDataBase? = null
+
+        fun getInstance(context: Context): AppDataBase{
             synchronized(this) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(
                         context.applicationContext,
-                        PillsDataBase::class.java,
-                        "task_database"
+                        AppDataBase::class.java,
+                        DB_NAME
                     ).build()
                 }
                 return INSTANCE!!

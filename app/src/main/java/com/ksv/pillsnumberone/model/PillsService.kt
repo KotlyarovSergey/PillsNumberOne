@@ -1,6 +1,5 @@
 package com.ksv.pillsnumberone.model
 
-import android.util.Log
 import com.ksv.pillsnumberone.data.Repository
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Period

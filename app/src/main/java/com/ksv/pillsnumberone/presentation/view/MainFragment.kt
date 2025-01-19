@@ -17,7 +17,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ksv.pillsnumberone.R
-import com.ksv.pillsnumberone.data.PillsDataBase
+import com.ksv.pillsnumberone.data.AppDataBase
 import com.ksv.pillsnumberone.data.Repository
 import com.ksv.pillsnumberone.data.old.FileDataSource
 import com.ksv.pillsnumberone.databinding.FragmentMainBinding
@@ -38,7 +38,7 @@ class MainFragment : Fragment() {
             PillsService(
                 Repository(
                     FileDataSource(requireContext().applicationContext),
-                    PillsDataBase.getInstance(requireContext().applicationContext).getPillsDao
+                    AppDataBase.getInstance(requireContext().applicationContext).getPillsDao
                 )
             )
         )

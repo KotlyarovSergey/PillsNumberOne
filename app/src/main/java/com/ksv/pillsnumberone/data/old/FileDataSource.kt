@@ -12,7 +12,6 @@ import java.io.IOException
 import java.io.InputStreamReader
 
 class FileDataSource(private val context: Context) {
-//    private val context = MyApp.applicationContext
 
     fun saveData(medicineMap: Map<String, List<MedicineItem>>) {
         val text = Json.encodeToString(medicineMap)
