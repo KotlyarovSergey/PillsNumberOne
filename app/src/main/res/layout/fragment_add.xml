@@ -58,7 +58,7 @@
                             android:id="@+id/medicine_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/medicine_name"
+                            android:hint="@string/pill_name"
                             android:inputType="textCapSentences"
                             android:text="@={viewModel.title}"
                             android:textSize="22sp" />
@@ -73,7 +73,7 @@
                             android:id="@+id/medicine_recipe"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/medicine_recipe"
+                            android:hint="@string/pill_recipe"
                             android:inputType="text"
                             android:text="@={viewModel.recipe}"
                             android:textSize="22sp" />
@@ -103,7 +103,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="8dp"
-                        android:text="@string/eating_time_title"
+                        android:text="@string/period_group_title"
                         android:textSize="24sp"
                         android:textStyle="bold" />
 

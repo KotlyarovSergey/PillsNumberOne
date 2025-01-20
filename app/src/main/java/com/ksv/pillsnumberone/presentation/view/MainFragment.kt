@@ -60,12 +60,14 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainBinding.inflate(layoutInflater)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
         binding.recycler.adapter = dataListAdapter
         addMenuProvider()
         addLiveDataObservers()
-        addButtonClickListeners()
+        setFABClickListeners()
 
         return binding.root
     }
@@ -81,47 +83,32 @@ class MainFragment : Fragment() {
 //            Log.d("ksvlog", "data refresh")
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        viewModel.setTimeFor.onEach { item ->
-            if (item != null) {
+        viewModel.setTimeFor.onEach { pill ->
+            pill?.let {
                 val action = MainFragmentDirections
-                    .actionTestFragmentToSetTimeDialog(item.id, item.time)
+                    .actionMainFragmentToSetTimeDialog(pill.id, pill.time)
                 findNavController().navigate(action)
                 viewModel.setTimeFinished()
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        viewModel.isEditMode.onEach { isEdit ->
-            if (isEdit) {
-                binding.applyButton.visibility = View.VISIBLE
-                binding.addButton.visibility = View.GONE
-            } else {
-                binding.applyButton.visibility = View.GONE
-                binding.addButton.visibility = View.VISIBLE
+        viewModel.modifiedPill.onEach { modifiedPill ->
+            modifiedPill?.let {
+                val action = MainFragmentDirections
+                    .actionMainFragmentToEditDialog(modifiedPill.id)
+                findNavController().navigate(action)
+                viewModel.resetModifiedItem()
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        viewModel.modifiedItem.onEach { modifiedItem ->
-            modifiedItem?.let {
-                if (modifiedItem is DataItem.Pill) {
-                    val action = MainFragmentDirections
-                        .actionTestFragmentToEditDialog(modifiedItem.id)
-                    findNavController().navigate(action)
-                    viewModel.resetModifiedItem()
-                }
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
-
-        viewModel.emptyDataHint.onEach { showHint ->
-            showHideHint(showHint)
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun addButtonClickListeners() {
+    private fun setFABClickListeners() {
         binding.addButton.setOnClickListener {
-            findNavController().navigate(R.id.action_testFragment_to_editFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_editFragment)
         }
         binding.applyButton.setOnClickListener {
-            viewModel.finishEditMode()
+            viewModel.onApplyClick()
         }
     }
 
@@ -134,9 +121,9 @@ class MainFragment : Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
-                    R.id.menu_clear -> {
-                        if (!viewModel.isEditMode.value && !viewModel.emptyDataHint.value)
-                            onMenuClearClick()
+                    R.id.menu_reset -> {
+                        if (!viewModel.isEditMode.value && !viewModel.showEmptyDataHint.value)
+                            onMenuResetClick()
                         true
                     }
 
@@ -146,7 +133,7 @@ class MainFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun onMenuClearClick() {
+    private fun onMenuResetClick() {
         val builder = AlertDialog.Builder(requireContext())
         builder
             .setTitle(getString(R.string.alert_dialog_clear_title))
@@ -157,18 +144,6 @@ class MainFragment : Fragment() {
             }
             .setNegativeButton(getString(R.string.alert_dialog_clear_no)) { _, _ -> }
         builder.create().show()
-    }
-
-    private fun showHideHint(show: Boolean){
-        if (show) {
-            binding.arrow.visibility = View.VISIBLE
-            binding.emptyListText.visibility = View.VISIBLE
-            binding.clickPlusText.visibility = View.VISIBLE
-        } else {
-            binding.arrow.visibility = View.GONE
-            binding.emptyListText.visibility = View.GONE
-            binding.clickPlusText.visibility = View.GONE
-        }
     }
 
 }

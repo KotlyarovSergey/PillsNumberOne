@@ -50,7 +50,6 @@ class DataListAdapter(private val interaction: Interaction) :
             else -> throw IllegalArgumentException("Invalid ViewType Provided")
         }
     }
-
     override fun onBindViewHolder(holder: DataItemViewHolder, position: Int) {
         when (holder) {
             is DataItemViewHolder.CaptionItemViewHolder -> {
@@ -60,12 +59,10 @@ class DataListAdapter(private val interaction: Interaction) :
             is DataItemViewHolder.PillItemViewHolder -> {
                 holder.binding.pill = currentList[position] as DataItem.Pill
                 holder.binding.interaction = interaction
-
                 holder.binding.recipe.text = (currentList[position] as DataItem.Pill).recipe
             }
         }
     }
-
     override fun getItemViewType(position: Int): Int {
         return when (currentList[position]) {
             is DataItem.PeriodCaption -> R.layout.caption_view
@@ -81,9 +78,7 @@ class DataListAdapter(private val interaction: Interaction) :
                     is DataItem.PeriodCaption -> oldItem.id == (newItem as DataItem.PeriodCaption).id
                 }
             } else false
-
         override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean =
             oldItem == newItem
     }
-
 }

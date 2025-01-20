@@ -24,7 +24,6 @@
         app:endIconMode="clear_text">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/ed_medicine_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/edit_medicine_name"
@@ -41,7 +40,6 @@
         app:endIconMode="clear_text">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/ed_medicine_recipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/edit_medicine_recipe"

@@ -16,7 +16,7 @@ class PillsService(private val repository: Repository) {
     val pillsList = pillsDB.map { listPillsDB ->
         listPillsDB.map { it.toPill() }
     }.onEach {
-        checkAndRepairPositions(it)
+        repairPositions(it)
     }.stateIn(
         scope = CoroutineScope(Dispatchers.Default),
         started = SharingStarted.Eagerly,
@@ -27,114 +27,98 @@ class PillsService(private val repository: Repository) {
         val pillWithRightPosition = setLastPosition(addedPill)
         repository.insert(pillWithRightPosition)
     }
-
     fun add(pills: List<DataItem.Pill>) {
         val withLastPositions = pills.map { setLastPosition(it) }
         repository.insert(withLastPositions)
     }
-
     fun remove(removedPill: DataItem.Pill) {
-        shiftPositions(removedPill.period, removedPill.position)
+        decreasePositionsAfter(removedPill.period, removedPill.position)
         repository.remove(removedPill)
     }
-
-    fun moveUpPillID(id: Long) {
-        val movedPill = pillsList.value.firstOrNull { it.id == id }
-        movedPill?.let { mvdPll ->
-            val previousPill = findPreviousPill(mvdPll)
-            previousPill?.let { prvPll ->
-                swapPills(mvdPll, prvPll)
-            }
+    fun moveUpPill(movedPill: DataItem.Pill) {
+        previousPillOrNull(movedPill)?.let { previousPill ->
+            swapPills(movedPill, previousPill)
         }
     }
-
-    fun moveDownPillID(id: Long) {
-        val movedPill = pillsList.value.firstOrNull { it.id == id }
-        movedPill?.let { mvdPll ->
-            val nextPill = findNextPill(mvdPll)
-            nextPill?.let { nxtPll ->
-                swapPills(mvdPll, nxtPll)
-            }
+    fun moveDownPill(movedPill: DataItem.Pill) {
+        nextPillOrNull(movedPill)?.let { nextPill ->
+            swapPills(movedPill, nextPill)
         }
     }
-
     fun switchFinishedState(pill: DataItem.Pill) {
-        val updatedPill = pill.copy(finished = !pill.finished)
-        repository.update(updatedPill)
+        val modifiedPill = pill.copy(finished = !pill.finished)
+        repository.update(modifiedPill)
     }
-
     fun setTimeFor(id: Long, time: String?) {
         val pill = pillsList.value.firstOrNull { it.id == id }
         pill?.let {
-            val newPill = it.copy(time = time)
-            repository.update(newPill)
+            val modifiedPill = it.copy(time = time)
+            repository.update(modifiedPill)
         }
     }
-
     fun modifyPill(pill: DataItem.Pill) {
         repository.update(pill)
     }
-
-    fun resetPills() {
+    fun resetPillsToDefaultState() {
         val pillsToUpdate = mutableListOf<DataItem.Pill>()
-        pillsList.value.onEach { item ->
-            if (item.finished || item.time != null) {
-                val resetPill = item.copy(finished = false, time = null)
-                pillsToUpdate.add(resetPill)
+        pillsList.value.onEach { pill ->
+            if (pill.finished || pill.time != null) {
+                val defaultsPill = pill.copy(finished = false, time = null)
+                pillsToUpdate.add(defaultsPill)
             }
         }
         repository.update(pillsToUpdate)
     }
 
 
-    private fun checkAndRepairPositions(pills: List<DataItem.Pill>) {
-        listOf(Period.MORNING, Period.NOON, Period.EVENING).forEach { period ->
+    private fun repairPositions(pills: List<DataItem.Pill>) {
+        Period.entries.forEach { period ->
             val listByPeriod = pills.filter { it.period == period }
-            val errorContain = listByPeriod.map { it.position }.toSet().size != listByPeriod.size
-            if (errorContain) {
-                var ind = 0
-                val rebased = listByPeriod
-                    .sortedBy { it.position }
-                    .map { it.copy(position = ind++) }
-                repository.update(rebased)
+            if (listByPeriod.isNotEmpty()) {
+                val doublePositionContains =
+                    listByPeriod.map { it.position }.toSet().size != listByPeriod.size
+                val skippedPositionContains =
+                    listByPeriod.maxByOrNull { it.position }!!.position != listByPeriod.size - 1
+                if (doublePositionContains || skippedPositionContains) {
+                    var ind = 0
+                    val rebased = listByPeriod
+                        .sortedBy { it.position }
+                        .map { it.copy(position = ind++) }
+                    repository.update(rebased)
+                }
             }
         }
     }
-
     private fun setLastPosition(pill: DataItem.Pill): DataItem.Pill {
         val pillsByPeriod = pillsList.value
             .filter { it.period == pill.period }
         val lastPosition = pillsByPeriod.lastIndex + 1
         return pill.copy(position = lastPosition)
     }
-
-    private fun findPreviousPill(movedPill: DataItem.Pill): DataItem.Pill? {
+    private fun previousPillOrNull(movedPill: DataItem.Pill): DataItem.Pill? {
         val prevPos = movedPill.position - 1
         if (prevPos >= 0) {
             return pillsList.value.firstOrNull { it.period == movedPill.period && it.position == prevPos }
         }
         return null
     }
-
-    private fun findNextPill(movedPill: DataItem.Pill): DataItem.Pill? {
+    private fun nextPillOrNull(movedPill: DataItem.Pill): DataItem.Pill? {
         val nextPos = movedPill.position + 1
         return pillsList.value.firstOrNull { it.period == movedPill.period && it.position == nextPos }
     }
-
     private fun swapPills(pill1: DataItem.Pill, pill2: DataItem.Pill) {
         val updatedPill1 = pill1.copy(position = pill2.position)
         val updatedPill2 = pill2.copy(position = pill1.position)
         repository.update(listOf(updatedPill1, updatedPill2))
     }
-
-    private fun shiftPositions(period: Period, startIndex: Int) {
-        val rebasedList = mutableListOf<DataItem.Pill>()
-        pillsList.value.forEach {
-            if (it.period == period && it.position > startIndex) {
-                val newPill = it.copy(position = it.position - 1)
-                rebasedList.add(newPill)
+    private fun decreasePositionsAfter(period: Period, startIndex: Int) {
+        val modifiedList = mutableListOf<DataItem.Pill>()
+        pillsList.value.forEach { pill ->
+            if (pill.period == period && pill.position > startIndex) {
+                val modifiedPill = pill.copy(position = pill.position - 1)
+                modifiedList.add(modifiedPill)
             }
         }
-        repository.update(rebasedList)
+        repository.update(modifiedList)
     }
 }
