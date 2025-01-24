@@ -1,4 +1,4 @@
-package com.ksv.pillsnumberone.presentation.view
+package com.ksv.pillsnumberone.ui.home.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -20,21 +20,22 @@ import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.data.AppDataBase
 import com.ksv.pillsnumberone.data.Repository
 import com.ksv.pillsnumberone.data.old.FileDataSource
-import com.ksv.pillsnumberone.databinding.FragmentMainBinding
+import com.ksv.pillsnumberone.databinding.FragmentHomeBinding
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Interaction
+import com.ksv.pillsnumberone.ui.home.model.HomeViewModel
+import com.ksv.pillsnumberone.ui.home.model.HomeViewModelFactory
 import com.ksv.pillsnumberone.model.PillsService
-import com.ksv.pillsnumberone.presentation.viewmodel.DataViewModel
-import com.ksv.pillsnumberone.presentation.viewmodel.DataViewModelFactory
+import com.ksv.pillsnumberone.ui.home.model.HomeState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class MainFragment : Fragment() {
-    private var _binding: FragmentMainBinding? = null
+class HomeFragment : Fragment() {
+    private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: DataViewModel by activityViewModels {
-        DataViewModelFactory(
+    private val viewModel: HomeViewModel by activityViewModels {
+        HomeViewModelFactory(
             PillsService(
                 Repository(
                     FileDataSource(requireContext().applicationContext),
@@ -59,7 +60,7 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMainBinding.inflate(layoutInflater)
+        _binding = FragmentHomeBinding.inflate(layoutInflater)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -85,7 +86,7 @@ class MainFragment : Fragment() {
 
         viewModel.setTimeFor.onEach { pill ->
             pill?.let {
-                val action = MainFragmentDirections
+                val action = HomeFragmentDirections
                     .actionMainFragmentToSetTimeDialog(pill.id, pill.time)
                 findNavController().navigate(action)
                 viewModel.setTimeFinished()
@@ -94,7 +95,7 @@ class MainFragment : Fragment() {
 
         viewModel.modifiedPill.onEach { modifiedPill ->
             modifiedPill?.let {
-                val action = MainFragmentDirections
+                val action = HomeFragmentDirections
                     .actionMainFragmentToEditDialog(modifiedPill.id)
                 findNavController().navigate(action)
                 viewModel.resetModifiedItem()

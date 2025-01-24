@@ -1,4 +1,4 @@
-package com.ksv.pillsnumberone.presentation.view
+package com.ksv.pillsnumberone.ui.home.view
 
 import android.app.Dialog
 import android.os.Bundle
@@ -6,11 +6,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.ksv.pillsnumberone.databinding.DialogEditBinding
-import com.ksv.pillsnumberone.presentation.viewmodel.DataViewModel
+import com.ksv.pillsnumberone.ui.home.model.HomeViewModel
 
 
 class EditDialog : DialogFragment() {
-    private val viewModel: DataViewModel by activityViewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogEditBinding.inflate(requireActivity().layoutInflater)
@@ -22,8 +22,8 @@ class EditDialog : DialogFragment() {
             binding.edMedicineRecipe.setText(pill.recipe)
             binding.ok.setOnClickListener {
                 val modifiedPill = pill.copy(
-                    title = binding.edMedicineTitle.text.toString(),
-                    recipe = binding.edMedicineRecipe.text.toString()
+                    title = binding.edMedicineTitle.text.toString().trim(),
+                    recipe = binding.edMedicineRecipe.text.toString().trim()
                 )
                 viewModel.modifyPill(modifiedPill)
                 dismiss()

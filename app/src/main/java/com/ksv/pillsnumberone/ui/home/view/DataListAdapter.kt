@@ -1,4 +1,4 @@
-package com.ksv.pillsnumberone.presentation.view
+package com.ksv.pillsnumberone.ui.home.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

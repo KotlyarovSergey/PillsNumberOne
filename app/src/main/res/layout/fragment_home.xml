@@ -2,13 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".presentation.view.MainFragment">
+    tools:context=".ui.home.view.HomeFragment">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.ksv.pillsnumberone.presentation.viewmodel.DataViewModel" />
+            type="com.ksv.pillsnumberone.ui.home.model.HomeViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -57,7 +57,7 @@
 
             android:contentDescription="@string/button_apply_description"
             android:src="@drawable/icon_apply"
-            android:visibility="@{viewModel.isEditMode() ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.isEditMode() &amp; viewModel.modifiedPill == null ? View.VISIBLE : View.GONE}"
             app:maxImageSize="42dp"
             app:tint="#FFFFFF"
             tools:visibility="visible" />

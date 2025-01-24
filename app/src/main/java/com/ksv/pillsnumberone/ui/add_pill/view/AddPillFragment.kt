@@ -1,4 +1,4 @@
-package com.ksv.pillsnumberone.presentation.view
+package com.ksv.pillsnumberone.ui.add_pill.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -15,8 +15,8 @@ import com.ksv.pillsnumberone.data.Repository
 import com.ksv.pillsnumberone.data.old.FileDataSource
 import com.ksv.pillsnumberone.databinding.FragmentAddBinding
 import com.ksv.pillsnumberone.model.PillsService
-import com.ksv.pillsnumberone.presentation.viewmodel.AddPillViewModel
-import com.ksv.pillsnumberone.presentation.viewmodel.AppPIllViewModelProvider
+import com.ksv.pillsnumberone.ui.add_pill.viewmodel.AddPillViewModel
+import com.ksv.pillsnumberone.ui.add_pill.viewmodel.AppPIllViewModelProvider
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
