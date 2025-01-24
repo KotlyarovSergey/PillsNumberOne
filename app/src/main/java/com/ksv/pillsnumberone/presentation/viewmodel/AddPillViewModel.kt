@@ -20,24 +20,42 @@ class AddPillViewModel(private val pillsService: PillsService): ViewModel() {
     var title = ""
     var recipe = ""
 
-    fun onAddClick(){
-        if(!morningCheck && !noonCheck && !eveningCheck){
+    fun onAddClick() {
+        if (!morningCheck && !noonCheck && !eveningCheck) {
             _errorNotChecked.value = true
         } else {
             val addedPillsList = mutableListOf<DataItem.Pill>()
-            if(morningCheck)
-                addedPillsList.add(DataItem.Pill(title = title, recipe = recipe, period = Period.MORNING))
-            if(noonCheck)
-                addedPillsList.add(DataItem.Pill(title = title, recipe = recipe, period = Period.NOON))
-            if(eveningCheck)
-                addedPillsList.add(DataItem.Pill(title = title, recipe = recipe, period = Period.EVENING))
+            if (morningCheck)
+                addedPillsList.add(
+                    DataItem.Pill(
+                        title = title.trim(),
+                        recipe = recipe.trim(),
+                        period = Period.MORNING
+                    )
+                )
+            if (noonCheck)
+                addedPillsList.add(
+                    DataItem.Pill(
+                        title = title.trim(),
+                        recipe = recipe.trim(),
+                        period = Period.NOON
+                    )
+                )
+            if (eveningCheck)
+                addedPillsList.add(
+                    DataItem.Pill(
+                        title = title.trim(),
+                        recipe = recipe.trim(),
+                        period = Period.EVENING
+                    )
+                )
             pillsService.add(addedPillsList)
 
             _backToMainFragment.value = true
         }
     }
 
-    fun errorWasMessaged(){
+    fun errorWasMessaged() {
         _errorNotChecked.value = false
     }
 }

@@ -22,8 +22,8 @@ class EditDialog : DialogFragment() {
             binding.edMedicineRecipe.setText(pill.recipe)
             binding.ok.setOnClickListener {
                 val modifiedPill = pill.copy(
-                    title = binding.edMedicineTitle.text.toString(),
-                    recipe = binding.edMedicineRecipe.text.toString()
+                    title = binding.edMedicineTitle.text.toString().trim(),
+                    recipe = binding.edMedicineRecipe.text.toString().trim()
                 )
                 viewModel.modifyPill(modifiedPill)
                 dismiss()
