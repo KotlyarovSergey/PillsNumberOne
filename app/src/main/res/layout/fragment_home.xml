@@ -54,10 +54,9 @@
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="42dp"
             android:backgroundTint="#558B2F"
-
             android:contentDescription="@string/button_apply_description"
             android:src="@drawable/icon_apply"
-            android:visibility="@{viewModel.isEditMode() &amp; viewModel.modifiedPill == null ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.isEditMode() ? View.VISIBLE : View.GONE}"
             app:maxImageSize="42dp"
             app:tint="#FFFFFF"
             tools:visibility="visible" />

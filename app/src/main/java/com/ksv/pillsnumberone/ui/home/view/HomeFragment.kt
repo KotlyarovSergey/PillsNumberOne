@@ -26,7 +26,6 @@ import com.ksv.pillsnumberone.entity.Interaction
 import com.ksv.pillsnumberone.ui.home.model.HomeViewModel
 import com.ksv.pillsnumberone.ui.home.model.HomeViewModelFactory
 import com.ksv.pillsnumberone.model.PillsService
-import com.ksv.pillsnumberone.ui.home.model.HomeState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -89,7 +88,8 @@ class HomeFragment : Fragment() {
                 val action = HomeFragmentDirections
                     .actionMainFragmentToSetTimeDialog(pill.id, pill.time)
                 findNavController().navigate(action)
-                viewModel.setTimeFinished()
+                viewModel.setTimeDialogShowed()
+
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
@@ -98,7 +98,7 @@ class HomeFragment : Fragment() {
                 val action = HomeFragmentDirections
                     .actionMainFragmentToEditDialog(modifiedPill.id)
                 findNavController().navigate(action)
-                viewModel.resetModifiedItem()
+                viewModel.editDialogShowed()
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 

@@ -17,8 +17,11 @@
     <color name="md_theme_onPrimaryContainer">#FFFFFF</color>
     <color name="md_theme_secondary">#49607F</color>
     <color name="md_theme_onSecondary">#FFFFFF</color>
-    <color name="md_theme_secondaryContainer">#CADEFF</color>
-    <color name="md_theme_onSecondaryContainer">#2E4664</color>
+<!--    <color name="md_theme_secondaryContainer">#CADEFF</color>-->
+    <color name="md_theme_secondaryContainer">#DADEE6</color>
+<!--    <color name="md_theme_secondaryContainer">#FFFFFF</color>-->
+<!--    <color name="md_theme_onSecondaryContainer">#2E4664</color>-->
+    <color name="md_theme_onSecondaryContainer">#231F1C</color>
     <color name="md_theme_tertiary">#703489</color>
     <color name="md_theme_onTertiary">#FFFFFF</color>
     <color name="md_theme_tertiaryContainer">#9859B0</color>
