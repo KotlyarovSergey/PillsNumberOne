@@ -37,13 +37,17 @@ class HomeViewModel(private val pillService: PillsService) : ViewModel() {
     private val _showEmptyDataHint = MutableStateFlow(false)
     val showEmptyDataHint = _showEmptyDataHint.asStateFlow()
 
+
+    private val _state = MutableStateFlow<HomeState>(HomeState.Normal)
+    val state = _state.asStateFlow()
+
     init {
         pillsFromDB.onEach {
-            //val dataItemList = createDataItemsList(it)
-            //_actualData.value = includeEditableItemToActualData(dataItemList)
             _actualData.value = createDataItemsList(it)
             includeSelectedPillIntoActualData()
             _showEmptyDataHint.value = _actualData.value.isEmpty()
+            _state.value = if (it.isEmpty()) HomeState.Empty else HomeState.Normal
+
         }.launchIn(viewModelScope)
     }
 
@@ -70,7 +74,7 @@ class HomeViewModel(private val pillService: PillsService) : ViewModel() {
 
     fun itemClick(item: DataItem) {
         if (item is DataItem.Pill) {
-            if (isEditMode.value){
+            if (isEditMode.value) {
                 if (item.id == selectedItemId) {
                     _modifiedPill.value = item
                 } else {
@@ -83,10 +87,14 @@ class HomeViewModel(private val pillService: PillsService) : ViewModel() {
     }
 
     fun itemLongClick(item: DataItem): Boolean {
-        if (selectedItemId == null) {
-            selectedItemId = (item as DataItem.Pill).id
-            //_actualData.value = includeEditableItemToActualData(_actualData.value)
-            includeSelectedPillIntoActualData()
+        if (item is DataItem.Pill) {
+            if (item.id != selectedItemId){
+                if (selectedItemId != null) {
+                    unselectItem(selectedItemId!!)
+                }
+                selectedItemId = item.id
+                includeSelectedPillIntoActualData()
+            }
         }
         return true
     }
@@ -103,7 +111,7 @@ class HomeViewModel(private val pillService: PillsService) : ViewModel() {
         _setTimeFor.value = null
     }
 
-    fun editDialogShowed(){
+    fun editDialogShowed() {
         _modifiedPill.value = null
     }
 

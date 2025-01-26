@@ -11,6 +11,7 @@
             type="com.ksv.pillsnumberone.ui.home.model.HomeViewModel" />
 
         <import type="android.view.View" />
+        <import type="com.ksv.pillsnumberone.ui.home.model.HomeState"/>
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -63,10 +64,31 @@
         <!--        android:nestedScrollingEnabled="false"-->
         <!--        app:shapeAppearance="?attr/shapeAppearance"-->
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="42dp"
+            android:backgroundTint="?attr/colorPrimary"
+            android:contentDescription="@string/floating_button_description"
+            android:src="@drawable/icon_add"
+            android:visibility="@{viewModel.isEditMode() ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:maxImageSize="42dp"
+            app:shapeAppearance="?attr/shapeAppearance"
+            app:tint="#FFFFFF"
+            tools:visibility="visible" />
+        <!--        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"-->
+        <!--            android:nestedScrollingEnabled="false"-->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="@{viewModel.state instanceof HomeState.Empty ? View.VISIBLE : View.GONE}"
             tools:visibility="gone">
+<!--            android:visibility="@{viewModel.showEmptyDataHint ? View.VISIBLE : View.GONE}"-->
 
             <TextView
                 android:id="@+id/empty_list_text"
@@ -78,13 +100,13 @@
                 android:textAlignment="center"
                 android:textSize="38sp"
                 android:textStyle="bold"
-                android:visibility="@{viewModel.showEmptyDataHint ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/click_plus_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.4"
                 tools:visibility="visible" />
+            <!--                android:visibility="@{viewModel.showEmptyDataHint ? View.VISIBLE : View.GONE}"-->
 
             <TextView
                 android:id="@+id/click_plus_text"
@@ -96,43 +118,15 @@
                 android:textAlignment="center"
                 android:textSize="32sp"
                 android:textStyle="bold"
-                android:visibility="@{viewModel.showEmptyDataHint ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toTopOf="@id/arrow"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:visibility="visible" />
-
-            <ImageView
-                android:id="@+id/arrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center"
-                android:layout_marginEnd="8dp"
-                android:contentDescription="@string/button_add"
-                android:src="@drawable/arrow2"
-                android:visibility="@{viewModel.showEmptyDataHint ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@id/add_button"
-                app:layout_constraintEnd_toStartOf="@id/add_button"
-                tools:visibility="visible" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/add_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="42dp"
-                android:backgroundTint="?attr/colorPrimary"
-                android:contentDescription="@string/floating_button_description"
-                android:src="@drawable/icon_add"
-                android:visibility="@{viewModel.isEditMode() ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:maxImageSize="42dp"
-                app:shapeAppearance="?attr/shapeAppearance"
-                app:tint="#FFFFFF"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/empty_list_text"
+                app:layout_constraintVertical_bias="0.4"
                 tools:visibility="visible" />
-            <!--        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"-->
-            <!--            android:nestedScrollingEnabled="false"-->
+            <!--                android:visibility="@{viewModel.showEmptyDataHint ? View.VISIBLE : View.GONE}"-->
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
