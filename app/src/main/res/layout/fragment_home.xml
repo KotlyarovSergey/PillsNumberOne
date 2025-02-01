@@ -57,10 +57,11 @@
             android:backgroundTint="#558B2F"
             android:contentDescription="@string/button_apply_description"
             android:src="@drawable/icon_apply"
-            android:visibility="@{viewModel.isEditMode() &amp; viewModel.modifiedPill == null ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.state instanceof HomeState.SelectItem ? View.VISIBLE : View.GONE}"
             app:maxImageSize="42dp"
             app:tint="#FFFFFF"
             tools:visibility="visible" />
+<!--            android:visibility="@{viewModel.isEditMode() &amp; viewModel.modifiedPill == null ? View.VISIBLE : View.GONE}"-->
         <!--        android:nestedScrollingEnabled="false"-->
         <!--        app:shapeAppearance="?attr/shapeAppearance"-->
 
@@ -73,13 +74,14 @@
             android:backgroundTint="?attr/colorPrimary"
             android:contentDescription="@string/floating_button_description"
             android:src="@drawable/icon_add"
-            android:visibility="@{viewModel.isEditMode() ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.state instanceof HomeState.Normal || viewModel.state instanceof HomeState.Empty ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:maxImageSize="42dp"
             app:shapeAppearance="?attr/shapeAppearance"
             app:tint="#FFFFFF"
             tools:visibility="visible" />
+<!--            android:visibility="@{viewModel.isEditMode() ? View.GONE : View.VISIBLE}"-->
         <!--        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"-->
         <!--            android:nestedScrollingEnabled="false"-->
 

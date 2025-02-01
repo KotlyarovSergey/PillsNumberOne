@@ -1,5 +1,6 @@
 package com.ksv.pillsnumberone.ui.home.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -15,6 +16,25 @@ import com.ksv.pillsnumberone.entity.Interaction
 
 class DataListAdapter(private val interaction: Interaction) :
     ListAdapter<DataItem, DataListAdapter.DataItemViewHolder>(DiffUtilItemCallback()) {
+
+    private var selectedId: Long? = null
+
+    fun setSelected(id: Long?) {
+        selectedId = id
+        val index = currentList.indexOfFirst { it is DataItem.Pill && it.id == id }
+        if (index > -1) notifyItemChanged(index)
+    }
+
+    fun unSellPIlls() {
+        val wasSelected = selectedId
+        selectedId = null
+        wasSelected?.let {
+            val ind = currentList.indexOfFirst { it is DataItem.Pill && it.id == wasSelected }
+            if (ind >= -1) {
+                notifyItemChanged(ind)
+            }
+        }
+    }
 
     sealed class DataItemViewHolder(open val binding: ViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -38,6 +58,7 @@ class DataListAdapter(private val interaction: Interaction) :
                     )
                 )
             }
+
             R.layout.caption_view -> {
                 DataItemViewHolder.CaptionItemViewHolder(
                     CaptionViewBinding.inflate(
@@ -47,9 +68,11 @@ class DataListAdapter(private val interaction: Interaction) :
                     )
                 )
             }
+
             else -> throw IllegalArgumentException("Invalid ViewType Provided")
         }
     }
+
     override fun onBindViewHolder(holder: DataItemViewHolder, position: Int) {
         when (holder) {
             is DataItemViewHolder.CaptionItemViewHolder -> {
@@ -60,9 +83,11 @@ class DataListAdapter(private val interaction: Interaction) :
                 holder.binding.pill = currentList[position] as DataItem.Pill
                 holder.binding.interaction = interaction
                 holder.binding.recipe.text = (currentList[position] as DataItem.Pill).recipe
+                holder.binding.selected = (currentList[position] as DataItem.Pill).id == selectedId
             }
         }
     }
+
     override fun getItemViewType(position: Int): Int {
         return when (currentList[position]) {
             is DataItem.PeriodCaption -> R.layout.caption_view
@@ -78,6 +103,7 @@ class DataListAdapter(private val interaction: Interaction) :
                     is DataItem.PeriodCaption -> oldItem.id == (newItem as DataItem.PeriodCaption).id
                 }
             } else false
+
         override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean =
             oldItem == newItem
     }

@@ -1,6 +1,7 @@
 package com.ksv.pillsnumberone.ui.home.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -8,6 +9,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
@@ -26,6 +28,7 @@ import com.ksv.pillsnumberone.entity.Interaction
 import com.ksv.pillsnumberone.ui.home.model.HomeViewModel
 import com.ksv.pillsnumberone.ui.home.model.HomeViewModelFactory
 import com.ksv.pillsnumberone.model.PillsService
+import com.ksv.pillsnumberone.ui.home.model.HomeState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -81,24 +84,60 @@ class HomeFragment : Fragment() {
         viewModel.actualData.onEach { data ->
             dataListAdapter.submitList(data)
 //            Log.d("ksvlog", "data refresh")
+//            Log.d("ksvlog", "\t$data")
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        viewModel.setTimeFor.onEach { pill ->
-            pill?.let {
-                val action = HomeFragmentDirections
-                    .actionMainFragmentToSetTimeDialog(pill.id, pill.time)
-                findNavController().navigate(action)
-                viewModel.setTimeDialogShowed()
+//        viewModel.setTimeFor.onEach { pill ->
+//            pill?.let {
+//                val action = HomeFragmentDirections
+//                    .actionMainFragmentToSetTimeDialog(pill.id, pill.time)
+//                findNavController().navigate(action)
+//                viewModel.setTimeDialogShowed()
+//
+//            }
+//        }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+//        viewModel.modifiedPill.onEach { modifiedPill ->
+//            modifiedPill?.let {
+//                val action = HomeFragmentDirections
+//                    .actionMainFragmentToEditDialog(modifiedPill.id)
+//                findNavController().navigate(action)
+//                viewModel.editDialogShowed()
+//            }
+//        }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        viewModel.modifiedPill.onEach { modifiedPill ->
-            modifiedPill?.let {
-                val action = HomeFragmentDirections
-                    .actionMainFragmentToEditDialog(modifiedPill.id)
-                findNavController().navigate(action)
-                viewModel.editDialogShowed()
+        viewModel.state.onEach { state ->
+            Log.d("ksvlog", "State: ${state.javaClass.simpleName}")
+            when (state){
+                is HomeState.Normal -> {
+//                    dataListAdapter.unselectAll()
+                    //dataListAdapter.submitList(state.list)
+                    dataListAdapter.unSellPIlls()
+                }
+                is HomeState.SelectItem -> {
+//                    dataListAdapter.submitList(state.list)
+                    //dataListAdapter.unselectAll()
+//                    dataListAdapter.selectPill(state.id)
+                    dataListAdapter.setSelected(state.id)
+                }
+                is HomeState.ModifyItem -> {
+                    val action = HomeFragmentDirections.actionMainFragmentToEditDialog(state.id)
+                    findNavController().navigate(action)
+                    //viewModel.editDialogShowed()
+                }
+                is HomeState.AddPills -> {
+                    findNavController().navigate(R.id.action_mainFragment_to_editFragment)
+                }
+                is HomeState.SetTime -> {
+                    val pill = state.item as DataItem.Pill
+                    val action = HomeFragmentDirections
+                        .actionMainFragmentToSetTimeDialog(pill.id, pill.time)
+                    findNavController().navigate(action)
+                    //viewModel.setTimeDialogShowed()
+                }
+                else -> {
+                    //Toast.makeText(requireContext(), "State: ${state.javaClass.simpleName}", Toast.LENGTH_SHORT).show()
+                }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
@@ -106,7 +145,8 @@ class HomeFragment : Fragment() {
 
     private fun setFABClickListeners() {
         binding.addButton.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_editFragment)
+            viewModel.onAddClick()
+            // findNavController().navigate(R.id.action_mainFragment_to_editFragment)
         }
         binding.applyButton.setOnClickListener {
             viewModel.onApplyClick()

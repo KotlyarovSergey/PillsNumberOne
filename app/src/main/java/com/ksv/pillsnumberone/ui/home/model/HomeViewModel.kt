@@ -7,14 +7,18 @@ import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Period
 import com.ksv.pillsnumberone.model.PillsService
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class HomeViewModel(private val pillService: PillsService) : ViewModel() {
 
-    private val pillsFromDB = pillService.pillsList
+    private val pillsFromDB: StateFlow<List<DataItem.Pill>> = pillService.pillsList
+    private var actualList = listOf<DataItem>()
 
     private val _actualData = MutableStateFlow<List<DataItem>>(listOf())
     val actualData = _actualData.asStateFlow()
@@ -28,11 +32,11 @@ class HomeViewModel(private val pillService: PillsService) : ViewModel() {
     private val _isEditMode = MutableStateFlow(false)
     val isEditMode = _isEditMode.asStateFlow()
 
-    private val _modifiedPill = MutableStateFlow<DataItem.Pill?>(null)
-    val modifiedPill = _modifiedPill.asStateFlow()
+//    private val _modifiedPill = MutableStateFlow<DataItem.Pill?>(null)
+//    val modifiedPill = _modifiedPill.asStateFlow()
 
-    private val _setTimeFor = MutableStateFlow<DataItem.Pill?>(null)
-    val setTimeFor = _setTimeFor.asStateFlow()
+//    private val _setTimeFor = MutableStateFlow<DataItem.Pill?>(null)
+//    val setTimeFor = _setTimeFor.asStateFlow()
 
     private val _showEmptyDataHint = MutableStateFlow(false)
     val showEmptyDataHint = _showEmptyDataHint.asStateFlow()
@@ -44,9 +48,27 @@ class HomeViewModel(private val pillService: PillsService) : ViewModel() {
     init {
         pillsFromDB.onEach {
             _actualData.value = createDataItemsList(it)
-            includeSelectedPillIntoActualData()
-            _showEmptyDataHint.value = _actualData.value.isEmpty()
-            _state.value = if (it.isEmpty()) HomeState.Empty else HomeState.Normal
+//            includeSelectedPillIntoActualData()
+//            _showEmptyDataHint.value = _actualData.value.isEmpty()
+////            _state.value = if (it.isEmpty()) HomeState.Empty else HomeState.Normal
+//            _state.value = if (it.isEmpty()) HomeState.Empty else HomeState.Normal(_actualData.value)
+
+
+            actualList = createDataItemsList(it)
+//            includeSelectedPillIntoActualData()
+//            _state.value = if (it.isEmpty()) HomeState.Empty else HomeState.Normal(actualList)
+            if (it.isEmpty()) _state.value = HomeState.Empty
+            else {
+                _state.value = when(_state.value){
+                    HomeState.Empty -> HomeState.Normal
+                    else -> _state.value
+//                    is HomeState.ModifyItem -> HomeState.ModifyItem((_state.value as HomeState.ModifyItem).id)
+//                    is HomeState.Normal -> TODO()
+//                    is HomeState.SelectItem -> TODO()
+//                    is HomeState.SetTime -> TODO()
+                }
+            }
+
 
         }.launchIn(viewModelScope)
     }
@@ -67,52 +89,98 @@ class HomeViewModel(private val pillService: PillsService) : ViewModel() {
     }
 
     fun removeItem(removedItem: DataItem) {
-        finishEditMode()
+        //finishEditMode()
+        _state.value = HomeState.Normal
         if (removedItem is DataItem.Pill)
             pillService.remove(removedItem)
     }
 
     fun itemClick(item: DataItem) {
         if (item is DataItem.Pill) {
-            if (isEditMode.value) {
-                if (item.id == selectedItemId) {
-                    _modifiedPill.value = item
-                } else {
-                    finishEditMode()
+////            if (isEditMode.value) {
+//            if (_state.value is HomeState.SelectItem) {
+////                if (item.id == selectedItemId) {
+//                if (_state.value.equals(item.id)) {
+//                    //_modifiedPill.value = item
+//                    _state.value = HomeState.ModifyItem(item)
+//                } else {
+//                    //finishEditMode()
+//                    _state.value = HomeState.Normal
+//                }
+//            } else {
+//                pillService.switchFinishedState(item)
+//            }
+
+            when(_state.value){
+                // if now Normal state - change field "finished" on item
+                is HomeState.Normal -> pillService.switchFinishedState(item)
+                // if some item is Select
+                is HomeState.SelectItem -> {
+                    val id = (_state.value as HomeState.SelectItem).id
+                    if (id == item.id) // click on selected item
+                        _state.value = HomeState.ModifyItem(id) // set Modified state
+                    else // click on other item
+                        _state.value = HomeState.Normal // unSelect item
                 }
-            } else {
-                pillService.switchFinishedState(item)
+                else -> {
+                    throw IllegalArgumentException("Click on Unable State")
+                }
             }
+
+
+
         }
     }
 
     fun itemLongClick(item: DataItem): Boolean {
-        if (item is DataItem.Pill) {
-            if (item.id != selectedItemId){
-                if (selectedItemId != null) {
-                    unselectItem(selectedItemId!!)
-                }
-                selectedItemId = item.id
-                includeSelectedPillIntoActualData()
-            }
-        }
+//        if (item is DataItem.Pill) {
+//            if (item.id != selectedItemId){
+//                if (selectedItemId != null) {
+//                    unselectItem(selectedItemId!!)
+//                }
+//                selectedItemId = item.id
+//                includeSelectedPillIntoActualData()
+//            }
+//        }
+
+        val id = (item as DataItem.Pill).id
+        _state.value = HomeState.SelectItem(id)
+
         return true
     }
 
     fun onTimeClick(item: DataItem) {
         if (item is DataItem.Pill) {
-            if (!item.finished && !_isEditMode.value) {
-                _setTimeFor.value = item
+            if (!item.finished && _state.value !is HomeState.SelectItem) {
+//                _setTimeFor.value = item
+                _state.value = HomeState.SetTime(item)
             }
         }
     }
 
-    fun setTimeDialogShowed() {
-        _setTimeFor.value = null
+    fun onAddClick(){
+        _state.value = HomeState.AddPills
+        viewModelScope.launch {
+            delay(1000)
+            _state.value = HomeState.Normal
+        }
     }
 
-    fun editDialogShowed() {
-        _modifiedPill.value = null
+    fun setTimeDialogShowed() {
+//        _setTimeFor.value = null
+        _state.value = HomeState.Normal
+    }
+
+//    fun editDialogShowed() {
+//        _modifiedPill.value = null
+//    }
+
+    fun editDialogDismiss(id:Long){
+        _state.value = HomeState.SelectItem(id)
+    }
+
+    fun setTimeDialogDismiss(){
+        _state.value = HomeState.Normal
     }
 
     fun setTimeFor(itemId: Long, time: String?) {
@@ -120,19 +188,27 @@ class HomeViewModel(private val pillService: PillsService) : ViewModel() {
     }
 
     fun onApplyClick() {
-        finishEditMode()
+        //finishEditMode()
+        _state.value = HomeState.Normal
     }
 
-    fun resetModifiedItem() {
-        _modifiedPill.value = null
-    }
+//    fun resetModifiedItem() {
+//        _modifiedPill.value = null
+//    }
 
     fun modifyPill(pill: DataItem.Pill) {
         pillService.modifyPill(pill)
     }
 
+//    fun getPillByID(id: Long): DataItem.Pill? {
+//        val datItem = _actualData.value.firstOrNull { it is DataItem.Pill && it.id == id }
+//        datItem?.let {
+//            return it as DataItem.Pill
+//        }
+//        return null
+//    }
     fun getPillByID(id: Long): DataItem.Pill? {
-        val datItem = _actualData.value.firstOrNull { it is DataItem.Pill && it.id == id }
+        val datItem = actualList.firstOrNull { it is DataItem.Pill && it.id == id }
         datItem?.let {
             return it as DataItem.Pill
         }
@@ -157,23 +233,36 @@ class HomeViewModel(private val pillService: PillsService) : ViewModel() {
         return data
     }
 
-    private fun includeSelectedPillIntoActualData(pill: DataItem.Pill) {
-        val index = _actualData.value.indexOfFirst { it is DataItem.Pill && it.id == pill.id }
-        if (index != -1) {
-            val selectedPill = (_actualData.value[index] as DataItem.Pill).copy(editable = true)
-            _actualData.value = _actualData.value.toMutableList().apply {
-                this[index] = selectedPill
-            }
-        }
-    }
+//    private fun includeSelectedPillIntoActualData(pill: DataItem.Pill) {
+//        val index = _actualData.value.indexOfFirst { it is DataItem.Pill && it.id == pill.id }
+//        if (index != -1) {
+//            val selectedPill = (_actualData.value[index] as DataItem.Pill).copy(editable = true)
+//            _actualData.value = _actualData.value.toMutableList().apply {
+//                this[index] = selectedPill
+//            }
+//        }
+//    }
+
+//    private fun includeSelectedPillIntoActualData() {
+//        selectedItemId?.let {
+//            val index =
+//                _actualData.value.indexOfFirst { it is DataItem.Pill && it.id == selectedItemId }
+//            if (index != -1) {
+//                val selectedPill = (_actualData.value[index] as DataItem.Pill).copy(editable = true)
+//                _actualData.value = _actualData.value.toMutableList().apply {
+//                    this[index] = selectedPill
+//                }
+//            }
+//        }
+//    }
 
     private fun includeSelectedPillIntoActualData() {
         selectedItemId?.let {
             val index =
-                _actualData.value.indexOfFirst { it is DataItem.Pill && it.id == selectedItemId }
+                actualList.indexOfFirst { it is DataItem.Pill && it.id == selectedItemId }
             if (index != -1) {
-                val selectedPill = (_actualData.value[index] as DataItem.Pill).copy(editable = true)
-                _actualData.value = _actualData.value.toMutableList().apply {
+                val selectedPill = (actualList[index] as DataItem.Pill).copy(editable = true)
+                actualList = actualList.toMutableList().apply {
                     this[index] = selectedPill
                 }
             }
@@ -188,11 +277,21 @@ class HomeViewModel(private val pillService: PillsService) : ViewModel() {
         }
     }
 
+//    private fun unselectItem(itemId: Long) {
+//        val index = _actualData.value.indexOfFirst { it is DataItem.Pill && it.id == itemId }
+//        if (index != -1) {
+//            val unEditablePill = (_actualData.value[index] as DataItem.Pill).copy(editable = false)
+//            _actualData.value = _actualData.value.toMutableList().apply {
+//                this[index] = unEditablePill
+//                this.toList()
+//            }
+//        }
+//    }
     private fun unselectItem(itemId: Long) {
-        val index = _actualData.value.indexOfFirst { it is DataItem.Pill && it.id == itemId }
+        val index = actualList.indexOfFirst { it is DataItem.Pill && it.id == itemId }
         if (index != -1) {
-            val unEditablePill = (_actualData.value[index] as DataItem.Pill).copy(editable = false)
-            _actualData.value = _actualData.value.toMutableList().apply {
+            val unEditablePill = (actualList[index] as DataItem.Pill).copy(editable = false)
+            actualList = actualList.toMutableList().apply {
                 this[index] = unEditablePill
                 this.toList()
             }

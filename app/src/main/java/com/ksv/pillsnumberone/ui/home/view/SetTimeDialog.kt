@@ -40,6 +40,7 @@ class SetTimeDialog : DialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
+        viewModel.setTimeDialogDismiss()
         _binding = null
     }
 
