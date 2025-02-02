@@ -9,7 +9,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
@@ -81,49 +80,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun addLiveDataObservers() {
-        viewModel.actualData.onEach { data ->
+        viewModel.dataItems.onEach { data ->
             dataListAdapter.submitList(data)
-//            Log.d("ksvlog", "data refresh")
-//            Log.d("ksvlog", "\t$data")
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-//        viewModel.setTimeFor.onEach { pill ->
-//            pill?.let {
-//                val action = HomeFragmentDirections
-//                    .actionMainFragmentToSetTimeDialog(pill.id, pill.time)
-//                findNavController().navigate(action)
-//                viewModel.setTimeDialogShowed()
-//
-//            }
-//        }.launchIn(viewLifecycleOwner.lifecycleScope)
-
-//        viewModel.modifiedPill.onEach { modifiedPill ->
-//            modifiedPill?.let {
-//                val action = HomeFragmentDirections
-//                    .actionMainFragmentToEditDialog(modifiedPill.id)
-//                findNavController().navigate(action)
-//                viewModel.editDialogShowed()
-//            }
-//        }.launchIn(viewLifecycleOwner.lifecycleScope)
-
         viewModel.state.onEach { state ->
-            Log.d("ksvlog", "State: ${state.javaClass.simpleName}")
             when (state){
                 is HomeState.Normal -> {
-//                    dataListAdapter.unselectAll()
-                    //dataListAdapter.submitList(state.list)
                     dataListAdapter.unSellPIlls()
                 }
                 is HomeState.SelectItem -> {
-//                    dataListAdapter.submitList(state.list)
-                    //dataListAdapter.unselectAll()
-//                    dataListAdapter.selectPill(state.id)
                     dataListAdapter.setSelected(state.id)
                 }
                 is HomeState.ModifyItem -> {
                     val action = HomeFragmentDirections.actionMainFragmentToEditDialog(state.id)
                     findNavController().navigate(action)
-                    //viewModel.editDialogShowed()
                 }
                 is HomeState.AddPills -> {
                     findNavController().navigate(R.id.action_mainFragment_to_editFragment)
@@ -133,10 +104,13 @@ class HomeFragment : Fragment() {
                     val action = HomeFragmentDirections
                         .actionMainFragmentToSetTimeDialog(pill.id, pill.time)
                     findNavController().navigate(action)
-                    //viewModel.setTimeDialogShowed()
                 }
-                else -> {
-                    //Toast.makeText(requireContext(), "State: ${state.javaClass.simpleName}", Toast.LENGTH_SHORT).show()
+                is HomeState.Refresh -> {
+                    onMenuResetClick()
+                }
+                HomeState.Empty -> {
+                    // show EmptyHint
+                    // realised on DataBinding
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
@@ -146,7 +120,6 @@ class HomeFragment : Fragment() {
     private fun setFABClickListeners() {
         binding.addButton.setOnClickListener {
             viewModel.onAddClick()
-            // findNavController().navigate(R.id.action_mainFragment_to_editFragment)
         }
         binding.applyButton.setOnClickListener {
             viewModel.onApplyClick()
@@ -163,8 +136,8 @@ class HomeFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menu_reset -> {
-                        if (!viewModel.isEditMode.value && !viewModel.showEmptyDataHint.value)
-                            onMenuResetClick()
+                        if(viewModel.state.value is HomeState.Normal)
+                            viewModel.onRefreshButtonClick()
                         true
                     }
 
@@ -184,6 +157,9 @@ class HomeFragment : Fragment() {
                 viewModel.resetPills()
             }
             .setNegativeButton(getString(R.string.alert_dialog_clear_no)) { _, _ -> }
+            .setOnDismissListener {
+                viewModel.onRefreshDialogDismiss()
+            }
         builder.create().show()
     }
 

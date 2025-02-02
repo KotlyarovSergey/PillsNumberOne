@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 class PillsService(private val repository: Repository) {
     private val pillsDB = repository.pillDB
 
-    val pillsList = pillsDB.map { listPillsDB ->
+    val pills = pillsDB.map { listPillsDB ->
         listPillsDB.map { it.toPill() }
     }.onEach {
         repairPositions(it)
@@ -50,7 +50,7 @@ class PillsService(private val repository: Repository) {
         repository.update(modifiedPill)
     }
     fun setTimeFor(id: Long, time: String?) {
-        val pill = pillsList.value.firstOrNull { it.id == id }
+        val pill = pills.value.firstOrNull { it.id == id }
         pill?.let {
             val modifiedPill = it.copy(time = time)
             repository.update(modifiedPill)
@@ -61,7 +61,7 @@ class PillsService(private val repository: Repository) {
     }
     fun resetPillsToDefaultState() {
         val pillsToUpdate = mutableListOf<DataItem.Pill>()
-        pillsList.value.onEach { pill ->
+        pills.value.onEach { pill ->
             if (pill.finished || pill.time != null) {
                 val defaultsPill = pill.copy(finished = false, time = null)
                 pillsToUpdate.add(defaultsPill)
@@ -90,7 +90,7 @@ class PillsService(private val repository: Repository) {
         }
     }
     private fun setLastPosition(pill: DataItem.Pill): DataItem.Pill {
-        val pillsByPeriod = pillsList.value
+        val pillsByPeriod = pills.value
             .filter { it.period == pill.period }
         val lastPosition = pillsByPeriod.lastIndex + 1
         return pill.copy(position = lastPosition)
@@ -98,13 +98,13 @@ class PillsService(private val repository: Repository) {
     private fun previousPillOrNull(movedPill: DataItem.Pill): DataItem.Pill? {
         val prevPos = movedPill.position - 1
         if (prevPos >= 0) {
-            return pillsList.value.firstOrNull { it.period == movedPill.period && it.position == prevPos }
+            return pills.value.firstOrNull { it.period == movedPill.period && it.position == prevPos }
         }
         return null
     }
     private fun nextPillOrNull(movedPill: DataItem.Pill): DataItem.Pill? {
         val nextPos = movedPill.position + 1
-        return pillsList.value.firstOrNull { it.period == movedPill.period && it.position == nextPos }
+        return pills.value.firstOrNull { it.period == movedPill.period && it.position == nextPos }
     }
     private fun swapPills(pill1: DataItem.Pill, pill2: DataItem.Pill) {
         val updatedPill1 = pill1.copy(position = pill2.position)
@@ -113,7 +113,7 @@ class PillsService(private val repository: Repository) {
     }
     private fun decreasePositionsAfter(period: Period, startIndex: Int) {
         val modifiedList = mutableListOf<DataItem.Pill>()
-        pillsList.value.forEach { pill ->
+        pills.value.forEach { pill ->
             if (pill.period == period && pill.position > startIndex) {
                 val modifiedPill = pill.copy(position = pill.position - 1)
                 modifiedList.add(modifiedPill)

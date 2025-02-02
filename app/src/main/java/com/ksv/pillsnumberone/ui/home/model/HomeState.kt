@@ -9,4 +9,5 @@ sealed interface HomeState {
     class ModifyItem(val id: Long): HomeState
     class SelectItem(val id: Long): HomeState
     data object AddPills: HomeState
+    data object Refresh: HomeState
 }
