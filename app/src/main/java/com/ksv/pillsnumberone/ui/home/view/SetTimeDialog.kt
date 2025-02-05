@@ -6,7 +6,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import com.ksv.pillsnumberone.R
 import com.ksv.pillsnumberone.databinding.DialogSetTimeBinding
+import com.ksv.pillsnumberone.ui.home.model.HomeState
 import com.ksv.pillsnumberone.ui.home.model.HomeViewModel
 import java.util.Calendar
 
@@ -15,7 +18,16 @@ class SetTimeDialog : DialogFragment() {
     private var _binding: DialogSetTimeBinding? = null
     private val binding get() = _binding!!
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (viewModel.state.value !is HomeState.SetTime){
+            findNavController().navigate(R.id.action_setTimeDialog_to_homeFragment)
+        }
+        viewModel.setTimeDialogIsShown()
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+
         _binding = DialogSetTimeBinding.inflate(requireActivity().layoutInflater)
         val id = SetTimeDialogArgs.fromBundle(requireArguments()).itemId
         val time = SetTimeDialogArgs.fromBundle(requireArguments()).time
@@ -31,16 +43,11 @@ class SetTimeDialog : DialogFragment() {
             .setView(binding.root)
             .create()
         return alertDialog
-
-//        val dialog = Dialog(requireContext())
-//        dialog.setContentView(binding.root)
-//        dialog.create()
-//        return dialog
     }
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        viewModel.setTimeDialogDismiss()
+        //viewModel.setTimeDialogIsShown()
         _binding = null
     }
 

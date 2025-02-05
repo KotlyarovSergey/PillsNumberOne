@@ -1,6 +1,5 @@
 package com.ksv.pillsnumberone.ui.home.view
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -83,7 +82,7 @@ class DataListAdapter(private val interaction: Interaction) :
                 holder.binding.pill = currentList[position] as DataItem.Pill
                 holder.binding.interaction = interaction
                 holder.binding.recipe.text = (currentList[position] as DataItem.Pill).recipe
-                holder.binding.selected = (currentList[position] as DataItem.Pill).id == selectedId
+                holder.binding.isSelected = (currentList[position] as DataItem.Pill).id == selectedId
             }
         }
     }

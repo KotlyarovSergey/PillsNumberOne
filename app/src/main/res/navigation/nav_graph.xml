@@ -10,7 +10,7 @@
         android:label="fragment_edit"
         tools:layout="@layout/fragment_add">
         <action
-            android:id="@+id/action_editFragment_to_testFragment"
+            android:id="@+id/action_editFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
@@ -21,13 +21,13 @@
         android:label="fragment_test"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_mainFragment_to_editFragment"
+            android:id="@+id/action_homeFragment_to_addFragment"
             app:destination="@id/addFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_editDialog"
+            android:id="@+id/action_homeFragment_to_editDialog"
             app:destination="@id/editDialog" />
         <action
-            android:id="@+id/action_mainFragment_to_setTimeDialog"
+            android:id="@+id/action_homeFragment_to_setTimeDialog"
             app:destination="@id/setTimeDialog" />
     </fragment>
     <dialog
@@ -36,7 +36,7 @@
         android:label="EditDialog"
         tools:layout="@layout/dialog_edit">
         <action
-            android:id="@+id/action_editDialog_to_testFragment"
+            android:id="@+id/action_editDialog_to_homeFragment"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
@@ -50,7 +50,7 @@
         android:label="SetTimeDialog"
         tools:layout="@layout/dialog_set_time">
         <action
-            android:id="@+id/action_setTimeDialog_to_testFragment"
+            android:id="@+id/action_setTimeDialog_to_homeFragment"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />

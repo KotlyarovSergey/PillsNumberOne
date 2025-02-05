@@ -46,7 +46,7 @@ class AddPillFragment : Fragment() {
 
         viewModel.backToMainFragment.onEach { goBack ->
             if (goBack)
-                findNavController().navigate(R.id.action_editFragment_to_testFragment)
+                findNavController().navigate(R.id.action_editFragment_to_homeFragment)
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.errorNotChecked.onEach { isError ->

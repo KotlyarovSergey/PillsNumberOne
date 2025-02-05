@@ -14,7 +14,7 @@
             type="com.ksv.pillsnumberone.entity.Interaction" />
 
         <variable
-            name="selected"
+            name="isSelected"
             type="Boolean" />
 
         <import type="android.view.View" />
@@ -27,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4dp">
-        <!--        android:background="@{pill.period == Period.MORNING ? @color/colorCustomColor1Container : (pill.period == Period.NOON ? @color/colorCustomColor2Container : @color/colorCustomColor3Container)}"-->
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card"
@@ -35,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
-            android:backgroundTint="@{selected ? @color/medicine_editable : (pill.finished ? @color/medicine_passive : @color/medicine_active)}"
+            android:backgroundTint="@{isSelected ? @color/medicine_editable : (pill.finished ? @color/medicine_passive : @color/medicine_active)}"
             android:elevation="46dp"
             android:onClick="@{ () -> interaction.onItemClick(pill)}"
             android:onLongClick="@{ () -> interaction.onItemLongClick(pill)}"
@@ -60,7 +59,7 @@
                     android:minHeight="36dp"
                     android:onClick="@{()-> interaction.onUpClick(pill)}"
                     android:src="@drawable/icon_arrow_up"
-                    android:visibility="@{selected ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{isSelected ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toTopOf="@id/move_down_button"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -79,7 +78,7 @@
                     android:minHeight="36dp"
                     android:onClick="@{()-> interaction.onDownClick(pill)}"
                     android:src="@drawable/icon_arrow_down"
-                    android:visibility="@{selected ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{isSelected ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/move_up_button"
                     app:layout_constraintTop_toBottomOf="@id/move_up_button"
@@ -95,7 +94,7 @@
                     android:layout_marginBottom="4dp"
                     android:maxLines="1"
                     android:text="@{pill.title}"
-                    android:textColor="@{ selected ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"
+                    android:textColor="@{ isSelected ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@id/recipe"
@@ -111,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="8dp"
-                    android:textColor="@{selected ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"
+                    android:textColor="@{isSelected ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/time"
@@ -129,9 +128,9 @@
                     android:layout_marginHorizontal="8dp"
                     android:onClick="@{()-> interaction.onTimeClick(pill)}"
                     android:text="@{pill.time}"
-                    android:textColor="@{ selected ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"
+                    android:textColor="@{ isSelected ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"
                     android:textSize="21sp"
-                    android:visibility="@{(pill.time == null || pill.editable) ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{(pill.time == null || isSelected) ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="@id/recipe"
                     app:layout_constraintEnd_toStartOf="@id/clock"
                     tools:text="0:00" />
@@ -147,7 +146,7 @@
                     android:minHeight="36dp"
                     android:onClick="@{() -> interaction.onTimeClick(pill)}"
                     android:src="@drawable/icon_time_24"
-                    android:visibility="@{(pill.time != null || selected) ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{(pill.time != null || isSelected) ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="@id/recipe"
                     app:layout_constraintEnd_toStartOf="@id/remove_button" />
 <!--                    android:visibility="@{(pill.time != null || pill.editable) ? View.GONE : View.VISIBLE}"-->
@@ -164,7 +163,7 @@
                     android:minHeight="36dp"
                     android:onClick="@{() -> interaction.onRemoveClick(pill)}"
                     android:src="@drawable/icon_delete"
-                    android:visibility="@{selected ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{ isSelected ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

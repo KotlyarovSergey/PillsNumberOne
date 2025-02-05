@@ -14,7 +14,6 @@ sealed class DataItem {
         val position: Int = 0,
         val time: String? = null,
         val finished: Boolean = false,
-        val editable: Boolean = false,
     ): DataItem(){
         fun toPillDB(): PillToDB{
             return PillToDB(

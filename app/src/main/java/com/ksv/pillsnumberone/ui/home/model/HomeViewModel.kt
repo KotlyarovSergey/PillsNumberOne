@@ -96,7 +96,11 @@ class HomeViewModel(private val pillService: PillsService) : ViewModel() {
         _state.value = HomeState.SelectItem(id)
     }
 
-    fun setTimeDialogDismiss() {
+    fun editDialogIsShown(id: Long) {
+        _state.value = HomeState.SelectItem(id)
+    }
+
+    fun setTimeDialogIsShown() {
         _state.value = HomeState.Normal
     }
 

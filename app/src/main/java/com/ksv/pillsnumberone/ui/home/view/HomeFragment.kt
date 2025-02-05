@@ -1,18 +1,17 @@
 package com.ksv.pillsnumberone.ui.home.view
 
+import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -24,12 +23,13 @@ import com.ksv.pillsnumberone.data.old.FileDataSource
 import com.ksv.pillsnumberone.databinding.FragmentHomeBinding
 import com.ksv.pillsnumberone.entity.DataItem
 import com.ksv.pillsnumberone.entity.Interaction
-import com.ksv.pillsnumberone.ui.home.model.HomeViewModel
-import com.ksv.pillsnumberone.ui.home.model.HomeViewModelFactory
 import com.ksv.pillsnumberone.model.PillsService
 import com.ksv.pillsnumberone.ui.home.model.HomeState
+import com.ksv.pillsnumberone.ui.home.model.HomeViewModel
+import com.ksv.pillsnumberone.ui.home.model.HomeViewModelFactory
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -93,16 +93,16 @@ class HomeFragment : Fragment() {
                     dataListAdapter.setSelected(state.id)
                 }
                 is HomeState.ModifyItem -> {
-                    val action = HomeFragmentDirections.actionMainFragmentToEditDialog(state.id)
+                    val action = HomeFragmentDirections.actionHomeFragmentToEditDialog(state.id)
                     findNavController().navigate(action)
                 }
                 is HomeState.AddPills -> {
-                    findNavController().navigate(R.id.action_mainFragment_to_editFragment)
+                    findNavController().navigate(R.id.action_homeFragment_to_addFragment)
                 }
                 is HomeState.SetTime -> {
                     val pill = state.item as DataItem.Pill
                     val action = HomeFragmentDirections
-                        .actionMainFragmentToSetTimeDialog(pill.id, pill.time)
+                        .actionHomeFragmentToSetTimeDialog(pill.id, pill.time)
                     findNavController().navigate(action)
                 }
                 is HomeState.Refresh -> {
@@ -163,4 +163,33 @@ class HomeFragment : Fragment() {
         builder.create().show()
     }
 
+
+    private fun showSetTimeDialog(){
+//        val builder = AlertDialog.Builder(requireContext())
+//        val builder = AlertDialog.Builder(requireActivity())
+//        val _setTimeBinding = DialogSetTimeBinding.inflate(requireActivity().layoutInflater)
+//        val id = SetTimeDialogArgs.fromBundle(requireArguments()).itemId
+//        val time = SetTimeDialogArgs.fromBundle(requireArguments()).time
+        AlertDialog.Builder(requireContext())
+//            .setView(DialogSetTimeBinding.inflate(requireActivity().layoutInflater).root)
+            .setTitle("Time")
+            .setMessage("Select time to take your pill")
+            .setPositiveButton("OK", { dialog, id ->
+
+            })
+            //.setCancelable(false)
+            .create()
+            .show()
+
+
+//        builder.create()
+//
+//        val dialog: AlertDialog = builder.create()
+//        dialog.show()
+
+//        val timeDialog = TimePickerDialog
+//            .OnTimeSetListener(TimePicker.)
+
+
+    }
 }
