@@ -41,12 +41,10 @@
     <color name="md_theme_inverseSurface">#2D3036</color>
     <color name="md_theme_inverseOnSurface">#EFF0F8</color>
     <color name="md_theme_inversePrimary">#A3C9FF</color>
-
     <color name="md_theme_primaryFixed">#D3E4FF</color>
     <color name="md_theme_onPrimaryFixed">#001C38</color>
     <color name="md_theme_primaryFixedDim">#A3C9FF</color>
     <color name="md_theme_onPrimaryFixedVariant">#004882</color>
-
     <color name="md_theme_secondaryFixed">#D3E4FF</color>
     <color name="md_theme_onSecondaryFixed">#001C38</color>
     <color name="md_theme_secondaryFixedDim">#B0C8EC</color>
@@ -72,8 +70,6 @@
     <color name="colorOnCustomColor2Container">#26034B</color>
     <color name="colorCustomColor3">#983A81</color>
     <color name="colorOnCustomColor3">#FFFFFF</color>
-
-<!--    <color name="colorCustomColor3Container">#EA7FCB</color>-->
     <color name="colorCustomColor3Container">#BD83AC</color>
     <color name="colorOnCustomColor3Container">#35002C</color>
 </resources>
