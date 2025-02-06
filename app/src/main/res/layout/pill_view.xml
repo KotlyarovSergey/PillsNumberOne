@@ -39,7 +39,7 @@
             android:onClick="@{ () -> interaction.onItemClick(pill)}"
             android:onLongClick="@{ () -> interaction.onItemLongClick(pill)}"
             app:cardCornerRadius="15dp">
-<!--            android:backgroundTint="@{ pill.editable ? @color/medicine_editable : (pill.finished ? @color/medicine_passive : @color/medicine_active)}"-->
+            <!--            android:backgroundTint="@{ pill.editable ? @color/medicine_editable : (pill.finished ? @color/medicine_passive : @color/medicine_active)}"-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/main_layout"
@@ -52,11 +52,9 @@
                 <ImageButton
                     android:id="@+id/move_up_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="32dp"
                     android:backgroundTint="#00000000"
                     android:contentDescription="@string/move_up_button_description"
-                    android:minWidth="36dp"
-                    android:minHeight="36dp"
                     android:onClick="@{()-> interaction.onUpClick(pill)}"
                     android:src="@drawable/icon_arrow_up"
                     android:visibility="@{isSelected ? View.VISIBLE : View.GONE}"
@@ -64,18 +62,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/on_medicine_editable" />
-<!--                    android:visibility="@{pill.editable ? View.VISIBLE : View.GONE}"-->
+                <!--                    android:visibility="@{pill.editable ? View.VISIBLE : View.GONE}"-->
 
                 <ImageButton
                     android:id="@+id/move_down_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="32dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="0dp"
                     android:backgroundTint="#00000000"
                     android:contentDescription="@string/move_down_button_description"
-                    android:minWidth="36dp"
-                    android:minHeight="36dp"
                     android:onClick="@{()-> interaction.onDownClick(pill)}"
                     android:src="@drawable/icon_arrow_down"
                     android:visibility="@{isSelected ? View.VISIBLE : View.GONE}"
@@ -83,58 +79,62 @@
                     app:layout_constraintStart_toStartOf="@id/move_up_button"
                     app:layout_constraintTop_toBottomOf="@id/move_up_button"
                     app:tint="@color/on_medicine_editable" />
-<!--                    android:visibility="@{pill.editable ? View.VISIBLE : View.GONE}"-->
+                <!--                    android:visibility="@{pill.editable ? View.VISIBLE : View.GONE}"-->
 
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="12dp"
                     android:layout_marginTop="2dp"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="2dp"
                     android:maxLines="1"
                     android:text="@{pill.title}"
                     android:textColor="@{ isSelected ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"
-                    android:textSize="24sp"
+                    android:textSize="21sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@id/recipe"
-                    app:layout_constraintEnd_toStartOf="@id/remove_button"
+                    app:layout_constraintEnd_toStartOf="@+id/clock"
                     app:layout_constraintStart_toEndOf="@id/move_up_button"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Алмагель" />
-<!--                    android:textColor="@{ pill.editable ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"-->
+                <!--                    android:textColor="@{ pill.editable ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"-->
 
                 <TextView
                     android:id="@+id/recipe"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="2dp"
+                    android:gravity="center_vertical"
+                    android:maxLines="@{isSelected ? 4 : 1}"
+                    android:text="@{pill.recipe}"
                     android:textColor="@{isSelected ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/time"
                     app:layout_constraintStart_toStartOf="@id/title"
                     app:layout_constraintTop_toBottomOf="@id/title"
-                                tools:text="За 2 чача до еды"/>
-<!--                    android:textColor="@{ pill.editable ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"-->
-                <!--                    android:text="@{pill.recipe}"-->
+                    tools:text="За 2 чача до еды" />
+<!--                    android:minHeight="45dp"-->
+                <!--                    android:textColor="@{ pill.editable ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"-->
                 <!--                    tools:text="За 2 чача до еды много-много текста на пять-шесть строчек"-->
 
                 <TextView
                     android:id="@+id/time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="12dp"
                     android:onClick="@{()-> interaction.onTimeClick(pill)}"
                     android:text="@{pill.time}"
                     android:textColor="@{ isSelected ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"
-                    android:textSize="21sp"
+                    android:textSize="18sp"
                     android:visibility="@{(pill.time == null || isSelected) ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="@id/recipe"
                     app:layout_constraintEnd_toStartOf="@id/clock"
                     tools:text="0:00" />
-<!--                    android:textColor="@{ pill.editable ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"-->
+                <!--                    android:textColor="@{ pill.editable ? @color/on_medicine_editable : (pill.finished ? @color/on_medicine_passive : @color/on_medicine_active)}"-->
 
                 <ImageView
                     android:id="@+id/clock"
@@ -142,14 +142,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:contentDescription="@string/time_picker_title"
-                    android:minWidth="36dp"
-                    android:minHeight="36dp"
+                    android:minWidth="32dp"
+                    android:minHeight="32dp"
                     android:onClick="@{() -> interaction.onTimeClick(pill)}"
                     android:src="@drawable/icon_time_24"
                     android:visibility="@{(pill.time != null || isSelected) ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="@id/recipe"
                     app:layout_constraintEnd_toStartOf="@id/remove_button" />
-<!--                    android:visibility="@{(pill.time != null || pill.editable) ? View.GONE : View.VISIBLE}"-->
+                <!--                    android:visibility="@{(pill.time != null || pill.editable) ? View.GONE : View.VISIBLE}"-->
 
                 <ImageButton
                     android:id="@+id/remove_button"
@@ -167,7 +167,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-<!--                    android:visibility="@{pill.editable ? View.VISIBLE : View.GONE}"-->
+                <!--                    android:visibility="@{pill.editable ? View.VISIBLE : View.GONE}"-->
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </FrameLayout>

@@ -70,9 +70,10 @@ class HomeViewModel(private val pillService: PillsService) : ViewModel() {
     }
 
     fun itemLongClick(item: DataItem): Boolean {
-        val id = (item as DataItem.Pill).id
-        _state.value = HomeState.SelectItem(id)
-
+        if(_state.value is HomeState.Normal) {
+            val id = (item as DataItem.Pill).id
+            _state.value = HomeState.SelectItem(id)
+        }
         return true
     }
 
@@ -90,10 +91,6 @@ class HomeViewModel(private val pillService: PillsService) : ViewModel() {
             delay(1000)
             _state.value = HomeState.Normal
         }
-    }
-
-    fun editDialogDismiss(id: Long) {
-        _state.value = HomeState.SelectItem(id)
     }
 
     fun editDialogIsShown(id: Long) {
