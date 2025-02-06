@@ -81,7 +81,7 @@ class DataListAdapter(private val interaction: Interaction) :
             is DataItemViewHolder.PillItemViewHolder -> {
                 holder.binding.pill = currentList[position] as DataItem.Pill
                 holder.binding.interaction = interaction
-                holder.binding.recipe.text = (currentList[position] as DataItem.Pill).recipe
+//                holder.binding.recipe.text = (currentList[position] as DataItem.Pill).recipe
                 holder.binding.isSelected = (currentList[position] as DataItem.Pill).id == selectedId
             }
         }
